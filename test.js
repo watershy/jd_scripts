@@ -1,235 +1,5 @@
-/*
- * @Author: LXK9301 https://github.com/LXK9301
- */
-/*
-京豆签到,自用,可N个京东账号
-Node.JS专用
-IOS软件用户请使用 https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js
-更新时间：2021-1-19
-Modified From github https://github.com/ruicky/jd_sign_bot
- */
-const $ = new Env('京豆签到');
-
-const exec = require('child_process').execSync
-const fs = require('fs')
-const download = require('download');
-let resultPath = "./result.txt";
-let JD_DailyBonusPath = "./JD_DailyBonus.js";
-let outPutUrl = './';
-let NodeSet = 'CookieSet.json';
-let cookiesArr = [], cookie = '';
-$.notice = ''
-const ck = require('./jdCookie.js')
-!(async () => {
-    cookiesArr = await ck.getCookie();
-    if (!cookiesArr[0]) {
-        $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-        return;
-    }
-    await requireConfig();
-    // 下载最新代码
-    await downFile();
-    const content = await fs.readFileSync(JD_DailyBonusPath, 'utf8')
-    for (let i = 0; i < cookiesArr.length; i++) {
-        cookie = cookiesArr[i];
-        if (cookie) {
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-            $.index = i + 1;
-            $.nickName = '';
-            await TotalBean();
-            console.log(`*****************开始京东账号${$.index} ${$.UserName}京豆签到*******************\n`);
-            console.log(`⚠️⚠️⚠️⚠️目前Bark APP推送通知消息对推送内容长度有限制，如推送通知中包含此推送方式脚本会默认转换成简洁内容推送 ⚠️⚠️⚠️⚠️\n`)
-            await changeFile(content);
-            await execSign();
-        }
-    }
-})()
-    .catch(async (e) => {
-        $.notice += `\n${e}`
-        $.name += `错误`
-    })
-    .finally(async () => {
-        await ck.methodEnd($)
-    })
-
-async function execSign() {
-    console.log(`\n开始执行脚本签到，请稍等`)
-    await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
-    let notifyContent = await fs.readFileSync(resultPath, "utf8");
-    console.log(`👇👇👇👇👇👇👇👇👇👇👇LOG记录👇👇👇👇👇👇👇👇👇👇👇\n${notifyContent}\n👆👆👆👆👆👆👆👆👆LOG记录👆👆👆👆👆👆👆👆👆👆👆`);
-    let BarkContent = '';
-    if (fs.existsSync(resultPath)) {
-        notifyContent = await fs.readFileSync(resultPath, "utf8");
-        const barkContentStart = notifyContent.indexOf('【签到概览】')
-        const barkContentEnd = notifyContent.length;
-        if (barkContentStart > -1 && barkContentEnd > -1) {
-            BarkContent = notifyContent.substring(barkContentStart, barkContentEnd);
-            $.notice += `【京东账号${$.index}】${$.UserName}\n`
-            $.notice += `${BarkContent}\n--------------------\n`
-        }
-    }
-    //运行完成后，删除下载的文件
-    console.log('运行完成后，删除下载的文件\n')
-    await deleteFile(resultPath);//删除result.txt
-    await deleteFile(JD_DailyBonusPath);//删除JD_DailyBonus.js
-    console.log(`*****************京东账号${$.index} ${$.UserName}京豆签到完成*******************\n`);
-}
-
-async function downFile() {
-    let url;
-    await downloadUrl();
-    if ($.body) {
-        url = 'https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js';
-    } else {
-        url = 'https://cdn.jsdelivr.net/gh/NobyDa/Script@master/JD-DailyBonus/JD_DailyBonus.js';
-    }
-    try {
-        const options = {}
-        if (process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
-            const tunnel = require("tunnel");
-            const agent = {
-                https: tunnel.httpsOverHttp({
-                    proxy: {
-                        host: process.env.TG_PROXY_HOST,
-                        port: process.env.TG_PROXY_PORT * 1
-                    }
-                })
-            }
-            Object.assign(options, {agent})
-        }
-        await download(url, outPutUrl, options);
-        console.log('文件下载完毕');
-    } catch (e) {
-        console.log("文件下载异常:" + e);
-    }
-}
-
-async function changeFile(content) {
-    console.log(`开始替换变量`)
-    let newContent = content.replace(/var Key = ''/, `var Key = '${cookie}'`);
-    newContent = newContent.replace(/const NodeSet = 'CookieSet.json'/, `const NodeSet = '${NodeSet}'`)
-    if (process.env.JD_BEAN_STOP && process.env.JD_BEAN_STOP !== '0') {
-        newContent = newContent.replace(/var stop = 0/, `var stop = ${process.env.JD_BEAN_STOP * 1}`);
-    }
-    const zone = new Date().getTimezoneOffset();
-    if (zone === 0) {
-        //此处针对UTC-0时区用户做的
-        newContent = newContent.replace(/tm\s=.*/, `tm = new Date(new Date().toLocaleDateString()).getTime() - 28800000;`);
-    }
-    try {
-        await fs.writeFileSync(JD_DailyBonusPath, newContent, 'utf8');
-        console.log('替换变量完毕');
-    } catch (e) {
-        console.log("京东签到写入文件异常:" + e);
-    }
-}
-
-async function deleteFile(path) {
-    // 查看文件result.txt是否存在,如果存在,先删除
-    const fileExists = await fs.existsSync(path);
-    // console.log('fileExists', fileExists);
-    if (fileExists) {
-        const unlinkRes = await fs.unlinkSync(path);
-        // console.log('unlinkRes', unlinkRes)
-    }
-}
-
-function TotalBean() {
-    return new Promise(async resolve => {
-        const options = {
-            "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
-            "headers": {
-                "Accept": "application/json,text/plain, */*",
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "zh-cn",
-                "Connection": "keep-alive",
-                "Cookie": cookie,
-                "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
-            }
-        }
-        $.post(options, (err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (data) {
-                        data = JSON.parse(data);
-                        if (data['retcode'] === 13) {
-                            $.isLogin = false; //cookie过期
-                            return
-                        }
-                        $.nickName = data['base'].nickname;
-                    } else {
-                        console.log(`京东服务器返回空数据`)
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve();
-            }
-        })
-    })
-}
-
-function downloadUrl(url = 'https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js') {
-    return new Promise(resolve => {
-        const options = {url};
-        if (process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
-            const tunnel = require("tunnel");
-            const agent = {
-                https: tunnel.httpsOverHttp({
-                    proxy: {
-                        host: process.env.TG_PROXY_HOST,
-                        port: process.env.TG_PROXY_PORT * 1
-                    }
-                })
-            }
-            Object.assign(options, {agent})
-        }
-        $.get(options, async (err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`检测到您不能访问外网,将使用CDN下载JD_DailyBonus.js文件`)
-                } else {
-                    $.body = data;
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve();
-            }
-        })
-    })
-}
-
-function requireConfig() {
-    return new Promise(resolve => {
-        const file = 'jd_bean_sign.js';
-        fs.access(file, fs.constants.W_OK, (err) => {
-            resultPath = err ? '/app/jd/jd_scripts/result.txt' : resultPath;
-            JD_DailyBonusPath = err ? '/app/jd/jd_scripts/JD_DailyBonus.js' : JD_DailyBonusPath;
-            outPutUrl = err ? '/app/jd/jd_scripts/' : outPutUrl;
-            NodeSet = err ? '/app/jd/jd_scripts/CookieSet.json' : NodeSet;
-            resolve()
-        });
-    })
-}
-
-function timeFormat(time) {
-    let date;
-    if (time) {
-        date = new Date(time)
-    } else {
-        date = new Date();
-    }
-    return date.getFullYear() + '-' + ((date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1)) + '-' + (date.getDate() >= 10 ? date.getDate() : '0' + date.getDate());
-}
-
+const  $ = new Env('便利蜂签到')
+$.isNode()
 function Env(t, e) {
     "undefined" != typeof process && JSON.stringify(process.env).indexOf("GITHUB") > -1 && process.exit(0);
 
@@ -259,7 +29,17 @@ function Env(t, e) {
 
     return new class {
         constructor(t, e) {
-            this.name = t, this.http = new s(this), this.data = null, this.dataFile = "box.dat", this.logs = [], this.isMute = !1, this.isNeedRewrite = !1, this.logSeparator = "\n", this.startTime = (new Date).getTime(), Object.assign(this, e), this.log("", `🔔${this.name}, 开始!`)
+            this.name = t
+            this.http = new s(this)
+            this.data = null
+            this.dataFile = "box.dat"
+            this.logs = []
+            this.isMute = !1
+            this.isNeedRewrite = !1
+            this.logSeparator = "\n"
+            this.startTime = (new Date).getTime()
+            Object.assign(this, e)
+            this.log("", `🔔${this.name}, 开始!`)
         }
 
         isNode() {
@@ -268,10 +48,6 @@ function Env(t, e) {
 
         isQuanX() {
             return "undefined" != typeof $task
-        }
-
-        isSurge() {
-            return "undefined" != typeof $httpClient && "undefined" == typeof $loon
         }
 
         isLoon() {
@@ -500,7 +276,8 @@ function Env(t, e) {
         }
 
         log(...t) {
-            t.length > 0 && (this.logs = [...this.logs, ...t]), console.log(t.join(this.logSeparator))
+            t.length > 0 && (this.logs = [...this.logs, ...t])
+            console.log(t.join(this.logSeparator))
         }
 
         logErr(t, e) {

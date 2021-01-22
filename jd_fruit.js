@@ -74,7 +74,7 @@ notify = $.isNode() ? require('./sendNotify') : '';
   }
 })()
     .catch(async (e) => {
-      $.notice += `${e}`
+      $.notice += `\n${e}`
       $.name += `错误`
     })
     .finally(async () => {
