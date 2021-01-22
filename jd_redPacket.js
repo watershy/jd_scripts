@@ -28,32 +28,19 @@ cron "1 1 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_script
  */
 const $ = new Env('京东全民开红包');
 const notify = $.isNode() ? require('./sendNotify') : '';
-//Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
+
 
 const JD_API_HOST = 'https://api.m.jd.com/api';
 
-
+const ck = require('./jdCookie')
 !(async () => {
+  cookiesArr = await ck.getCookie();
+
   if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -64,12 +51,14 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       $.isLogin = true;
       $.nickName = '';
       await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
+      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await notify.sendNotify(`京东账号${$.index},${$.name}cookie失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`,'',true);
+        } else {
+          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
         }
         continue
       }
@@ -79,11 +68,12 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
     }
   }
 })()
-    .catch((e) => {
-      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    .catch(async (e) => {
+
+      await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
     })
-    .finally(() => {
-      $.done();
+    .finally(async () => {
+      await ck.methodEnd($)
     })
 
 async function redPacket() {
@@ -165,7 +155,7 @@ async function active(taskType) {
       const { advertDetails } = getTaskDetailForColorRes.data.result;
       for (let item of advertDetails) {
         await $.wait(1000);
-        if (item.id && item.status == 0) {
+        if (item.id && item.status === 0) {
           let taskReportForColorRes = await taskReportForColor(taskType, item.id);
           // console.log(`完成任务的动作---${JSON.stringify(taskReportForColorRes)}`)
         }

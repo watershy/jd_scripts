@@ -23,24 +23,11 @@ const $ = new Env('京东炸年兽领爆竹🧨');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
-
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
+const ck = require('./jdCookie')
 let UserName = '';
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 !(async () => {
+  cookiesArr = await ck.getCookie()
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -64,7 +51,9 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
   }
 })()
     .catch((e) => $.logErr(e))
-    .finally(() => $.done())
+    .finally(async () => {
+      await ck.methodEnd($)
+    })
 
 async function collectProduceScore() {
   await getHomeData();

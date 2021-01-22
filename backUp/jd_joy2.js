@@ -232,7 +232,7 @@ function* step() {
         if ($.isNode() && notify.SCKEY) {
           notify.sendNotify(`京东账号${UserName}cookie已失效`, '请重新登录获取cookie');
         }
-        $.done();
+        await ck.methodEnd($)
         return
       } else {
         message += `${petTaskConfig.errorMessage}`;
@@ -240,7 +240,7 @@ function* step() {
     }
   } else {
     $.msg(name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-    $.done();
+    await ck.methodEnd($)
     return
   }
   console.log(`jdNotify${jdNotify}`)
@@ -248,7 +248,7 @@ function* step() {
   if (!jdNotify || jdNotify === 'false') {
     $.msg(name, subTitle, message);
   }
-  $.done();
+  await ck.methodEnd($)
 }
 
 function click(marketLink) {
@@ -438,7 +438,7 @@ function request(url) {
     // if (err) {
     //   console.log("\n京东宠汪汪: API查询请求失败 ‼️‼️")
     //   $.msg('京东宠汪汪', `脚本执行中断`, `京东宠汪汪: API查询请求失败 ‼️‼️`);
-    //   $.done();
+    //   await ck.methodEnd($)
     // } else {
     //   try {
     //     data = JSON.parse(data);
@@ -484,7 +484,7 @@ function requestPost(url, body, ContentType) {
     // if (err) {
     //   console.log("\n京东宠汪汪: API查询请求失败 ‼️‼️")
     //   $.msg('京东宠汪汪', `${err.name}`, `京东宠汪汪: API查询请求失败 ‼️‼️`);
-    //   $.done();
+    //   await ck.methodEnd($)
     // } else {
     //   try {
     //     data = JSON.parse(data);

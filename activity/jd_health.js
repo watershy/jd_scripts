@@ -21,33 +21,24 @@ cron "10 0 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scrip
  */
 const $ = new Env('健康抽奖机');
 
-const notify = $.isNode() ? require('../sendNotify') : '';
-//Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('../jdCookie.js') : '';
+const notify = $.isNode() ? require('./sendNotify') : '';
+
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const inviteCodes = [`P04z54XCjVUnoaW5nJcXCCyoR8C6i9QR16e`, 'P04z54XCjVUnoaW5m9cZ2T6jChKkh8FWbFAplQ', `P04z54XCjVUnoaW5u2ak7ZCdan1Bdbpik_F9ud7lznm`, `P04z54XCjVUnoaW5m9cZ2ariXVJwFN5uKHNqnc`];
+const inviteCodes = [
+    'P04z54XCjVUnoaW5m9cZ2X82HhCnCz7GpL84a0@P04z54XCjVUnoaW5m9cZ2bxiCpDlWuAyFro_fc@P04z54XCjVUnoaW5m9cZzipgC0LzIoGgeWqxA',
+    'P04z54XCjVUnoaW5m9cZyCKtTYgyaXraAsc_A@P04z54XCjVUnoaW5m9cZzipgC0LzIoGgeWqxA@P04z54XCjVUnoaW5m9cZ2bxiCpDlWuAyFro_fc',
+    'P04z54XCjVUnoaW5m9cZyCKtTYgyaXraAsc_A@P04z54XCjVUnoaW5m9cZ2X82HhCnCz7GpL84a0@P04z54XCjVUnoaW5m9cZ2bxiCpDlWuAyFro_fc',
+    'P04z54XCjVUnoaW5m9cZyCKtTYgyaXraAsc_A@P04z54XCjVUnoaW5m9cZ2X82HhCnCz7GpL84a0@P04z54XCjVUnoaW5m9cZzipgC0LzIoGgeWqxA',
+];
 !(async () => {
+  cookiesArr = await ck.getCookie();
   await requireConfig();
   if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -59,12 +50,14 @@ const inviteCodes = [`P04z54XCjVUnoaW5nJcXCCyoR8C6i9QR16e`, 'P04z54XCjVUnoaW5m9c
       $.nickName = '';
       message = '';
       await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await notify.sendNotify(`京东账号${$.index},${$.name}cookie失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`,'',true);
+        } else {
+          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
         }
         continue
       }
@@ -73,11 +66,12 @@ const inviteCodes = [`P04z54XCjVUnoaW5nJcXCCyoR8C6i9QR16e`, 'P04z54XCjVUnoaW5m9c
     }
   }
 })()
-    .catch((e) => {
-      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    .catch(async (e) => {
+
+      await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
     })
-    .finally(() => {
-      $.done();
+    .finally(async () => {
+      await ck.methodEnd($)
     })
 async function jdHealth() {
   await helpFriends();
@@ -302,7 +296,7 @@ function shareCodesFormat() {
 function requireConfig() {
   return new Promise(resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
-    //Node.js用户请在jdCookie.js处填写京东ck;
+
     const shareCodes = [] //$.isNode() ? require('./jdSplitShareCodes.js') : '';
     console.log(`共${cookiesArr.length}个京东账号\n`);
     $.shareCodesArr = [];

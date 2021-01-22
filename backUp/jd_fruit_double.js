@@ -67,7 +67,7 @@ function* step() {
   let option = {};
   if (!cookie) {
     $.msg(name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-    $.done();
+    await ck.methodEnd($)
     return
   }
   UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
@@ -80,20 +80,20 @@ function* step() {
     if (farmInfo.treeState === 0) {
       //已下单购买, 但未开始种植新的水果
       $.msg(name, `【提醒⏰】请重新种植水果`, `上轮水果${farmInfo.farmUserPro.name}已兑换成功\n请去京东APP或微信小程序选购并种植新的水果\n openApp.jdMobile://`, {"open-url": "openApp.jdMobile://"});
-      $.done();
+      await ck.methodEnd($)
       return;
     } else if (farmInfo.treeState === 1){
       console.log(`\n${farmInfo.farmUserPro.name}种植中...\n`)
     } else if (farmInfo.treeState === 2) {
       option['open-url'] = "openApp.jdMobile://";
       $.msg(name, `【提醒⏰】${farmInfo.farmUserPro.name}已可领取`, '请去京东APP或微信小程序查看', option);
-      $.done();
+      await ck.methodEnd($)
       return;
     } else if (farmInfo.treeState === 3) {
       //已成熟可去兑换,但还没去下单购买
       option['open-url'] = "openApp.jdMobile://";
       $.msg(name, `【提醒⏰】${farmInfo.farmUserPro.name}已可领取`, '请去京东APP或微信小程序查看', option);
-      $.done();
+      await ck.methodEnd($)
       return;
     }
     farmTask = yield taskInitForFarm();
@@ -533,7 +533,7 @@ function* step() {
       if (isFruitFinished) {
         option['open-url'] = "openApp.jdMobile://";
         $.msg(name, `【提醒⏰】${farmInfo.farmUserPro.name}已可领取`, '请去京东APP或微信小程序查看', option);
-        $.done();
+        await ck.methodEnd($)
         return;
       }
       farmTask = yield taskInitForFarm();
@@ -592,7 +592,7 @@ function* step() {
       if (isFruitFinished) {
         option['open-url'] = "openApp.jdMobile://";
         $.msg(name, `【提醒⏰】${farmInfo.farmUserPro.name}已可领取`, '请去京东APP或微信小程序查看', option);
-        $.done();
+        await ck.methodEnd($)
         return;
       }
     } else if (overageEnergy >= 10) {
@@ -638,7 +638,7 @@ function* step() {
       if (isFruitFinished) {
         option['open-url'] = "openApp.jdMobile://";
         $.msg(name, `【提醒⏰】${farmInfo.farmUserPro.name}已可领取`, '请去京东APP或微信小程序查看', option);
-        $.done();
+        await ck.methodEnd($)
         return;
       }
     } else {
@@ -743,7 +743,7 @@ function* step() {
     if (farmInfo.code === '3') {
       $.msg(name, '【提示】京东cookie已失效,请重新登录获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
       $.setdata('', 'CookieJD');//cookie失效，故清空cookie。
-      $.done();
+      await ck.methodEnd($)
       return
     } else {
       console.log(`初始化农场数据异常, 请登录京东 app查看农场0元水果功能是否正常,农场初始化数据: ${JSON.stringify(farmInfo)}`);
@@ -753,7 +753,7 @@ function* step() {
   if (!jdNotify || jdNotify === 'false') {
     $.msg(name, subTitle, message, option);
   }
-  $.done();
+  await ck.methodEnd($)
 }
 
 /**

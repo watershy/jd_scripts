@@ -59,7 +59,7 @@ gen.next();
 function* entrance() {
   if (!cookie) {
     $.msg(name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-    $.done();
+    await ck.methodEnd($)
     return
   }
   console.log('任务开始');
@@ -97,7 +97,7 @@ function* entrance() {
   }
   // $notify(name, subTitle, message);
   console.log('全部任务完成, 如果帮助到您可以点下🌟STAR鼓励我一下, 明天见~');
-  $.done();
+  await ck.methodEnd($)
 }
 
 
@@ -352,7 +352,7 @@ function initPetTown() {
       petInfo = response.result;
       if (petInfo.userStatus === 0) {
         $.msg(name, '【提示】此账号萌宠活动未开始，请手动去京东APP开启活动\n入口：我的->游戏与互动->查看更多', '', { "open-url": "openapp.jdmoble://" });
-        $.done();
+        await ck.methodEnd($)
         return
       }
       goodsUrl = petInfo.goodsInfo && petInfo.goodsInfo.goodsUrl;
@@ -361,7 +361,7 @@ function initPetTown() {
         option['open-url'] = "openApp.jdMobile://";
         option['media-url'] = goodsUrl;
         $.msg($.name, `【提醒⏰】${petInfo.goodsInfo.goodsName}已可领取`, '请去京东APP或微信小程序查看', option);
-        $.done();
+        await ck.methodEnd($)
         return
       }
       console.log(`\n【您的互助码shareCode】 ${petInfo.shareCode}\n`);
@@ -370,7 +370,7 @@ function initPetTown() {
       console.log(`初始化萌宠失败:  ${response.message}`);
       $.setdata('', 'CookieJD');//cookie失效，故清空cookie。
       $.msg(name, '【提示】京东cookie已失效,请重新登录获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-      $.done();
+      await ck.methodEnd($)
     }
   })
 

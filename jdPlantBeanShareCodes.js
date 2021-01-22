@@ -6,9 +6,32 @@
 //云服务器腾讯云函数等NOde.js用户在此处填写东东萌宠的好友码。
 // 同一个京东账号的好友互助码用@符号隔开,不同京东账号之间用&符号或者换行隔开,下面给一个示例
 // 如: 京东账号1的shareCode1@京东账号1的shareCode2&京东账号2的shareCode1@京东账号2的shareCode2
+//一个账号只能助力三次
+/**
+ * 2 4 5
+ * 1 4 5
+ * 1 4 5
+ * 1 2 6
+ * 1 2 7
+ * 1 7 8
+ * 1 6 7
+ * 1 6 8
+ * 1 7 9
+ * 1 7 10
+ *
+ */
 let PlantBeanShareCodes = [
-  '66j4yt3ebl5ierjljoszp7e4izzbzaqhi5k2unz2afwlyqsgnasq@olmijoxgmjutyrsovl2xalt2tbtfmg6sqldcb3q@e7lhibzb3zek27amgsvywffxx7hxgtzstrk2lba@olmijoxgmjutyx55upqaqxrblt7f3h26dgj2riy',//账号一的好友shareCode,不同好友中间用@符号隔开
-  'mlrdw3aw26j3wgzjipsxgonaoyr2evrdsifsziy@mlrdw3aw26j3wgzjipsxgonaoyr2evrdsifsziy',//账号二的好友shareCode，不同好友中间用@符号隔开
+  'mlrdw3aw26j3wmya4pk5ddp3lvbzhdknwrurwla@olmijoxgmjuty7b2qyimfo5twznw3f5ujggnidy@e7lhibzb3zek3kcagjsfkudcggtje7k6ktmnigy',
+  'igefhjvuw6xvsvwblhudczcaltzuium2sahd2ua@olmijoxgmjuty7b2qyimfo5twznw3f5ujggnidy@e7lhibzb3zek3kcagjsfkudcggtje7k6ktmnigy',
+  'igefhjvuw6xvsvwblhudczcaltzuium2sahd2ua@olmijoxgmjuty7b2qyimfo5twznw3f5ujggnidy@e7lhibzb3zek3kcagjsfkudcggtje7k6ktmnigy',
+  'igefhjvuw6xvsvwblhudczcaltzuium2sahd2ua@mlrdw3aw26j3wmya4pk5ddp3lvbzhdknwrurwla@4npkonnsy7xi3ym5cyqunaovrfgojumwj3iabfy',
+  'igefhjvuw6xvsvwblhudczcaltzuium2sahd2ua@mlrdw3aw26j3wmya4pk5ddp3lvbzhdknwrurwla@ggope2d22xx7w2laao67gdbd5m3h7wlwy7o5jii',
+  'igefhjvuw6xvsvwblhudczcaltzuium2sahd2ua@ggope2d22xx7w2laao67gdbd5m3h7wlwy7o5jii@4npkonnsy7xi3ub7sgvx5d6x7xydy3xatk5buvy',
+  'igefhjvuw6xvsvwblhudczcaltzuium2sahd2ua@4npkonnsy7xi3ym5cyqunaovrfgojumwj3iabfy@ggope2d22xx7w2laao67gdbd5m3h7wlwy7o5jii',
+  'igefhjvuw6xvsvwblhudczcaltzuium2sahd2ua@4npkonnsy7xi3ym5cyqunaovrfgojumwj3iabfy@4npkonnsy7xi3ub7sgvx5d6x7xydy3xatk5buvy',
+  'igefhjvuw6xvsvwblhudczcaltzuium2sahd2ua@ggope2d22xx7w2laao67gdbd5m3h7wlwy7o5jii@olmijoxgmjuty4qp5zh4xsotqvo7qwtlxrc6yaq',
+  'igefhjvuw6xvsvwblhudczcaltzuium2sahd2ua@ggope2d22xx7w2laao67gdbd5m3h7wlwy7o5jii@e7lhibzb3zek3c2jgde47325h2zn34h5woqrpqa',
+  '4npkonnsy7xi3ub7sgvx5d6x7xydy3xatk5buvy@mlrdw3aw26j3wmya4pk5ddp3lvbzhdknwrurwla@olmijoxgmjuty7b2qyimfo5twznw3f5ujggnidy',
 ]
 // 判断github action里面是否有种豆得豆互助码
 if (process.env.PLANT_BEAN_SHARECODES) {

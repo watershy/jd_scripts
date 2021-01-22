@@ -23,34 +23,19 @@ cron "10 7 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scrip
 const $ = new Env('领京豆额外奖励');
 
 const notify = $.isNode() ? require('./sendNotify') : '';
-//Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
-const helpAuthor = true; // 是否帮助作者助力，false打开通知推送，true关闭通知推送
+
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
-  };
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
 const JD_API_HOST = 'https://api.m.jd.com/';
+const ck = require('./jdCookie.js')
+$.notice = ''
 !(async () => {
+  cookiesArr = await ck.getCookie();
   $.newShareCodes = []
   // await getAuthorShareCode();
   // await getAuthorShareCode2();
   if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -62,61 +47,28 @@ const JD_API_HOST = 'https://api.m.jd.com/';
       $.nickName = '';
       message = '';
       await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
         if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await notify.sendNotify(`京东账号${$.index},${$.name}cookie失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`,'',true);
         }
         continue
       }
       await jdBeanHome();
     }
   }
-  // for (let i = 0; i < cookiesArr.length; i++) {
-  //   if (cookiesArr[i]) {
-  //     $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-  //     console.log(`${$.UserName}去帮助下一个人`)
-  //     cookie = cookiesArr[i];
-  //     if ($.newShareCodes.length > 1) {
-  //       let code = $.newShareCodes[(i + 1) % $.newShareCodes.length]
-  //       await help(code[0], code[1])
-  //     }
-  //     if (helpAuthor && $.authorCode) {
-  //       console.log(`去帮助作者`)
-  //       const helpRes = await help($.authorCode[0], $.authorCode[1])
-  //       if (helpRes && helpRes.data.respCode === 'SG209') {
-  //         console.log(`助力次数已耗尽，跳出助力`)
-  //         break;
-  //       }
-  //     }
-  //     if (helpAuthor && $.authorCode2) {
-  //       for (let code of $.authorCode2) {
-  //         const helpRes = await help(code.shareCode, code.groupCode);
-  //         if (helpRes && helpRes.data.respCode === 'SG209') {
-  //           console.log(`助力次数已耗尽，跳出助力`)
-  //           break;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    $.notice += `${e}`
+    $.name += `错误`
   })
-  .finally(() => {
-    $.done();
+  .finally(async () => {
+    await ck.methodEnd($)
   })
 
 async function jdBeanHome() {
   $.doneState = false
-  // for (let i = 0; i < 3; ++i) {
-  //   await doTask2()
-  //   await $.wait(1000)
-  //   if ($.doneState) break
-  // }
   do {
     await doTask2()
     await $.wait(3000)

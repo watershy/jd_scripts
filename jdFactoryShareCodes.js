@@ -6,10 +6,17 @@
 //云服务器腾讯云函数等NOde.js用户在此处填写东东萌宠的好友码。
 // 同一个京东账号的好友互助码用@符号隔开,不同京东账号之间用&符号或者换行隔开,下面给一个示例
 // 如: 京东账号1的shareCode1@京东账号1的shareCode2&京东账号2的shareCode1@京东账号2的shareCode2
+// 一个账号只有三次助力机会
 let shareCodes = [
-  '',//账号一的好友shareCode,不同好友中间用@符号隔开
-  '',//账号二的好友shareCode，不同好友中间用@符号隔开
-]
+  'P04z54XCjVWnYaS5m9cZ2X82HhCnL0ar9uQV1c@P04z54XCjVWnYaS5m9cZzipgC0LzP0fcf_LXQ@P04z54XCjVWnYaS5m9cZ2bxiCpDlXK_bxyA6WE', // 2 3 4
+  'P04z54XCjVWnYaS5m9cZyCKtTYgyX-PpQkZ4w@P04z54XCjVWnYaS5m9cZzipgC0LzP0fcf_LXQ@P04z54XCjVWnYaS5m9cZ2bxiCpDlXK_bxyA6WE', // 1 3 4
+  'P04z54XCjVWnYaS5m9cZyCKtTYgyX-PpQkZ4w@P04z54XCjVWnYaS5m9cZ2X82HhCnL0ar9uQV1c@P04z54XCjVWnYaS5m9cZ2bxiCpDlXK_bxyA6WE', // 1 2 4
+  'P04z54XCjVWnYaS5m9cZyCKtTYgyX-PpQkZ4w@P04z54XCjVWnYaS5m9cZ2X82HhCnL0ar9uQV1c@P04z54XCjVWnYaS5m9cZzipgC0LzP0fcf_LXQ', // 1 2 3
+  'P04z54XCjVWnYaS5m9cZyCKtTYgyX-PpQkZ4w@P04z54XCjVWnYaS5m9cZ2X82HhCnL0ar9uQV1c@P04z54XCjVWnYaS5m9cZzipgC0LzP0fcf_LXQ', // 1 2 3
+  'P04z54XCjVWnYaS5m9cZyCKtTYgyX-PpQkZ4w@P04z54XCjVWnYaS5m9cZ2X82HhCnL0ar9uQV1c@P04z54XCjVWnYaS5m9cZ2bxiCpDlXK_bxyA6WE', // 1 2 4
+  'P04z54XCjVWnYaS5m9cZ2f5j3RJku230Bz2UmY@P04z54XCjVWnYaS5m9cZzipgC0LzP0fcf_LXQ@P04z54XCjVWnYaS5m9cZ2bxiCpDlXK_bxyA6WE', // 8 3 4
+  'P04z54XCjVWnYaS5m9cZ2T51HVOnXdADqjpjo4@P04z54XCjVWnYaS5m9cZ2f4jnpJwyImg66YlBI@P04z54XCjVWnYaS5jQNAGPx2X1MkI8-F_w',    // 5 6 7
+  ]
 // 判断github action里面是否有东东工厂互助码
 if (process.env.DDFACTORY_SHARECODES) {
   if (process.env.DDFACTORY_SHARECODES.indexOf('&') > -1) {

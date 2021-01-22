@@ -6,7 +6,6 @@
  */
 /*
 京东年货节
-活动入口：https://lzdz-isv.isvjcloud.com/dingzhi/vm/template/activity/940531?activityId=dzvm210168869301
 用5000金币开盲盒必中200-300京豆，任务做完每天1000，5天换一次
 活动时间：2021年1月9日-2021年2月9日
 已支持IOS双京东账号,Node.js支持N个京东账号
@@ -27,31 +26,16 @@ cron "1 7 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_script
 京东年货节 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nh.js, cronexpr="1 7 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东年货节');
-
+const ck = require('./jdCookie.js')
 const notify = $.isNode() ? require('./sendNotify') : '';
-//Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //const WebSocket = $.isNode() ? require('websocket').w3cwebsocket: SockJS;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message,helpInfo;
-let shareUuid = '83c6d4a80e3447b78572124e1fc3aa7c'
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
+const shareUuid = '9fd016b31afc4522ba87feb581bc6844'
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const ACT_ID = 'dzvm210168869301'
 !(async () => {
+  cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -81,14 +65,13 @@ const ACT_ID = 'dzvm210168869301'
   }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+
   })
-  .finally(() => {
-    $.done();
+  .finally(async () => {
+    await ck.methodEnd($)
   })
 async function jdNh() {
   $.score = 0
-  await getShareCode()
   await getIsvToken()
   await getIsvToken2()
   await getActCk()
@@ -102,30 +85,6 @@ async function jdNh() {
     await draw()
   }
   await showMsg();
-}
-
-function getShareCode() {
-  return new Promise(resolve => {
-    $.get({url:'https://gitee.com/shylocks/updateTeam/raw/main/jd_nh.json',headers:{
-        'user-agent': 'JD4iPhone/167490 (iPhone; iOS 14.2; Scale/3.00)'
-      }},(err,resp,data)=>{
-      try {
-        if (err) {
-          console.log(`${err}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            shareUuid = data['shareUuid']
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
 }
 function getIsvToken() {
   let config = {

@@ -16,7 +16,7 @@ cron "1 0,1-23/3 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd
 热8超级盲盒 = type=cron,cronexp=1 0,1-23/3 * * *,wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_mohe.js
  */
 const $ = new Env('热8超级盲盒');
-//Node.js用户请在jdCookie.js处填写京东ck;
+
 const jdCookieNode = $.isNode() ? require('../jdCookie.js') : '';
 
 //直接用NobyDa的jd cookie
@@ -60,11 +60,12 @@ let shareId = '';
     $.msg($.name, '', `【京东账号二】${UserName}\n任务已做完.\n 抽奖详情查看 https://blindbox.jd.com\n`, {"open-url": "https://blindbox.jd.com"});
   }
 })()
-    .catch((e) => {
-      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    .catch(async (e) => {
+
+      await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
     })
-    .finally(() => {
-      $.done();
+    .finally(async () => {
+      await ck.methodEnd($)
     })
 
 
@@ -181,7 +182,7 @@ function taskHomeCoin(type, id) {
   })
 }
 function getCoin() {
-  return new Promise((resolve) => {
+  return new Promise(async (resolve) => {
     const url = `getCoin?t=${Date.now()}`;
     $.get(taskurl(url), (err, resp, data) => {
       try {
@@ -191,7 +192,7 @@ function getCoin() {
         if (data.code === 1001) {
           console.log(data.msg);
           $.msg($.name, '领取失败', `${data.msg}`);
-          $.done();
+          $.done()
         } else {
           console.log(`成功领取${data.data}热力值`)
           resolve(data);

@@ -26,7 +26,7 @@ gen.next();
 function* entrance() {
   if (!cookie) {
     $.msg(name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-    $.done();
+    await ck.methodEnd($)
     return
   }
   yield user_info();
@@ -66,7 +66,7 @@ function* entrance() {
       $.setdata('0', 'treeMsgTime');
     }
   }
-  $.done();
+  await ck.methodEnd($)
 }
 
 function user_info() {
@@ -95,7 +95,7 @@ function user_info() {
           gen.next();
         } else {
           $.msg(name, `【提示】请先去京东app参加摇钱树活动\n入口：我的->游戏与互动->查看更多`, '', {"open-url": "openApp.jdMobile://"});
-          $.done();
+          await ck.methodEnd($)
           return
           gen.return();
         }
@@ -105,7 +105,7 @@ function user_info() {
       if (res.resultCode === 3) {
         $.setdata('', 'CookieJD');//cookie失效，故清空cookie。
         $.msg(name, '【提示】京东cookie已失效,请重新登录获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-        $.done();
+        await ck.methodEnd($)
         return
       }
       gen.return();

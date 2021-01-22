@@ -23,30 +23,26 @@ cron "1 7-21/2 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_s
 搬的https://github.com/uniqueque/QuantumultX/blob/4c1572d93d4d4f883f483f907120a75d925a693e/Script/jd_plantBean.js
 */
 const $ = new Env('京东种豆得豆');
-//Node.js用户请在jdCookie.js处填写京东ck;
+
 //ios等软件用户直接用NobyDa的jd cookie
-let jdNotify = true;//是否开启静默运行。默认true开启
+let jdNotify = false;//是否开启静默运行。默认true开启
 let cookiesArr = [], cookie = '', jdPlantBeanShareArr = [], isBox = false, notify, newShareCodes, option, message,subTitle;
 //京东接口地址
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 //助力好友分享码(最多3个,否则后面的助力失败)
 //此此内容是IOS用户下载脚本到本地使用，填写互助码的地方，同一京东账号的好友互助码请使用@符号隔开。
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
-let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好友的shareCode
-                   //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
-  '66j4yt3ebl5ierjljoszp7e4izzbzaqhi5k2unz2afwlyqsgnasq@olmijoxgmjutyrsovl2xalt2tbtfmg6sqldcb3q@e7lhibzb3zek27amgsvywffxx7hxgtzstrk2lba@e7lhibzb3zek32e72n4xesxmgc2m76eju62zk3y',
-  //账号二的好友shareCode,不同好友的shareCode中间用@符号隔开
-  'olmijoxgmjutyx55upqaqxrblt7f3h26dgj2riy@mlrdw3aw26j3wgzjipsxgonaoyr2evrdsifsziyvnsb2r54jq34s64sc4it3jlfnejwmtmsuadax2i@eeexxudqtlampbpvmceutaaht5tcftvr6kohuny',
-]
 let currentRoundId = null;//本期活动id
 let lastRoundId = null;//上期id
 let roundList = [];
 let awardState = '';//上期活动的京豆是否收取
 let randomCount = $.isNode() ? 20 : 5;
+$.notice = ''
+const ck = require('./jdCookie')
 !(async () => {
-  await requireConfig();
+  cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -57,27 +53,30 @@ let randomCount = $.isNode() ? 20 : 5;
       $.isLogin = true;
       $.nickName = '';
       await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
+      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      newShareCodes = await ck.getShareCode($.name,$.UserName);
+      console.log(`助力好友：${newShareCodes}`)
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await notify.sendNotify(`京东账号${$.index},${$.name}cookie失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`,'',true);
         }
         continue
       }
       message = '';
       subTitle = '';
       option = {};
-      await shareCodesFormat();
       await jdPlantBean();
-      await showMsg();
+      $.notice += `\n----------------------------\n`
+      $.notice = $.notice + subTitle + '\n' + message
     }
   }
 })().catch((e) => {
-  $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
-}).finally(() => {
-  $.done();
+  $.notice += `${e}`
+  $.name += `错误`
+}).finally(async () => {
+  await ck.methodEnd($)
 })
 
 async function jdPlantBean() {
@@ -127,7 +126,7 @@ async function doGetReward() {
       message += `【上期兑换京豆】${$.getReward.data.awardBean}个\n`;
       $.msg($.name, subTitle, message);
       if ($.isNode()) {
-        await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName || $.UserName}`, `京东账号${$.index} ${$.nickName}\n${message}`);
+        await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.UserName}`, `京东账号${$.index} ${$.nickName}\n${message}`);
       }
     }
   } else if (awardState === '6') {
@@ -160,10 +159,10 @@ async function doCultureBean() {
 async function stealFriendWater() {
   await stealFriendList();
   if ($.stealFriendList.code === '0') {
-    if ($.stealFriendList.data.tips) {
-      console.log('偷取好友营养液今日已达上限');
-      return
-    }
+    // if ($.stealFriendList.data.tips) {
+    //   console.log('偷取好友营养液今日已达上限');
+    //   return
+    // }
     if ($.stealFriendList.data && $.stealFriendList.data.friendInfoList && $.stealFriendList.data.friendInfoList.length > 0) {
       let nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000);
       for (let item of $.stealFriendList.data.friendInfoList) {
@@ -405,13 +404,6 @@ async function doHelp() {
     }
   }
 }
-function showMsg() {
-  $.log(`\n${message}\n`);
-  jdNotify = $.getdata('jdPlantBeanNotify') ? $.getdata('jdPlantBeanNotify') : jdNotify;
-  if (!jdNotify || jdNotify === 'false') {
-    $.msg($.name, subTitle, message);
-  }
-}
 // ================================================此处是API=================================
 //每轮种豆活动获取结束后,自动收取京豆
 async function getReward() {
@@ -516,116 +508,6 @@ async function helpShare(plantUuid) {
 async function plantBeanIndex() {
   $.plantBeanIndexResult = await request('plantBeanIndex');//plantBeanIndexBody
 }
-function readShareCode() {
-  return new Promise(async resolve => {
-    $.get({url: `http://jd.turinglabs.net/api/v2/jd/bean/read/${randomCount}/`, timeout: 10000}, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (data) {
-            console.log(`随机取个${randomCount}码放到您固定的互助码后面(不影响已有固定互助)`)
-            data = JSON.parse(data);
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-    await $.wait(15000);
-    resolve()
-  })
-}
-//格式化助力码
-function shareCodesFormat() {
-  return new Promise(async resolve => {
-    // console.log(`第${$.index}个京东账号的助力码:::${jdPlantBeanShareArr[$.index - 1]}`)
-    newShareCodes = [];
-    if (jdPlantBeanShareArr[$.index - 1]) {
-      newShareCodes = jdPlantBeanShareArr[$.index - 1].split('@');
-    } else {
-      console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
-      const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
-      newShareCodes = shareCodes[tempIndex].split('@');
-    }
-    const readShareCodeRes = await readShareCode();
-    if (readShareCodeRes && readShareCodeRes.code === 200) {
-      newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
-    }
-    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
-    resolve();
-  })
-}
-function requireConfig() {
-  return new Promise(resolve => {
-    console.log('开始获取种豆得豆配置文件\n')
-    notify = $.isNode() ? require('./sendNotify') : '';
-    //Node.js用户请在jdCookie.js处填写京东ck;
-    const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-    const jdPlantBeanShareCodes = $.isNode() ? require('./jdPlantBeanShareCodes.js') : '';
-    //IOS等用户直接用NobyDa的jd cookie
-    if ($.isNode()) {
-      Object.keys(jdCookieNode).forEach((item) => {
-        if (jdCookieNode[item]) {
-          cookiesArr.push(jdCookieNode[item])
-        }
-      })
-      if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-    } else {
-      let cookiesData = $.getdata('CookiesJD') || "[]";
-      cookiesData = jsonParse(cookiesData);
-      cookiesArr = cookiesData.map(item => item.cookie);
-      cookiesArr.reverse();
-      cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-      cookiesArr.reverse();
-      cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-    }
-    console.log(`共${cookiesArr.length}个京东账号\n`)
-    if ($.isNode()) {
-      Object.keys(jdPlantBeanShareCodes).forEach((item) => {
-        if (jdPlantBeanShareCodes[item]) {
-          jdPlantBeanShareArr.push(jdPlantBeanShareCodes[item])
-        }
-      })
-    } else {
-      const boxShareCodeArr = ['jd_plantBean1', 'jd_plantBean2', 'jd_plantBean3'];
-      const boxShareCodeArr2 = ['jd2_plantBean1', 'jd2_plantBean2', 'jd2_plantBean3'];
-      const isBox1 = boxShareCodeArr.some((item) => {
-        const boxShareCode = $.getdata(item);
-        return (boxShareCode !== undefined && boxShareCode !== null && boxShareCode !== '');
-      });
-      const isBox2 = boxShareCodeArr2.some((item) => {
-        const boxShareCode = $.getdata(item);
-        return (boxShareCode !== undefined && boxShareCode !== null && boxShareCode !== '');
-      });
-      isBox = isBox1 ? isBox1 : isBox2;
-      if (isBox1) {
-        let temp = [];
-        for (const item of boxShareCodeArr) {
-          if ($.getdata(item)) {
-            temp.push($.getdata(item))
-          }
-        }
-        jdPlantBeanShareArr.push(temp.join('@'));
-      }
-      if (isBox2) {
-        let temp = [];
-        for (const item of boxShareCodeArr2) {
-          if ($.getdata(item)) {
-            temp.push($.getdata(item))
-          }
-        }
-        jdPlantBeanShareArr.push(temp.join('@'));
-      }
-    }
-    // console.log(`\n种豆得豆助力码::${JSON.stringify(jdPlantBeanShareArr)}`);
-    console.log(`您提供了${jdPlantBeanShareArr.length}个账号的种豆得豆助力码\n`);
-    resolve()
-  })
-}
 function requestGet(function_id, body = {}) {
   if (!body.version) {
     body["version"] = "9.0.0.1";
@@ -646,7 +528,7 @@ function requestGet(function_id, body = {}) {
         'Accept-Encoding': 'gzip, deflate, br',
         'Content-Type': "application/x-www-form-urlencoded"
       },
-      timeout: 10000,
+      timeout: 20000,
     };
     $.get(option, (err, resp, data) => {
       try {
@@ -678,7 +560,7 @@ function TotalBean() {
         "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
         "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
       },
-      "timeout": 10000,
+      "timeout": 20000,
     }
     $.post(options, (err, resp, data) => {
       try {
@@ -742,7 +624,7 @@ function taskUrl(function_id, body) {
       "Accept-Encoding": "gzip, deflate, br",
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    timeout: 10000,
+    timeout: 20000,
   }
 }
 function getParam(url, name) {

@@ -70,7 +70,7 @@ function* step() {
       if (plantBeanIndexResult.code === '3') {
         $.setdata('', 'CookieJD');//cookie失效，故清空cookie。
         $.msg(name, '【提示】京东cookie已失效,请重新登录获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-        $.done();
+        await ck.methodEnd($)
         return
       }
       //todo
@@ -325,13 +325,13 @@ function* step() {
     console.log('结束')
   } else {
     $.msg(name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-    $.done();
+    await ck.methodEnd($)
     return
   }
   if (!jdNotify || jdNotify === 'false') {
     $.msg(name, subTitle, message);
   }
-  $.done();
+  await ck.methodEnd($)
 }
 
 function purchaseRewardTask(roundId) {

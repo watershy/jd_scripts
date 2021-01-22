@@ -1,6 +1,6 @@
 /*
  * @Author: LXK9301 https://github.com/LXK9301
- * @Date: 2020-10-24 18:53:29 
+ * @Date: 2020-10-24 18:53:29
  * @Last Modified by: LXK9301
  * @Last Modified time: 2020-11-05 18:54:13
  */
@@ -40,10 +40,10 @@ let repo = '';//需要触发的 Github Action 所在的仓库名称 例:scripts
   }
 })()
     .catch((e) => {
-      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+
     })
-    .finally(() => {
-      $.done();
+    .finally(async () => {
+      await ck.methodEnd($)
     })
 
 function hook(key) {

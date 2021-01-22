@@ -69,7 +69,7 @@ else
         sh -x /scripts/docker/shell_script_mod.sh
         echo "自定义远程shell脚本下载并执行结束。"
     else
-        if [ ! -f $CUSTOM_SHELL_FILE ]; then
+        if [ !$CUSTOM_SHELL_FILE ]; then
             echo "自定义shell脚本为docker挂载脚本文件，但是指定挂载文件不存在，跳过执行。"
         else
             echo "docker挂载的自定shell脚本，开始执行..."
@@ -80,28 +80,14 @@ else
     fi
 fi
 
-
-
-echo "第6步删除不运行的脚本任务..."
-if [ $DO_NOT_RUN_SCRIPTS ]; then
-    echo "您配置了不运行的脚本：$DO_NOT_RUN_SCRIPTS"
-    arr=${DO_NOT_RUN_SCRIPTS//&/ }
-    for item in $arr; do
-        sed -ie '/'"${item}"'/d' ${mergedListFile}
-    done
-
-fi
-
-
-
-echo "第7步增加 |ts 任务日志输出时间戳..."
+echo "第6步增加 |ts 任务日志输出时间戳..."
 sed -i "/\( ts\| |ts\|| ts\)/!s/>>/\|ts >>/g" $mergedListFile
 
-echo "第8步执行proc_file.sh脚本任务..."
+echo "第7步执行proc_file.sh脚本任务..."
 sh -x /scripts/docker/proc_file.sh
 
-echo "第9步加载最新的定时任务文件..."
+echo "第8步加载最新的定时任务文件..."
 crontab $mergedListFile
 
-echo "第10步将仓库的docker_entrypoint.sh脚本更新至系统/usr/local/bin/docker_entrypoint.sh内..."
+echo "第9步将仓库的docker_entrypoint.sh脚本更新至系统/usr/local/bin/docker_entrypoint.sh内..."
 cat /scripts/docker/docker_entrypoint.sh >/usr/local/bin/docker_entrypoint.sh

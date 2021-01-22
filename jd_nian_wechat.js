@@ -73,8 +73,8 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
     .catch((e) => {
       $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
-    .finally(() => {
-      $.done();
+    .finally(async () => {
+      await ck.methodEnd($)
     })
 async function jdNian() {
   try {

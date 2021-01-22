@@ -1,8 +1,24 @@
 /*
 crazy joy
 挂机领金币/宝箱专用
-⚠️建议云端使用。手机端不建议使用(会一直跑下去，永不停止)
-10 7 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy_coin.js
+
+
+已支持IOS双京东账号,Node.js支持N个京东账号
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+============Quantumultx===============
+[task_local]
+#crazyJoy挂机
+10 7 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy_coin.js, tag=crazyJoy挂机, enabled=true
+
+================Loon==============
+[Script]
+cron "10 7 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy_coin.js,tag=crazyJoy挂机
+
+===============Surge=================
+crazyJoy挂机 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy_coin.js
+
+============小火箭=========
+crazyJoy挂机 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy_coin.js, cronexpr="10 * * * *", timeout=200, enable=true
 
  */
 
@@ -12,22 +28,7 @@ const JD_API_HOST = 'https://api.m.jd.com/';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
-  };
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
+const ck = require('./jdCookie.js')
 !function (n) {
   "use strict";
 
@@ -145,6 +146,7 @@ if ($.isNode()) {
   $.md5 = A
 }(this);
 !(async () => {
+  cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -171,9 +173,9 @@ if ($.isNode()) {
         $.isLogin = true;
         $.nickName = '';
         await TotalBean();
-        console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
+        console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
         if (!$.isLogin) {
-         $.log(`\n京东账号${$.index} ${$.nickName || $.UserName}\ncookie已过期,请重新登录获取\n`)
+         $.log(`\n京东账号${$.index} ${$.UserName}\ncookie已过期,请重新登录获取\n`)
           continue
         }
         await jdCrazyJoy()
@@ -183,10 +185,10 @@ if ($.isNode()) {
   }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+
   })
-  .finally(() => {
-    $.done();
+  .finally(async () => {
+    await ck.methodEnd($)
   })
 
 async function jdCrazyJoy() {
@@ -315,7 +317,8 @@ function getJoyShop() {
           data = JSON.parse(data);
           if (data.success && data.data && data.data.shop) {
             const shop = data.data.shop.filter(vo => vo.status === 1) || []
-            $.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1;//可购买的最大等级
+            // $.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1;//可购买的最大等级
+            $.buyJoyLevel = 9;//购买等级
             if ($.isNode() && process.env.BUY_JOY_LEVEL) {
               $.log(`当前可购买的最高JOY等级为${$.buyJoyLevel}级\n`)
               $.buyJoyLevel = (process.env.BUY_JOY_LEVEL * 1) > $.buyJoyLevel ? $.buyJoyLevel : process.env.BUY_JOY_LEVEL * 1;

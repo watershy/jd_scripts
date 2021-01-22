@@ -6,43 +6,31 @@
 ==========Quantumult X==========
 [task_local]
 #注销京东会员卡
-55 23 * * 6 https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_unbind.js, tag=注销京东会员卡, img-url= https://raw.githubusercontent.com/58xinian/icon/master/jd_unbind.png, enabled=true
+55 23 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_unbind.js, tag=注销京东会员卡, img-url= https://raw.githubusercontent.com/58xinian/icon/master/jd_unbind.png, enabled=true
 =======Loon========
 [Script]
-cron "55 23 * * 6" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_unbind.js,tag=注销京东会员卡
+cron "55 23 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_unbind.js,tag=注销京东会员卡
 ========Surge==========
-注销京东会员卡 = type=cron,cronexp="55 23 * * 6",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_unbind.js
+注销京东会员卡 = type=cron,cronexp="55 23 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_unbind.js
 =======小火箭=====
-注销京东会员卡 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_unbind.js, cronexpr="10 23 * * 6", timeout=3600, enable=true
+注销京东会员卡 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_unbind.js, cronexpr="10 23 * * *", timeout=3600, enable=true
  */
 const $ = new Env('注销京东会员卡');
-//Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+
 const notify = $.isNode() ? require('./sendNotify') : '';
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
+const ck = require('./jdCookie')
 const jdNotify = $.getdata('jdUnbindCardNotify');//是否关闭通知，false打开通知推送，true关闭通知推送
 let cardPageSize = 200;// 运行一次取消多少个会员卡。数字0表示不注销任何会员卡
 let stopCards = `京东PLUS会员`;//遇到此会员卡跳过注销,多个使用&分开
 const JD_API_HOST = 'https://api.m.jd.com/';
 !(async () => {
+  cookiesArr = await ck.getCookie();
+
   if (!cookiesArr[0]) {
-    $.msg('【京东账号一】注销京东会员卡失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+    $.msg('【京东账号一】注销京东会员卡失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
   }
   await requireConfig()
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -55,12 +43,14 @@ const JD_API_HOST = 'https://api.m.jd.com/';
       $.unsubscribeCount = 0
       $.cardList = []
       await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
+      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await notify.sendNotify(`京东账号${$.index},${$.name}cookie失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`,'',true);
+        } else {
+          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
         }
         continue
       }
@@ -69,11 +59,12 @@ const JD_API_HOST = 'https://api.m.jd.com/';
     }
   }
 })()
-    .catch((e) => {
-      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    .catch(async (e) => {
+
+      await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
     })
-    .finally(() => {
-      $.done();
+    .finally(async () => {
+      await ck.methodEnd($)
     })
 async function jdUnbind() {
   await getCards()

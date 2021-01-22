@@ -34,7 +34,7 @@ let task_status = null, able_energeProp_list = [], spaceEvents = [], energePropU
 function* entrance() {
   if (!cookie) {
     $.msg(name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-    $.done();
+    await ck.methodEnd($)
     return
   }
   console.log(`start...`);
@@ -92,7 +92,7 @@ function* entrance() {
   if (!jdNotify || jdNotify === 'false') {
     $.msg(name, subTitle, message);
   }
-  $.done();
+  await ck.methodEnd($)
 }
 //检查燃料
 function energyPropList() {
@@ -246,7 +246,7 @@ function flyTask_state() {
       if (res.info.isLogin === 0) {
         $.setdata('', 'CookieJD');//cookie失效，故清空cookie。
         $.msg(name, '【提示】京东cookie已失效,请重新登录获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-        $.done();
+        await ck.methodEnd($)
         return
       }
       let data = res.data;

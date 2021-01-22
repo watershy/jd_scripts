@@ -20,30 +20,16 @@ cron "10 8 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scrip
  */
 const $ = new Env('京东健康');
 const notify = $.isNode() ? require('./sendNotify') : '';
-//Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
 const JD_API_HOST = 'https://api.m.jd.com/api';
-$.newShareCodes = ['21d9b4b51a69839577027beb0aad5105', '8edbdfa148e78f028496cff17e7df35b'];
+$.newShareCodes = ['65eca70a747795ce04b1750337b795cb'];
 !(async () => {
+  cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -55,32 +41,34 @@ $.newShareCodes = ['21d9b4b51a69839577027beb0aad5105', '8edbdfa148e78f028496cff1
       $.nickName = '';
       message = '';
       await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await notify.sendNotify(`京东账号${$.index},${$.name}cookie失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`,'',true);
+        } else {
+          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
         }
         continue
       }
       await jdJdh()
     }
   }
-  // 帮助作者，把作者助力码放到用户助力码之后
-  await getAuthorShareCode('https://gitee.com/shylocks/updateTeam/raw/main/jd_jdh.json');
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
-      await helpFriends()
+      if (i !== 0) {
+        await helpFriends()
+      }
     }
   }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+
   })
-  .finally(() => {
-    $.done();
+  .finally(async () => {
+    await ck.methodEnd($)
   })
 async function helpFriends(){
   for(let i = 0; i < $.newShareCodes.length; ++i){
@@ -106,7 +94,7 @@ async function jdJdh() {
   await queryTask(17,"246147") //
   await queryTask(24, t) // 辟谣
   await doTask(22,42,`${new Date().getUTCFullYear()}-${new Date().getUTCMonth()+1}-${new Date().getUTCDate()}`) // 去打卡
-  await queryTask(20,"362451650500001") // 测一测
+  await queryTask(20,"359946910500001") // 测一测
   await doTask(23,40,`${rand(10000, 20000)}`) // 走路，这个可以直接提示领奖结果
   // 以下两个需要开启家庭医生才能完成
   await doTask(null,50,`${rand(10000, 20000)}`) // 家庭医生走路
@@ -146,7 +134,7 @@ function queryShareInfo() {
           if (safeGet(data)) {
             data = JSON.parse(data);
             console.log(`您的分享助力码为：${data.data.shareParam}`)
-            $.newShareCodes.push(data.data.shareParam)
+            // $.newShareCodes.push(data.data.shareParam)
           }
         }
       } catch (e) {
