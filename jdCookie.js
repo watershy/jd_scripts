@@ -29,7 +29,7 @@ let getShareCode = function (name, userName) {
 //获取cookie数据
 let getCookie = function () {
     return new Promise(async resolve => {
-        let res = await db.query('select * from jd_cookie where possessor = \'yyg\'')
+        let res = await db.query('select * from jd_cookie')
         let cookieArr = []
         for (let i = 0; i < res.length; i++) {
             cookieArr.push('pt_pin=' + res[i]['pt_pin'] + ';pt_key=' + res[i]['pt_key'])
