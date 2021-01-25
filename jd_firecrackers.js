@@ -77,9 +77,25 @@ async function jdFamily() {
 }
 
 function showMsg() {
-  return new Promise(resolve => {
-    message += `本次运行获得鞭炮${$.earn}，共计${$.total}🧨`
-    $.log($.name, '', `京东账号${$.index}${$.nickName}\n${message}`);
+  return new Promise(async resolve => {
+    subTitle = `【京东账号${$.index}】${$.nickName}`;
+    message += `【鞭炮🧨】本次获得 ${$.earn}，共计${$.total}\n`
+    if ($.total && notifyBean) {
+      for (let item of $.prize) {
+        if (notifyBean <= item.beansPerNum) { // 符合预定的京豆档位
+          if ($.total >= item.prizerank) { // 当前鞭炮满足兑换
+            message += `【京豆】请手动兑换 ${item.beansPerNum} 个京豆，需消耗花费🧨 ${item.prizerank}`
+            $.msg($.name, subTitle, message);
+            if ($.isNode()) {
+              await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `${subTitle}\n${message}`);
+              resolve();
+              return;
+            }
+          }
+        }
+      }
+    }
+    $.log(`${$.name}\n\n账号${$.index} - ${$.nickName}\n${subTitle}\n${message}`);
     resolve()
   })
 }
@@ -115,17 +131,22 @@ function getUserInfo(info = false) {
           $.userInfo = JSON.parse(data.match(/query\((.*)\n/)[1])
           if (info) {
             $.earn = $.userInfo.tatalprofits - $.total
-          } else for (let task of $.info.config.tasks) {
-            let vo = $.userInfo.tasklist.filter(vo => vo.taskid === task['_id'])
-            if (vo.length > 0) {
-              vo = vo[0]
-              if (vo['isdo'] === 1) {
-                if (vo['times'] === 0) {
-                  console.log(`去做任务${task['_id']}`)
-                  await doTask(task['_id'])
-                  await $.wait(3000)
-                } else {
-                  console.log(`${Math.trunc(vo['times'] / 60)}分钟可后做任务${task['_id']}`)
+          } else {
+            for (let task of $.info.config.tasks) {
+              let vo = $.userInfo.tasklist.filter(vo => vo.taskid === task['_id'])
+              if (vo.length > 0) {
+                vo = vo[0]
+                if (vo['isdo'] === 1) {
+                  if (vo['times'] === 0) {
+                    console.log(`去做任务${task['_id']}`)
+                    let res = await doTask(task['_id'])
+                    if (!res) { // 黑号，不再继续执行任务
+                      break;
+                    }
+                    await $.wait(3000)
+                  } else {
+                    console.log(`${Math.trunc(vo['times'] / 60)}分钟可后做任务${task['_id']}`)
+                  }
                 }
               }
             }
@@ -150,9 +171,14 @@ function doTask(taskId) {
           console.log(`${err},${jsonParse(resp.body)['message']}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-          data = JSON.parse(data.match(/query\((.*)\n/)[1])
+          let res = data.match(/query\((.*)\n/)[1];
+          data = JSON.parse(res);
           if (data.ret === 0) {
             console.log(`任务完成成功`)
+          } else if (data.ret === 1001) {
+            console.log(`任务完成失败，原因：这个账号黑号了！！！`)
+            resolve(false);
+            return;
           } else {
             console.log(`任务完成失败，原因未知`)
           }
