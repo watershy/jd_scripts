@@ -10,7 +10,7 @@ let getShareCode = function (name, userName) {
             let sql = 'select help_info from jd_share_code_info where active_name = ? and pt_pin = ?'
             const valueList = [name, userName]
             const helpInfo = await db.query(sql, valueList)
-            if (helpInfo.length !== 0) {
+            if (helpInfo[0]['help_info']) {
                 const values = helpInfo[0]['help_info'].split(',')
                 sql = 'select share_code from jd_share_code_info where active_name = ? and cookie_id in (?)'
                 const shareCodes = await db.query(sql, [name, values])
@@ -31,6 +31,7 @@ let getCookie = function (sql) {
     return new Promise(async resolve => {
         if (!sql) {
             sql = 'select * from jd_cookie where possessor = \'hyk\''
+            // sql = 'select * from jd_cookie'
         }
         let res = await db.query(sql)
         let cookieArr = []

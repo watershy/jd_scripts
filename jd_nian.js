@@ -45,8 +45,12 @@ const inviteCodes = [
   `cgxZdTXtZMiyoGSVSXz3pniyHYtEsXle_hm9bgFcDu8nh7SaiAkj5gg`,
 ];
 const pkInviteCodes = [
-  'IgNWdiLGaPadvlqJQnnKp27-YpAvKvSYNTSkTGvZylf_0wcvqD9EMkohEd8@IgNWdiLGaPaZskfACQyhgLSpZWps-WtQEW3McifV@IgNWdiLGaPaAvmHPAQf769XqjJjMyRirPzN9-AS-WHY9Y_G7t9Cwe5gdiI2qEvHZ',
-  'IgNWdiLGaPadvlqJQnnKp27-YpAvKvSYNTSkTGvZylf_0wcvqD9EMkohEd8@IgNWdiLGaPaZskfACQyhgLSpZWps-WtQEW3McifV@IgNWdiLGaPaAvmHPAQf769XqjJjMyRirPzN9-AS-WHY9Y_G7t9Cwe5gdiI2qEvHZ'
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
 ]
 const ck = require('./jdCookie')
 !(async () => {
@@ -767,8 +771,7 @@ function pkInfo() {
               console.log(`\n您的好友PK助力码为${data.data.result.groupInfo.groupAssistInviteId}\n`)
               let info = data.data.result.groupPkInfo
               console.log(`当前关卡：${info.dayAward}元红包，完成进度 ${info.dayTotalValue}/${info.dayTargetSell}`)
-            }
-            else{
+            } else{
               $.group = false
               console.log(`获取组队信息失败，请检查`)
             }
@@ -1016,10 +1019,10 @@ function shareCodesFormatPk() {
       const tempIndex = $.index > pkInviteCodes.length ? (pkInviteCodes.length - 1) : ($.index - 1);
       $.newShareCodesPk = pkInviteCodes[tempIndex].split('@');
     }
-    const readShareCodeRes = await readShareCodePk();
-    if (readShareCodeRes && readShareCodeRes.code === 200) {
-      $.newShareCodesPk = [...new Set([...$.newShareCodesPk, ...(readShareCodeRes.data || [])])];
-    }
+    // const readShareCodeRes = await readShareCodePk();
+    // if (readShareCodeRes && readShareCodeRes.code === 200) {
+    //   $.newShareCodesPk = [...new Set([...$.newShareCodesPk, ...(readShareCodeRes.data || [])])];
+    // }
     console.log(`第${$.index}个京东账号将要助力的PK好友${JSON.stringify($.newShareCodesPk)}`)
     resolve();
   })

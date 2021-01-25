@@ -75,7 +75,7 @@ const weAppUrl = 'https://draw.jdfcloud.com//pet';
       await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
     })
     .finally(async () => {
-      await ck.methodEnd($)
+      $.done()
     })
 async function jdJoy() {
   await getPetTaskConfig();

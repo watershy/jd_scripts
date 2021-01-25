@@ -37,7 +37,8 @@ let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = ['wUjR_aJ43-uLjZU5cS9KGg=='];
 const ck = require('./jdCookie.js')
 !(async () => {
-  await requireConfig();
+  cookiesArr = await ck.getCookie('select * from jd_cookie');
+  // await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -55,6 +56,8 @@ const ck = require('./jdCookie.js')
       $.pickFriendEle = 0;
       $.friendList = [];
       $.canHelpFlag = true;//能否助力朋友
+      $.newShareCodes = await ck.getShareCode($.name,$.UserName);
+      console.log(`助力码：${$.newShareCodes}`)
       await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
       if (!$.isLogin) {
@@ -345,7 +348,7 @@ function hireAward(date, type = 0) {
 async function helpFriends() {
   let Hours = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).getHours();
   if ($.canHelpFlag && Hours >= 6) {
-    await shareCodesFormat();
+    // await shareCodesFormat();
     for (let code of $.newShareCodes) {
       if (code) {
         if ($.encryptPin === code) {
@@ -1412,7 +1415,6 @@ function shareCodesFormat() {
 }
 function requireConfig() {
   return new Promise(async resolve => {
-    cookiesArr = await ck.getCookie();
     await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateFactoryTuanId.json');
     if (!$.tuanIdS) await updateTuanIds();
     if (!$.tuanIdS) await updateTuanIdsCDN('https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_updateFactoryTuanId.json');
