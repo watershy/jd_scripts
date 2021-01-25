@@ -169,6 +169,10 @@ const randomCount = $.isNode() ? 10 : 5;
   await requireConfig();
   $.nextCode = ""
   for (let i = 0; i < cookiesArr.length; i++) {
+    if (i%2===0) {
+      $.nextCode = ["EdLPh8A6X5G1iWXu-uPYfA==", "nCQQXQHKGjPCb7jkd8q2U-aCTjZMxL3s"];
+      $.nextCode = $.nextCode[randomNumber(0, $.nextCode.length)];
+    }
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])

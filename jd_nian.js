@@ -9,17 +9,17 @@
 ============Quantumultx===============
 [task_local]
 #京东炸年兽🧨
-10 * * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js, tag=京东炸年兽🧨, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_nian.png, enabled=true
+0 9,12,20 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js, tag=京东炸年兽🧨, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_nian.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "10 * * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js,tag=京东炸年兽🧨
+cron "0 9,12,20 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js,tag=京东炸年兽🧨
 
 ===============Surge=================
-京东炸年兽🧨 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js
+京东炸年兽🧨 = type=cron,cronexp="0 9,12,20 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js
 
 ============小火箭=========
-京东炸年兽🧨 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js, cronexpr="10 * * * *", timeout=3600, enable=true
+京东炸年兽🧨 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js, cronexpr="0 9,12,20 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东炸年兽🧨');
 
@@ -75,6 +75,7 @@ const ck = require('./jdCookie')
         continue
       }
       await shareCodesFormat();
+      await shareCodesFormatPk()
       await jdNian()
     }
   }
@@ -95,7 +96,7 @@ async function jdNian() {
       $.hasGroup = false
       await pkTaskDetail()
       if ($.hasGroup) await pkInfo()
-      // await helpFriendsPK()
+      await helpFriendsPK()
     }
     await $.wait(2000)
     await killCouponList()
