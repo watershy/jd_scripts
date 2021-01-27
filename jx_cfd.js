@@ -79,7 +79,6 @@ const ck = require('./jdCookie')
   }
 	await $.wait(500);
   await fs.unlinkSync('./cfdShareCode.txt')
-  await showMsg();
 })()
   .catch((e) => $.logErr(e))
   .finally(async () => {

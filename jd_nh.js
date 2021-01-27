@@ -84,7 +84,6 @@ async function jdNh() {
     console.log(`大于5000金币，去抽奖`)
     await draw()
   }
-  await showMsg();
 }
 function getIsvToken() {
   let config = {

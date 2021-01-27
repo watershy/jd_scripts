@@ -88,7 +88,6 @@ async function jdHealth() {
     console.log(`当前用户金币: ${$.userInfo.userScore}，抽奖需要${$.userInfo.scorePerLottery}，金币不足无法抽奖`)
     message += `当前用户金币: ${$.userInfo.userScore}，抽奖需要${$.userInfo.scorePerLottery}，金币不足无法抽奖\n`
   }
-  await showMsg();
 }
 
 function showMsg() {

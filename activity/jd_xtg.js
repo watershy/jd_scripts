@@ -126,7 +126,6 @@ const JD_API_HOST = 'https://urvsaggpt.m.jd.com/guardianstar';
       }
       const afterTotal = await TotalBean();
       $.jdNum = afterTotal['base'].jdNum;
-      await showMsg();
     }
   }
 })()

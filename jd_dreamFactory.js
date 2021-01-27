@@ -76,7 +76,6 @@ const ck = require('./jdCookie.js')
     $.notice += `----------------------------\n`
     $.notice = $.notice + '\n' + message
   }
-  await showMsg();
 })()
     .catch(async (e) => {
 
@@ -102,7 +101,6 @@ async function jdDreamFactory() {
   // await tuanActivity();
   // await QueryAllTuan();
   await exchangeProNotify();
-  // await showMsg();
 }
 
 

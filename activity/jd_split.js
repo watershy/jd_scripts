@@ -72,7 +72,6 @@ async function jdSplit() {
   await helpFriends();
   await jdsplit_getTaskDetail();
   await doTask();
-  await showMsg();
 }
 function showMsg() {
   return new Promise(resolve => {

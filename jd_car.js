@@ -57,7 +57,6 @@ const ck = require('./jdCookie.js')
         continue
       }
       await jdCar();
-      await showMsg();
     }
   }
 })()

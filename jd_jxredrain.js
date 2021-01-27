@@ -48,7 +48,6 @@ const ck = require('./jdCookie.js')
     notice += `----------------------------\n`
     notice = notice + '\n' + message
   }
-  await showMsg();
 })()
     .catch(async (e) => {
 

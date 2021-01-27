@@ -120,7 +120,6 @@ async function jdWish() {
     }
   }
   await getTaskList();
-  await showMsg();
 }
 
 function showMsg() {

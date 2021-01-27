@@ -55,7 +55,6 @@ const JD_API_HOST = 'https://api.m.jd.com/';
         continue
       }
       await jdUnbind();
-      await showMsg();
     }
   }
 })()

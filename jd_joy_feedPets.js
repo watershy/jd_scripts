@@ -69,7 +69,6 @@ const ck = require('./jdCookie.js')
       }
       await feedPets(FEED_NUM);//喂食
       await ThreeMeals();//三餐
-      await showMsg();
     }
   }
 })()

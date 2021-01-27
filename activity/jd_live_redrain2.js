@@ -79,7 +79,6 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
         console.log(`不在红包雨时间之内`)
         message += `不在红包雨时间之内`
       }
-      await showMsg();
     }
   }
 })()

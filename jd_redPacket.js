@@ -64,7 +64,6 @@ const ck = require('./jdCookie')
       }
       $.discount = 0;
       await redPacket();
-      await showMsg();
     }
   }
 })()

@@ -79,7 +79,6 @@ async function jdBeanHome() {
   await getUserInfo()
   await $.wait(1000)
   await getTaskList()
-  await showMsg();
 }
 
 function getRandomInt(min, max) {

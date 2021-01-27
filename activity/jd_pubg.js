@@ -171,7 +171,6 @@ async function jdHealth() {
   await helpFriends();
   await taskList();
   message += `已做完任务，共计获得京豆 ${$.bean}\n`
-  await showMsg();
 }
 
 function showMsg() {

@@ -79,7 +79,6 @@ async function jdDigitalFloor() {
   await helpFriends()
   await getUserInfo()
   await getTaskList()
-  await showMsg()
 }
 async function helpFriends() {
   for (let code of $.newShareCodes) {

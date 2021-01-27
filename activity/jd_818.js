@@ -120,7 +120,6 @@ async function main() {
     getListRank(),
     getListIntegral(),
   ]);
-  await showMsg()
 }
 async function JD818() {
   await getHelp();
@@ -137,7 +136,6 @@ async function JD818() {
   await getListJbean();
   await getListRank();
   await getListIntegral();
-  await showMsg()
 }
 function listMeeting() {
   const options = {

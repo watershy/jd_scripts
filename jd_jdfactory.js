@@ -72,7 +72,6 @@ const inviteCodes = [];//无用
       $.notice = $.notice + '\n' + message
     }
   }
-  await showMsg();
 })()
     .catch(async (e) => {
 

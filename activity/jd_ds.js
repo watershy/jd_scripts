@@ -63,7 +63,6 @@ const JD_API_HOST = 'https://api.m.jd.com/';
         continue
       }
       await userSignIn();
-      await showMsg();
     }
   }
 })()

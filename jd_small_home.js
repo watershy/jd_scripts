@@ -101,7 +101,6 @@ async function smallHome() {
   await doAllTask();
   await queryByUserId();
   await queryFurnituresCenterList();
-  await showMsg();
 }
 function showMsg() {
   return new Promise(resolve => {

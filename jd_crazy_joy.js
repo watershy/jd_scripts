@@ -272,7 +272,6 @@ async function jdCrazyJoy() {
     console.log(`检测您打开了自动兑换开关，去兑换京豆`)
     await doApplyJdBean(applyJdBean)
   }
-  await showMsg();
 }
 async function doTasks() {
   await getTaskInfo()

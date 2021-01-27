@@ -177,7 +177,6 @@ async function main() {
         const new_run_pins = run_pins[runIndex].split(',');
         await run(new_run_pins);
       }
-      await showMsg();
     }
   }
   $.done()

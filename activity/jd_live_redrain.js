@@ -107,7 +107,6 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
         continue
       }
       await receiveRedRain();
-      await showMsg();
     }
   }
 })()

@@ -76,7 +76,6 @@ const ck = require('./jdCookie.js')
       message = '';
       subTitle = '';
       await jdJoySteal();
-      await showMsg();
     }
   }
 })()

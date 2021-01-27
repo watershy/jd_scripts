@@ -24,7 +24,6 @@ const API_HOST = 'https://h5.bianlifeng.com/meepo/taskCenter/';
             $.nickName = '';
             message = '';
             await blfLogin();
-            await showMsg();
         }
     }
 })()

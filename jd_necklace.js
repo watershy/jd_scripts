@@ -82,7 +82,6 @@ async function jd_necklace() {
   await sign();
   await necklace_homePage();
   // await necklace_exchangeGift(10);//自动兑换多少钱的无门槛红包，1000代表1元
-  await showMsg();
 }
 function showMsg() {
   return new Promise(async resolve => {

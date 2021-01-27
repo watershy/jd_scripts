@@ -63,7 +63,6 @@ const ck = require('./jdCookie')
       subTitle = '';
       await jDSpeedUp();
       await getMemBerList();
-      await showMsg();
     }
   }
 })()
