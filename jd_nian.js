@@ -45,16 +45,28 @@ const inviteCodes = [
   `cgxZdTXtZMiyoGSVSXz3pniyHYtEsXle_hm9bgFcDu8nh7SaiAkj5gg`,
 ];
 const pkInviteCodes = [
-  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
-  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
-  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
-  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
-  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
-  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbw',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
+
 ]
 const ck = require('./jdCookie')
 !(async () => {
-  cookiesArr = await ck.getCookie()
+  cookiesArr = await ck.getCookie('select * from jd_cookie')
   await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
