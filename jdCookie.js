@@ -29,24 +29,31 @@ let getShareCode = function (name, userName) {
 //获取cookie数据
 let getCookie = function (sql) {
     return new Promise(async resolve => {
-        if (!sql) {
-            sql = 'select * from jd_cookie where possessor = \'hyk\''
-            // sql = 'select * from jd_cookie'
-        }
-        let res = await db.query(sql)
         let cookieArr = []
-        for (let i = 0; i < res.length; i++) {
-            cookieArr.push('pt_pin=' + res[i]['pt_pin'] + ';pt_key=' + res[i]['pt_key'])
+        try {
+            if (!sql) {
+                sql = 'select * from jd_cookie where possessor = \'hyk\''
+                // sql = 'select * from jd_cookie'
+            }
+            let res = await db.query(sql)
+            for (let i = 0; i < res.length; i++) {
+                cookieArr.push('pt_pin=' + res[i]['pt_pin'] + ';pt_key=' + res[i]['pt_key'])
+            }
+        } finally {
+            resolve(cookieArr)
         }
-        resolve(cookieArr)
     })
 }
 
 //查询sql
 let query = function (sql, value) {
     return new Promise(async resolve => {
-        let res = await db.query(sql, value)
-        resolve(res)
+        let res;
+        try {
+            res = await db.query(sql, value)
+        }finally {
+            resolve(res)
+        }
     })
 }
 
@@ -61,10 +68,28 @@ let methodEnd = function ($) {
     })
 }
 
+//插入助力码到数据库
+let addShareCode = function ($) {
+    return new Promise(async resolve => {
+        try {
+            let sql = 'select cookie_id from jd_share_code_info where pt_pin = ? and active_name = ?'
+            let res = await db.query(sql,[$.UserName,$.name])
+            if (res.length === 0) {
+                sql = 'insert into jd_share_code_info(cookie_id,pt_pin,active_name,share_code) select id,pt_pin,?,? from jd_cookie where pt_pin = ?;'
+                await db.query(sql,[$.name,$.shareCode,$.UserName])
+            }
+        }catch (e) {
+            console.log('错误')
+        } finally {
+            resolve()
+        }
+    })
+}
 //导出方法
 module.exports = {
     getShareCode,
     getCookie,
     methodEnd,
-    query
+    query,
+    addShareCode
 }
