@@ -29,7 +29,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
-
+$.notice = ''
 let jdNotify = true;//是否开启静默运行。默认true开启
 let message = '', subTitle = '';
 const JD_API_HOST = 'https://api.m.jd.com/'
@@ -64,6 +64,8 @@ const ck = require('./jdCookie')
       subTitle = '';
       await jDSpeedUp();
       await getMemBerList();
+      $.notice += `\n----------------------------\n`
+      $.notice = `${$.notice}\n${$.nickName}\n${subTitle}\n${message}`
     }
   }
 })()

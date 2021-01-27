@@ -66,7 +66,7 @@ let userInfo = null, taskInfo = [], message = '', subTitle = '', fruitTotal = 0;
       await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
     })
     .finally(async () => {
-      await ck.methodEnd($)
+      $.done()
     })
 async function jd_moneyTree() {
   const userRes = await user_info();

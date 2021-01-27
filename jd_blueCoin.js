@@ -103,11 +103,11 @@ async function PrizeIndex() {
       $.blueCost = prizeList[1].blueCost;
     } else {
       console.log(`查询换1000京豆ID失败`)
-      $.beanerr = `东哥今天不给换`;
+      $.beanerr += `东哥今天不给换`;
       return ;
     }
     if (prizeList[1].inStock === 506) {
-      $.beanerr = `失败，1000京豆领光了`;
+      $.beanerr += `失败，1000京豆领光了`;
       console.log('开始兑换20京豆')
       //设置为20京豆重新执行
       coinToBeans = 20
@@ -115,7 +115,7 @@ async function PrizeIndex() {
       return ;
     }
     if (prizeList[1].targetNum === prizeList[1].finishNum) {
-      $.beanerr = `${prizeList[1].subTitle}`;
+      $.beanerr += `${prizeList[1].subTitle}`;
       return ;
     }
     //兑换1000京豆
@@ -123,7 +123,7 @@ async function PrizeIndex() {
       await smtg_obtainPrize(prizeList[1].prizeId);
     } else {
       console.log(`兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`);
-      $.beanerr = `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
+      $.beanerr += `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
     }
   } else if (`${coinToBeans}` === '20') {
     if (prizeList[0].beanType === 'Bean') {
@@ -132,16 +132,16 @@ async function PrizeIndex() {
       $.blueCost = prizeList[0].blueCost;
     } else {
       console.log(`查询换万能的京豆ID失败`)
-      $.beanerr = `东哥今天不给换`;
+      $.beanerr += `东哥今天不给换`;
       return ;
     }
     if (prizeList[0].inStock === 506) {
       console.log(`失败，万能的京豆领光了，请明天再来`);
-      $.beanerr = `失败，万能的京豆领光了，请明天再来`;
+      $.beanerr += `失败，万能的京豆领光了，请明天再来`;
       return ;
     }
     if (prizeList[0].targetNum === prizeList[0].finishNum) {
-      $.beanerr = `${prizeList[0].subTitle}`;
+      $.beanerr += `${prizeList[0].subTitle}`;
       return ;
     }
     //兑换万能的京豆(1-20京豆)
@@ -149,7 +149,7 @@ async function PrizeIndex() {
       await smtg_obtainPrize(prizeList[0].prizeId,1000);
     } else {
       console.log(`兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`);
-      $.beanerr = `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
+      $.beanerr += `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
     }
   } else {
     //自定义输入兑换
@@ -165,22 +165,22 @@ async function PrizeIndex() {
     if (prizeId) {
       if (prizeList[i].inStock === 506 || prizeList[i].inStock === -1) {
         console.log(`失败，您输入设置的${coinToBeans}领光了，请明天再来`);
-        $.beanerr = `失败，您输入设置的${coinToBeans}领光了，请明天再来`;
+        $.beanerr += `失败，您输入设置的${coinToBeans}领光了，请明天再来`;
         return ;
       }
       if ((prizeList[i].targetNum) && prizeList[i].targetNum === prizeList[i].finishNum) {
-        $.beanerr = `${prizeList[0].subTitle}`;
+        $.beanerr += `${prizeList[0].subTitle}`;
         return ;
       }
       if ($.totalBlue > $.blueCost) {
         await smtg_obtainPrize(prizeId);
       } else {
         console.log(`兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`);
-        $.beanerr = `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
+        $.beanerr += `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
       }
     } else {
       console.log(`奖品兑换列表[${coinToBeans}]已下架，请检查APP是否存在此商品，如存在请检查您的输入是否正确`);
-      $.beanerr = `奖品兑换列表[${coinToBeans}]已下架`;
+      $.beanerr += `奖品兑换列表[${coinToBeans}]已下架`;
     }
   }
 }
@@ -206,7 +206,7 @@ function smtg_materialPrizeIndex(timeout = 0) {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.data.bizCode !== 0) {
-              $.beanerr = `${data.data.bizMsg}`;
+              $.beanerr += `${data.data.bizMsg}`;
               return
             }
             $.materialPrizeIndex = data.data.result.prizes || [];
@@ -242,7 +242,7 @@ function smtg_queryPrize(timeout = 0){
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.data.bizCode !== 0) {
-              $.beanerr = `${data.data.bizMsg}`;
+              $.beanerr += `${data.data.bizMsg}`;
               return
             }
             if (data.data.bizCode === 0) {
@@ -284,7 +284,7 @@ function smtg_obtainPrize(prizeId, timeout = 0) {
             data = JSON.parse(data);
             $.data = data;
             if ($.data.data.bizCode !== 0) {
-              $.beanerr = `${$.data.data.bizMsg}`;
+              $.beanerr += `${$.data.data.bizMsg}`;
               //console.log(`【京东账号${$.index}】${$.nickName} 换取京豆失败：${$.data.data.bizMsg}`)
               return
             }

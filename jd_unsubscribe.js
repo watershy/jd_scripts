@@ -66,7 +66,7 @@ const JD_API_HOST = 'https://wq.jd.com/fav';
       await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
     })
     .finally(async () => {
-      await ck.methodEnd($)
+      $.done()
     })
 async function jdUnsubscribe(doubleKey) {
   await Promise.all([

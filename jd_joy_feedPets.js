@@ -74,11 +74,10 @@ const ck = require('./jdCookie.js')
   }
 })()
     .catch(async (e) => {
-
       await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
     })
     .finally(async () => {
-      await ck.methodEnd($)
+      $.done()
     })
 function showMsg() {
   $.log(`\n${message}\n`);

@@ -62,7 +62,6 @@ const pkInviteCodes = [
   'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
   'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
   'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxOCbQ',
-
 ]
 const ck = require('./jdCookie')
 !(async () => {
