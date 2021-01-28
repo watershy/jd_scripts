@@ -13,7 +13,7 @@ Github: https://github.com/dompling
 使用方式：在代理软件配置好下方配置后，复制 https://home.m.jd.com/myJd/newhome.action 到浏览器打开 ，在个人中心自动获取 cookie，
 若弹出成功则正常使用。否则继续再此页面继续刷新一下试试
 ===================
-
+new Env('获取多账号京东Cookie');//此处忽略即可，为自动生成iOS端软件配置文件所需
 ===================
 [MITM]
 hostname = wq.jd.com
@@ -29,8 +29,15 @@ http-request https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion tag=获�
 ===================Quantumult X=====================
 [rewrite_local]
 # 获取多账号京东Cookie
-https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion url script-request-header https://raw.githubusercontent.com/LXK9301/jd_scripts/master/JD_extra_cookie.js
+https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion url script-request-header https://gitee.com/lxk0301/jd_scripts/raw/master/JD_extra_cookie.js
 
+===================Loon===================
+[Script]
+http-request https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/JD_extra_cookie.js, tag=获取多账号京东Cookie
+
+===================Surge===================
+[Script]
+获取多账号京东Cookie = type=http-request,pattern=^https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion,requires-body=1,max-size=0,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/JD_extra_cookie.js,script-update-interval=0
  */
 
 const APIKey = "CookiesJD";
