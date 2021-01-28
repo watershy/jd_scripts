@@ -44,7 +44,6 @@ const inviteCodes = ['wUjR_aJ43-uLjZU5cS9KGg=='];
 const ck = require('./jdCookie.js')
 !(async () => {
   cookiesArr = await ck.getCookie('select * from jd_cookie');
-  // await requireConfig();
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
@@ -1417,32 +1416,6 @@ function shareCodesFormat() {
     // }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
-  })
-}
-function requireConfig() {
-  return new Promise(async resolve => {
-    await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateFactoryTuanId.json');
-    if (!$.tuanIdS) await updateTuanIds();
-    if (!$.tuanIdS) await updateTuanIdsCDN('https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_updateFactoryTuanId.json');
-    if ($.tuanIdS && $.tuanIdS.tuanActiveId) {
-      tuanActiveId = $.tuanIdS.tuanActiveId;
-    }
-    console.log(`开始获取${$.name}配置文件\n`);
-    console.log(`tuanActiveId: ${tuanActiveId}`)
-
-    const shareCodes = $.isNode() ? require('./jdDreamFactoryShareCodes.js') : '';
-    console.log(`共${cookiesArr.length}个京东账号\n`);
-    $.shareCodesArr = [];
-    if ($.isNode()) {
-      Object.keys(shareCodes).forEach((item) => {
-        if (shareCodes[item]) {
-          $.shareCodesArr.push(shareCodes[item])
-        }
-      })
-    }
-    // console.log(`\n种豆得豆助力码::${JSON.stringify($.shareCodesArr)}`);
-    console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码\n`);
-    resolve()
   })
 }
 function TotalBean() {

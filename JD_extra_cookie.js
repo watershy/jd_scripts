@@ -99,7 +99,6 @@ function GetCookie() {
       } else {
         $.notify("写入京东Cookie失败", "", "请查看脚本内说明, 登录网页获取 ‼️");
       }
-      await ck.methodEnd($)
       return;
     } else {
       $.notify("写入京东Cookie失败", "", "请检查匹配URL或配置内脚本类型 ‼️");
@@ -113,7 +112,6 @@ function GetCookie() {
       )}\n\n${eor}\n\n${JSON.stringify($request.headers)}\n`
     );
   }
-  await ck.methodEnd($)
 }
 
 // prettier-ignore
