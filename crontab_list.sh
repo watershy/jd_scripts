@@ -80,7 +80,7 @@
 # crazyJoy自动每日任务
 10 7 * * * mkdir -p /app/jd/logs/$(date +\%Y-\%m-\%d) && /usr/local/bin/node /app/jd/jd_scripts/jd_crazy_joy.js >> /app/jd/logs/$(date +\%Y-\%m-\%d)/jd_crazy_joy_$(date +\%H) 2>&1
 # 京东汽车旅程赛点兑换金豆
-0 0 * * * mkdir -p /app/jd/logs/$(date +\%Y-\%m-\%d) && /usr/local/bin/node /app/jd/jd_scripts/jd_car_exchange.js >> /app/jd/logs/$(date +\%Y-\%m-\%d)/jd_car_exchange_$(date +\%H) 2>&1
+0 0 * * * mkdir -p /app/jd/logs/$(date +\%Y-\%m-\%d)/car_exchange && /usr/local/bin/node /app/jd/jd_scripts/jd_car_exchange.js >> /app/jd/logs/$(date +\%Y-\%m-\%d)/car_exchange/jd_car_exchange_$(date +\%H) 2>&1
 # 导到所有互助码
 47 7 * * * mkdir -p /app/jd/logs/$(date +\%Y-\%m-\%d) && /usr/local/bin/node /app/jd/jd_scripts/jd_get_share_code.js >> /app/jd/logs/$(date +\%Y-\%m-\%d)/jd_get_share_code_$(date +\%H) 2>&1
 # 口袋书店
