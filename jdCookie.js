@@ -18,6 +18,7 @@ let getShareCode = function (name, userName) {
                     newShareCodes.push(shareCodes[i].share_code)
                 }
             }
+            console.log(`助力码： ${newShareCodes}`)
         } catch (e) {
             console.log(e)
         } finally {
@@ -32,8 +33,8 @@ let getCookie = function (sql) {
         let cookieArr = []
         try {
             if (!sql) {
-                sql = 'select * from jd_cookie where possessor = \'hyk\''
-                // sql = 'select * from jd_cookie'
+                // sql = 'select * from jd_cookie where possessor = \'hyk\''
+                sql = 'select * from jd_cookie'
             }
             let res = await db.query(sql)
             for (let i = 0; i < res.length; i++) {
