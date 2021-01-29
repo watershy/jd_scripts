@@ -39,12 +39,11 @@ cron "16 22 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/j
 const $ = new Env('东东小窝');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const ck = require('./jdCookie')
-const fs = require('fs')
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message = '';
 let isPurchaseShops = false;//是否一键加购商品到购物车，默认不加购
 
-
+$.notice = ''
 const JD_API_HOST = 'https://lkyl.dianpusoft.cn/api';
 
 !(async () => {
@@ -57,7 +56,6 @@ const JD_API_HOST = 'https://lkyl.dianpusoft.cn/api';
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
-      $.flag = i === 0;
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
       $.index = i + 1;
       $.isLogin = true;
@@ -65,6 +63,7 @@ const JD_API_HOST = 'https://lkyl.dianpusoft.cn/api';
       message = '';
       await TotalBean();
       console.log(`\n*******开始【京东账号${$.index}】${$.UserName}********\n`);
+      $.flag = $.UserName === 'jd_pBXzZlqInyyk';
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
@@ -74,9 +73,11 @@ const JD_API_HOST = 'https://lkyl.dianpusoft.cn/api';
         continue
       }
       await smallHome();
+      const subTitle = `【京东账号${$.index}】${$.nickName}`;
+      $.notice += `\n----------------------------\n`
+      $.notice = $.notice + subTitle + '\n' + message
     }
   }
-  await ck.query('delete from jd_small_home where pt_pin = ?',['jd_pBXzZlqInyyk'])
 })()
     .catch(async (e) => {
 
@@ -91,22 +92,13 @@ async function smallHome() {
   await helpFriends();
   if (!$.isUnLock) return;
   await createInviteUser();
-  if ($.flag) {
-    //存储第一个账号的shareCode到数据库里面
-    await ck.query('insert into jd_small_home(pt_pin,share_code) value (?,?)',['jd_pBXzZlqInyyk',$.shareCode])
-  }
   await queryDraw();
   await lottery();
   await doAllTask();
   await queryByUserId();
   await queryFurnituresCenterList();
 }
-function showMsg() {
-  return new Promise(resolve => {
-    $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
-    resolve()
-  })
-}
+
 async function lottery() {
   if ($.freeDrawCount > 0) {
     await drawRecord($.lotteryId);
@@ -127,9 +119,9 @@ async function doChannelsListTask(taskId, taskType) {
 }
 async function helpFriends() {
   if (!$.flag) {
-    const shareCode = await dbUtils.query('select share_code from jd_small_home where pt_pin = ?',['jd_pBXzZlqInyyk'])
-    console.log(`需要助力的 ${shareCode[0].share_code}`)
-    await createAssistUser(shareCode[0].share_code, $.createAssistUserID)
+    const shareCode = await ck.getShareCode($.name,'jd_pBXzZlqInyyk');
+    console.log(`需要助力的 ${shareCode[0]}`)
+    await createAssistUser(shareCode[0], $.createAssistUserID)
   }
 }
 async function doAllTask() {
@@ -144,6 +136,7 @@ async function doAllTask() {
       // await createAssistUser('1330186694770339842', item.ssjjTaskInfo.id)
       $.createAssistUserID = item.ssjjTaskInfo.id;
       console.log(`\n\n助力您的好友:${item.doneNum}人`)
+      message +=`\n助力您的好友:${item.doneNum}人`
     }
     if (item.ssjjTaskInfo.type === 2) {
       //每日打卡
@@ -469,7 +462,7 @@ function followChannel(taskId, channelId) {
 }
 function createInviteUser() {
   return new Promise(resolve => {
-    $.get(taskUrl(`/ssjj-task-record/createInviteUser`), (err, resp, data) => {
+    $.get(taskUrl(`/ssjj-task-record/createInviteUser`),async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -483,6 +476,7 @@ function createInviteUser() {
                   console.log(`\n您的${$.name}shareCode(每天都是变化的):【${data.body.id}】\n`);
                   if ($.flag) {
                     $.shareCode = data.body.id
+                    await ck.updateShareCode($)
                   }
                 }
               }
