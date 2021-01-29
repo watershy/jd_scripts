@@ -99,7 +99,7 @@ async function jdDreamFactory() {
   if (!$.unActive) return
   await getUserElectricity();
   await taskList();
-  // await investElectric();
+  await investElectric();
   // await assistFriend('wUjR_aJ43-uLjZU5cS9KGg==');
   await QueryHireReward();//收取招工电力
   // await PickUp();//收取自家的地下零件

@@ -61,7 +61,6 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         await jdImmortalAnswer()
       }
     }
-  }
 })()
   .catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
