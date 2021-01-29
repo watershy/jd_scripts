@@ -34,7 +34,7 @@ const inviteCodes = [
   'T0205KkcAGxxvz6LYWOq3b5RCjVWmIaW5kRrbA',
 ];
 const randomCount = $.isNode() ? 20 : 5;
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 let merge = {}
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
@@ -261,7 +261,7 @@ function showMsg() {
 function requireConfig() {
   return new Promise(async resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
-    //Node.js用户请在jdCookie.js处填写京东ck;
+
     let shareCodes = []
     console.log(`共${cookiesArr.length}个京东账号\n`);
     if ($.isNode() && process.env.JDSGMH_SHARECODES) {

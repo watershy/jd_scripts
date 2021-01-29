@@ -29,7 +29,7 @@ cron "0 0-10/2 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/maste
 */
 
 const $ = new Env('宠汪汪偷好友积分与狗粮');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';

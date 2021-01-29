@@ -26,7 +26,7 @@ cron "5 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_
 */
 
 const $ = new Env('摇京豆');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://api.m.jd.com/client.action';

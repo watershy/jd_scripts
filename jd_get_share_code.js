@@ -23,7 +23,7 @@ cron "20 13 * * 6" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/j
 const $ = new Env("获取互助码");
 const JD_API_HOST = "https://api.m.jd.com/client.action";
 let cookiesArr = [], cookie = '', message;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const ck = require('./jdCookie')
 !function (n) {
   "use strict";
 

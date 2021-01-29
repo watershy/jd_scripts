@@ -26,8 +26,8 @@ cron "10 8,21 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master
 集鞭炮赢京豆 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_firecrackers.js, cronexpr="10 8,21 * * *", timeout=3600, enable=true
  */
 const $ = new Env('集鞭炮赢京豆');
-const notify = $.isNode() ? require('./sendNotify') : '';
-//Node.js用户请在jdCookie.js处填写京东ck;
+
+
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const ck = require('./jdCookie.js')

@@ -24,7 +24,7 @@ cron "8 0-23/3 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/maste
 */
 
 const $ = new Env('✈️天天加速');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 
 //IOS等用户直接用NobyDa的jd cookie

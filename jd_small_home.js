@@ -37,7 +37,7 @@ cron "16 22 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/j
 东东小窝 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js, cronexpr="16 22 * * *", timeout=3600, enable=true
  */
 const $ = new Env('东东小窝');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 const ck = require('./jdCookie')
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message = '';

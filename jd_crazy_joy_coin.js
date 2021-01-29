@@ -11,7 +11,7 @@ crazy joy
 const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
 
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 let cookiesArr = [], cookie = '', message = '';
 const ck = require('./jdCookie.js')
 !function (n) {
@@ -303,7 +303,7 @@ function getJoyShop() {
           if (data.success && data.data && data.data.shop) {
             const shop = data.data.shop.filter(vo => vo.status === 1) || []
             // $.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1;//可购买的最大等级
-            $.buyJoyLevel = 9;//购买等级
+            $.buyJoyLevel = 13;//购买等级
             if ($.isNode() && process.env.BUY_JOY_LEVEL) {
               $.log(`当前可购买的最高JOY等级为${$.buyJoyLevel}级\n`)
               $.buyJoyLevel = (process.env.BUY_JOY_LEVEL * 1) > $.buyJoyLevel ? $.buyJoyLevel : process.env.BUY_JOY_LEVEL * 1;

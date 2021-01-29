@@ -28,7 +28,7 @@ cron "10 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
 const $ = new Env('天天提鹅');
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://ms.jr.jd.com/gw/generic/uc/h5/m';
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 const ck = require('./jdCookie.js')
 !(async () => {
   cookiesArr = await ck.getCookie();

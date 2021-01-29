@@ -27,7 +27,7 @@ cron "1 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_
  */
 const $ = new Env('京东年货节');
 const ck = require('./jdCookie.js')
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 //const WebSocket = $.isNode() ? require('websocket').w3cwebsocket: SockJS;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message,helpInfo;

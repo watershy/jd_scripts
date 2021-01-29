@@ -20,7 +20,7 @@ cron "55 23 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/j
  */
 const $ = new Env('取关京东店铺和商品');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';

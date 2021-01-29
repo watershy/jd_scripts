@@ -26,7 +26,7 @@ cron "15 0-23/2 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/mast
 */
 
 const $ = new Env('宠汪汪');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';

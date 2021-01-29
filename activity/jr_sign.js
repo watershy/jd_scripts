@@ -21,7 +21,7 @@ cron "10 6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jr
  */
 const $ = new Env('金融打卡领年终奖');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;

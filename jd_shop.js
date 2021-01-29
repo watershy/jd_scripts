@@ -16,7 +16,7 @@ cron "10 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
 进店领豆 = type=cron,cronexp="10 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_shop.js
 */
 const $ = new Env('进店领豆');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 
 //IOS等用户直接用NobyDa的jd cookie

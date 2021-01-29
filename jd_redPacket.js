@@ -28,7 +28,7 @@ cron "1 1 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_
 京东全民开红包 = type=cron,cronexp=1 1 * * *,wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_redPacket.js
  */
 const $ = new Env('京东全民开红包');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';

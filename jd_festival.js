@@ -22,41 +22,21 @@ cron "15 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
  */
 const $ = new Env('京东手机年终奖');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
-//Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const ck = require('./jdCookie')
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const randomCount = $.isNode() ? 20 : 5;
 
 const inviteCodes = [
-  `9b98eb88-80ed-40ac-920c-a63fc769e72b@94c2a4d4-b53b-454b-82a0-0b80828bfd37@e274c80b-82dd-470c-878c-0790f5bf6a5d@aae299fc-6854-4fa7-b3ef-a6dedc3771b7@91ae877b-c98b-484a-9143-22d3a70b4088`,
-  `9b98eb88-80ed-40ac-920c-a63fc769e72b@94c2a4d4-b53b-454b-82a0-0b80828bfd37@e274c80b-82dd-470c-878c-0790f5bf6a5d@aae299fc-6854-4fa7-b3ef-a6dedc3771b7@91ae877b-c98b-484a-9143-22d3a70b4088`
-];
+  ];
 
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
-  };
-  if (JSON.stringify(process.env).indexOf('GITHUB') > -1) process.exit(0)
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
 const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
 !(async () => {
+  cookiesArr = await ck.getCookie()
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
-  await requireConfig()
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -67,6 +47,7 @@ const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
       $.nickName = '';
       message = '';
       await TotalBean();
+      $.newShareCodes = await ck.getShareCode($.name,$.UserName);
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
@@ -78,9 +59,7 @@ const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
         }
         continue
       }
-      await shareCodesFormat()
       await festival()
-      await showMsg();
     }
   }
 })()
@@ -90,15 +69,6 @@ const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
   .finally(() => {
     $.done();
   })
-
-function showMsg() {
-  message += `本次运行获得${$.beans}个京豆`
-  return new Promise(resolve => {
-    $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
-    resolve()
-  })
-}
-
 
 async function helpFriends() {
   for (let code of $.newShareCodes) {
@@ -225,9 +195,11 @@ function getTask(share = false) {
             data = JSON.parse(data);
             if (data.code === 200) {
               const {shareTask, generalTasks} = data.data
-              if (share)
+              if (share) {
                 console.log(`您的好友助力码为：${shareTask.shareId}，当前助力进度：${shareTask.needSupportNum - shareTask.remainSupportNum}/${shareTask.needSupportNum}`)
-              else
+                $.shareCode = shareTask.shareId
+                await ck.addShareCode($)
+              } else
                 for (let vo of generalTasks) {
                   console.log(`任务${vo.id}完成进度：${vo.finish}/${vo.total}`)
                   if (vo.finish < vo.total) {
@@ -638,7 +610,7 @@ function sign(t, e, n) {
 function requireConfig() {
   return new Promise(resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
-    //Node.js用户请在jdCookie.js处填写京东ck;
+
     let shareCodes = []
     console.log(`共${cookiesArr.length}个京东账号\n`);
     if ($.isNode() && process.env.JSMOBILEFESTIVAL_SHARECODES) {
@@ -670,12 +642,12 @@ function shareCodesFormat() {
     } else {
       console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
-      $.newShareCodes = inviteCodes[tempIndex].split('@');
+      // $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
-    const readShareCodeRes = null // await readShareCode();
-    if (readShareCodeRes && readShareCodeRes.code === 200) {
-      $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
-    }
+    // const readShareCodeRes = null // await readShareCode();
+    // if (readShareCodeRes && readShareCodeRes.code === 200) {
+    //   $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
+    // }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })

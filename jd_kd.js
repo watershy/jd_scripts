@@ -23,7 +23,7 @@ cron "10 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
  */
 const $ = new Env('京东快递签到');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;

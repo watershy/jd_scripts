@@ -21,7 +21,7 @@ cron "10 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
 京东赚赚 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdzz.js, cronexpr="10 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东赚赚');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 const ck = require('./jdCookie.js')
 let helpAuthor=true; // 帮助作者
 const randomCount = $.isNode() ? 20 : 5;

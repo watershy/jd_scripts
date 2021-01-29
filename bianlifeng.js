@@ -1,6 +1,6 @@
 const $ = new Env('便利蜂签到');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 const blfNode = $.isNode() ? require('./bianlifengToken.js') : '';
 //IOS等用户直接用NobyDa的jd cookie

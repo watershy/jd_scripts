@@ -16,7 +16,7 @@ cron如下
 1 * * * *
  */
 const $ = new Env('京东家庭号');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 let cookiesArr = [], cookie = '', message;
 const ck = require('./jdCookie.js')
 !(async () => {

@@ -4,7 +4,7 @@
 const $ = new Env('京喜红包');
 const JD_API_HOST = 'https://wq.jd.com';
 let notice = '';
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = ['wUjR_aJ43-uLjZU5cS9KGg=='];

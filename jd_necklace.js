@@ -27,7 +27,7 @@ cron "10 0,20 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master
  */
 const $ = new Env('点点券');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 const ck = require('./jdCookie.js')
 const openUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/41Lkp7DumXYCFmPYtU3LTcnTTXTX/index.html%22%20%7D`
 let message = '';

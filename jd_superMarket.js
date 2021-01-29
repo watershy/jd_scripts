@@ -24,7 +24,7 @@ cron "11 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
 东东超市 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_superMarket.js, cronexpr="11 * * * *", timeout=3600, enable=true
  */
 const $ = new Env('东东超市');
-//Node.js用户请在jdCookie.js处填写京东ck;
+
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', jdSuperMarketShareArr = [], notify, newShareCodes;
 
@@ -1518,7 +1518,7 @@ function requireConfig() {
   return new Promise(async resolve => {
     // console.log('\n开始获取京小超配置文件\n')
     notify = $.isNode() ? require('./sendNotify') : '';
-    //Node.js用户请在jdCookie.js处填写京东ck;
+
     //IOS等用户直接用NobyDa的jd cookie
     console.log(`共${cookiesArr.length}个京东账号\n`);
     // console.log(`京小超已改版,目前暂不用助力, 故无助力码`)

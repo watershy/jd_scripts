@@ -21,7 +21,7 @@ cron "3 0-23/2 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/maste
 */
 
 const $ = new Env('京东摇钱树');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';

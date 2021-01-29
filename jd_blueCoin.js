@@ -21,7 +21,7 @@ cron "0 0 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/j
 东东超市兑换奖品 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_blueCoin.js, cronexpr="0 0 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京小超兑换奖品');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 
 let coinToBeans = $.getdata('coinToBeans') || 20; //兑换多少数量的京豆（20或者1000），0表示不兑换，默认兑换20京豆，如需兑换把0改成20或者1000，或者'商品名称'(商品名称放到单引号内)即可
 //IOS等用户直接用NobyDa的jd cookie

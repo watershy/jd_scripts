@@ -22,7 +22,7 @@ cron "0 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_
  */
 const $ = new Env('源头好物红包');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const ck = require('./jdCookie')
