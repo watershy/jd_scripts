@@ -19,22 +19,22 @@
 
 支持京东双账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-// quantumultx
+===================quantumultx================
 [task_local]
 #京东手机狂欢城
-1 0-18/6 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_818.js, tag=京东手机狂欢城, enabled=true
-// Loon
+0 0-18/6 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_818.js, tag=京东手机狂欢城, enabled=true
+=====================Loon================
 [Script]
-cron "1 0-18/6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_818.js,tag=京东手机狂欢城
-// Surge
-京东手机狂欢城 = type=cron,cronexp=1 0-18/6 * * *,wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_818.js
+cron "0 0-18/6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_818.js, tag=京东手机狂欢城
+====================Surge================
+京东手机狂欢城 = type=cron,cronexp=0 0-18/6 * * *,wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_818.js
  */
 const $ = new Env('京东手机狂欢城');
 
-const notify = $.isNode() ? require('../sendNotify') : '';
+const notify = $.isNode() ? require('./sendNotify') : '';
 let jdNotify = false;//是否开启推送互助码
-
-const jdCookieNode = $.isNode() ? require('../jdCookie.js') : '';
+//Node.js用户请在jdCookie.js处填写京东ck;
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
@@ -55,13 +55,13 @@ if ($.isNode()) {
 }
 
 const JD_API_HOST = 'https://rdcseason.m.jd.com/api/';
-const activeEndTime = '2021/2/5 23:59:59+08:00';
+const activeEndTime = '2021/2/4 23:59:59+08:00';
 const addUrl = 'http://jd.turinglabs.net/helpcode/create/';
-const printUrl = `http://jd.turinglabs.net/api/v2/jd/5g/read/20/`;
+const printUrl = `http://jd.turinglabs.net/api/v2/jd/5g/read/30/`;
 let helpCode = []
 !(async () => {
   if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
   $.temp = [];
@@ -73,14 +73,12 @@ let helpCode = []
       $.isLogin = true;
       $.nickName = '';
       await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
 
         if ($.isNode()) {
-          await notify.sendNotify(`京东账号${$.index},${$.name}cookie失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`,'',true);
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
       }
@@ -92,12 +90,11 @@ let helpCode = []
   }
   // console.log($.temp)
 })()
-    .catch(async (e) => {
-
-      await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
+    .catch((e) => {
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
-    .finally(async () => {
-      await ck.methodEnd($)
+    .finally(() => {
+      $.done();
     })
 async function main() {
   // await getHelp();
@@ -120,22 +117,28 @@ async function main() {
     getListRank(),
     getListIntegral(),
   ]);
+  await showMsg()
 }
 async function JD818() {
-  await getHelp();
-  await listGoods();//逛新品
-  await shopInfo();//逛店铺
-  await listMeeting();//逛会场
-  await $.wait(10000);
-  //再次运行一次，避免出现遗漏的问题
-  await listGoods();//逛新品
-  await shopInfo();//逛店铺
-  await listMeeting();//逛会场
-  await doHelp();
-  await myRank();//领取往期排名奖励
-  await getListJbean();
-  await getListRank();
-  await getListIntegral();
+  try {
+    await getHelp();
+    await listGoods();//逛新品
+    await shopInfo();//逛店铺
+    await listMeeting();//逛会场
+    await $.wait(10000);
+    //再次运行一次，避免出现遗漏的问题
+    await listGoods();//逛新品
+    await shopInfo();//逛店铺
+    await listMeeting();//逛会场
+    await doHelp();
+    await myRank();//领取往期排名奖励
+    await getListJbean();
+    await getListRank();
+    await getListIntegral();
+    await showMsg()
+  } catch (e) {
+    $.logErr(e)
+  }
 }
 function listMeeting() {
   const options = {
@@ -586,12 +589,13 @@ async function doHelp() {
   }
   // await updateShareCodes();
   // if (!$.updatePkActivityIdRes) await updateShareCodesCDN();
-  // tempCode = $.updatePkActivityIdRes.shareCodes;
+  await updateShareCodesCDN();
+  if ($.updatePkActivityIdRes && $.updatePkActivityIdRes['shareCodes']) tempCode = $.updatePkActivityIdRes['shareCodes'];
   console.log(`是否大于当天九点🕘:${nowTime > new Date(nowTime).setHours(9, 0, 0, 0)}`)
   //当天大于9:00才从API里面取收集的助力码
   //if (nowTime > new Date(nowTime).setHours(9, 0, 0, 0)) body = await printAPI();//访问收集的互助码
   body = await printAPI();//访问收集的互助码
-  if (body) {
+  if (body && body['data']) {
     // console.log(`printAPI返回助力码数量:${body.replace(/"/g, '').split(',').length}`)
     // tempCode = tempCode.concat(body.replace(/"/g, '').split(','))
     tempCode = [...tempCode, ...body['data']]
@@ -854,10 +858,9 @@ function updateShareCodes(url = 'https://raw.githubusercontent.com/LXK9301/updat
     })
   })
 }
-function updateShareCodesCDN(url = 'https://raw.fastgit.org/LXK9301/updateTeam/master/jd_shareCodes.json') {
+function updateShareCodesCDN(url = 'https://gitee.com/lxk0301/updateTeam/raw/master/jd_shareCodes.json') {
   return new Promise(resolve => {
     //https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_shareCodes.json
-    //https://raw.githubusercontent.com/LXK9301/updateTeam/master/jd_shareCodes.json
     $.get({url}, async (err, resp, data) => {
       try {
         if (err) {
@@ -917,10 +920,10 @@ function TotalBean() {
 async function showMsg() {
   let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000;
   if (nowTime > new Date(activeEndTime).getTime()) {
-    $.msg($.name, '活动已结束', `该活动累计获得京豆：${$.jbeanCount}个\niOS用户请删除此脚本\ngithub action用户请删除.github/workflows/jd_818.yml文件\n如果帮助到您可以点下🌟STAR鼓励我一下,谢谢\n咱江湖再见\nhttps://github.com/LXK9301/jd_scripts`, {"open-url": "https://github.com/LXK9301/jd_scripts"});
-    if ($.isNode()) await notify.sendNotify($.name + '活动已结束', `请删除此脚本\ngithub action用户请删除.github/workflows/jd_818.yml文件\n如果帮助到您可以点下🌟STAR鼓励我一下,谢谢\n咱江湖再见\n https://github.com/LXK9301/jd_scripts`)
+    $.msg($.name, '活动已结束', `该活动累计获得京豆：${$.jbeanCount}个\n请删除此脚本\n咱江湖再见`);
+    if ($.isNode()) await notify.sendNotify($.name + '活动已结束', `请删除此脚本\n咱江湖再见`)
   } else {
-    $.msg($.name, `京东账号${$.index} ${$.UserName}`, `${$.jbeanCount ? `${$.integer ? `今日获得积分：${$.integer}个\n` : ''}${$.num ? `今日排名：${$.num}\n` : ''}今日参数人数：${$.lasNum}人\n累计获得京豆：${$.jbeanCount}个🐶\n` : ''}${$.jbeanCount ? `累计获得积分：${$.integralCount}个\n` : ''}${$.jbeanNum ? `${$.date}日奖品：${$.jbeanNum}\n` : ''}具体详情点击弹窗跳转后即可查看`, {"open-url": "https://rdcseason.m.jd.com/#/hame"});
+    $.msg($.name, `京东账号${$.index} ${$.nickName || $.UserName}`, `${$.jbeanCount ? `${$.integer ? `当前获得积分：${$.integer}个\n` : ''}${$.num ? `当前排名：${$.num}\n` : ''}当前参赛人数：${$.lasNum}人\n累计获得京豆：${$.jbeanCount}个🐶\n` : ''}${$.jbeanCount ? `累计获得积分：${$.integralCount}个\n` : ''}${$.jbeanNum ? `${$.date}日奖品：${$.jbeanNum}\n` : ''}具体详情点击弹窗跳转后即可查看`, {"open-url": "https://rdcseason.m.jd.com/#/hame"});
   }
 }
 function jsonParse(str) {

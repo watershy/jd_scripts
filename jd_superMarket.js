@@ -87,7 +87,7 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
       await ck.methodEnd($)
     })
 async function jdSuperMarket() {
-  // await receiveGoldCoin();//收金币
+  await receiveGoldCoin();//收金币
   await businessCircleActivity();//商圈活动
   await receiveBlueCoin();//收蓝币（小费）
   // await receiveLimitProductBlueCoin();//收限时商品的蓝币
@@ -315,41 +315,17 @@ async function businessCircleActivity() {
     console.log(`\njoinStatus:${joinStatus}`);
     console.log(`pkStatus:${pkStatus}\n`);
     if (joinStatus === 0) {
-      console.log(`\n注：PK会在每天的七点自动随机加入LXK9301创建的队伍\n`)
-      await updatePkActivityId();
-      if (!$.updatePkActivityIdRes) await updatePkActivityIdCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateTeam.json');
-      if (!$.updatePkActivityIdRes) await updatePkActivityIdCDN('https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_updateTeam.json');
-      console.log(`\nupdatePkActivityId[pkActivityId]:::${$.updatePkActivityIdRes.pkActivityId}`);
-      console.log(`\n京东服务器返回的[pkActivityId] ${pkActivityId}`);
-      if ($.updatePkActivityIdRes && ($.updatePkActivityIdRes.pkActivityId === pkActivityId)) {
-        let Teams = [
-          {
-            "teamId": "-4msulYas0O2JsRhE-2TA5XZmBQ_1604247312176",
-            "inviteCode": "-4msulYas0O2JsRhE-2TA5XZmBQ"
-          },
-          {
-            "teamId": "Ih4-a-mwZPUj9Gy6iw_1604277683224",
-            "inviteCode": "eU9Yar_mb_9z92_WmXNG0w"
-          },
-          {
-            "teamId": "eU9Ya77gZK5z-TqHn3UWhQ_1604277779750",
-            "inviteCode": "eU9YaOnjYK4j-GvWmXIWhA"
-          },
-          {
-            "teamId": "eU9Ya-y2N_5z9DvXwyIV0A",
-            "inviteCode": "eU9YaLm0bq4i-TrUzSUUhA"
-          },
-          {
-            "teamId": "eU9Ya-y2N_5z9DvXwyIV0A",
-            "inviteCode": "aURoM7PtY_Q"
-          },
-          {
-            "teamId": "eU9Ya-y2N_5z9DvXwyIV0A",
-            "inviteCode": "eU9YaeS3Z6ol8zrRmnMb1Q"
-          }
-        ]
-        Teams = $.updatePkActivityIdRes['Teams'] || Teams;
-        const randomNum = randomNumber(0, Teams.length);
+      if (joinPkTeam === 'true') {
+        await getTeam();
+        console.log(`\n注：PK会在每天的七点自动随机加入LXK9301创建的队伍\n`)
+        await updatePkActivityIdCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateTeam.json');
+        console.log(`\nupdatePkActivityId[pkActivityId]:::${$.updatePkActivityIdRes.pkActivityId}`);
+        console.log(`\n京东服务器返回的[pkActivityId] ${pkActivityId}`);
+        if ($.updatePkActivityIdRes && ($.updatePkActivityIdRes.pkActivityId === pkActivityId)) {
+          let Teams = []
+          Teams = $.updatePkActivityIdRes['Teams'] || Teams;
+          Teams = [...Teams, ...$.getTeams.filter(item => item['pkActivityId'] === `${pkActivityId}`)];
+          const randomNum = randomNumber(0, Teams.length);
 
         const res = await smtg_joinPkTeam(Teams[randomNum].teamId, Teams[randomNum].inviteCode, pkActivityId);
         if (res && res.data.bizCode === 0) {
