@@ -197,6 +197,8 @@ async function jdCrazyJoy() {
     const minJoyId = Math.min(...$.joyIds);
     const boxId = $.joyIds.indexOf(minJoyId);
     console.log(`格子全部被占有且没有可以合并的JOY，回收${boxId + 1}号位等级为${minJoyId}的JOY`)
+    $.buyJoyLevel = $.buyJoyLevel + 1
+    console.log(`当前购买等级 ${$.buyJoyLevel}`)
     await sellJoy(minJoyId, boxId);
     await getJoyList();
   }
@@ -383,7 +385,7 @@ function getJoyShop() {
           data = JSON.parse(data);
           if (data.success && data.data && data.data.shop) {
             const shop = data.data.shop.filter(vo => vo.status === 1) || [];
-            $.joyPrices = shop;
+            $.joyPrices = 14;
             $.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1;//可购买的最大等级
             if ($.isNode() && process.env.BUY_JOY_LEVEL) {
               $.log(`当前可购买的最高JOY等级为${$.buyJoyLevel}级\n`)
