@@ -134,7 +134,6 @@ async function jdNian() {
     await helpFriends()
     await $.wait(2000)
     await getHomeData(true)
-    await showMsg()
   } catch (e) {
     $.logErr(e)
   }

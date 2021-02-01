@@ -38,13 +38,15 @@ $.notice = ''
             }
         }
     }
-})() .catch(async (e) => {
+})() .catch((e) => {
     $.name += '错误'
     $.notice = e
-    await ck.methodEnd($)
 }).finally(async () => {
     if ($.notice) {
         await ck.methodEnd($)
+    } else {
+        console.log('没有新活动')
+        console.log(new Date().toLocaleString())
     }
 })
 

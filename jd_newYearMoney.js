@@ -24,8 +24,6 @@ cron "20 8,12 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master
 
 const $ = new Env('京东压岁钱');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
-//Node.js用户请在jdCookie.js处填写京东ck;
 const ck = require('./jdCookie')
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
@@ -78,7 +76,6 @@ const inviteCodes = [
       }
       await shareCodesFormat();
       await jdNian()
-      await showMsg()
     }
   }
   if(receiveAccount.length)
@@ -107,10 +104,12 @@ const inviteCodes = [
   }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    $.notice += `\n${e}`
+    $.notice += `\n${e}`
+      $.name += `错误`
   })
-  .finally(() => {
-    $.done();
+  .finally(async () => {
+    await ck.methodEnd($)
   })
 
 async function jdNian() {

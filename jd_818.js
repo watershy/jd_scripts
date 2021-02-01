@@ -31,28 +31,11 @@ cron "0 0-18/6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/maste
  */
 const $ = new Env('京东手机狂欢城');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
 let jdNotify = false;//是否开启推送互助码
-//Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
 
 const JD_API_HOST = 'https://rdcseason.m.jd.com/api/';
 const activeEndTime = '2021/2/4 23:59:59+08:00';
@@ -91,10 +74,12 @@ let helpCode = []
   // console.log(JSON.stringify($.temp))
 })()
     .catch((e) => {
-      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+      $.notice += `\n${e}`
+    $.notice += `\n${e}`
+      $.name += `错误`
     })
-    .finally(() => {
-      $.done();
+    .finally(async () => {
+      await ck.methodEnd($)
     })
 async function main() {
   // await getHelp();
@@ -117,7 +102,6 @@ async function main() {
     getListRank(),
     getListIntegral(),
   ]);
-  await showMsg()
 }
 async function JD818() {
   try {
@@ -135,7 +119,6 @@ async function JD818() {
     await getListJbean();
     await getListRank();
     await getListIntegral();
-    await showMsg()
   } catch (e) {
     $.logErr(e)
   }

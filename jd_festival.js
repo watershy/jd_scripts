@@ -64,10 +64,12 @@ const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
   }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    $.notice += `\n${e}`
+    $.notice += `\n${e}`
+      $.name += `错误`
   })
-  .finally(() => {
-    $.done();
+  .finally(async () => {
+    await ck.methodEnd($)
   })
 
 async function helpFriends() {

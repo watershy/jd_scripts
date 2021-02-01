@@ -58,7 +58,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
   }
 })()
     .catch((e) => {
-      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+      $.notice += `\n${e}`
+    $.notice += `\n${e}`
+      $.name += `错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -73,7 +75,6 @@ async function jdNian() {
     await doTask()
     await $.wait(2000)
     await getHomeData(true)
-    await showMsg()
   } catch (e) {
     $.logErr(e)
   }

@@ -24,7 +24,6 @@ cron "30 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
  */
 const $ = new Env('小鸽有礼2');
 
-const notify = $.isNode() ? require('./sendNotify') : '';
 const ck = require('./jdCookie')
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
@@ -58,10 +57,12 @@ let cookiesArr = [], cookie = '', message;
   }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    $.notice += `\n${e}`
+    $.notice += `\n${e}`
+      $.name += `错误`
   })
-  .finally(() => {
-    $.done();
+  .finally(async () => {
+    await ck.methodEnd($)
   })
 
 function showMsg() {

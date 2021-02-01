@@ -62,7 +62,7 @@ const ck = require('./jdCookie.js')
         }
     }
 })()
-    .catch(async (e) => {
+    .catch((e) => {
 
         await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`, '', true);
     })

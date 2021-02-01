@@ -74,10 +74,12 @@ const JD_API_HOST = 'https://api.m.jd.com/';
   }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    $.notice += `\n${e}`
+    $.notice += `\n${e}`
+      $.name += `错误`
   })
-  .finally(() => {
-    $.done();
+  .finally(async () => {
+    await ck.methodEnd($)
   })
 
 function showMsg() {

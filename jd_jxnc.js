@@ -106,7 +106,8 @@ const ck = require('./jdCookie.js')
 })()
     .catch((e) => {
         $.notice += `\n${e}`
-        $.name += `错误`
+      $.notice += `\n${e}`
+      $.name += `错误`
     })
     .finally(async () => {
         await ck.methodEnd($)

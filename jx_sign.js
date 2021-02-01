@@ -67,7 +67,6 @@ async function jdCash() {
   await sign()
   await getTaskList()
   await doubleSign()
-  await showMsg()
 }
 function sign() {
   return new Promise((resolve) => {

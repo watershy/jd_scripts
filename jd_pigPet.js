@@ -54,6 +54,8 @@ const ck = require('./jdCookie')
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
         if ($.isNode()) {
+          $.name += `cookie失效`
+          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
           await notify.sendNotify(`京东账号${$.index},${$.name}cookie失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`,'',true);
         } else {
           $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
@@ -64,9 +66,9 @@ const ck = require('./jdCookie')
     }
   }
 })()
-    .catch(async (e) => {
-
-      await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
+    .catch((e) => {
+      $.notice += `\n${e}`
+      $.name += `错误`
     })
     .finally(async () => {
       await ck.methodEnd($)

@@ -72,8 +72,9 @@ const ck = require('./jdCookie')
     }
   }
 })()
-    .catch(async (e) => {
+    .catch((e) => {
       $.notice += `\n${e}`
+    $.notice += `\n${e}`
       $.name += `错误`
     })
     .finally(async () => {

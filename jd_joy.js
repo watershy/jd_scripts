@@ -72,8 +72,10 @@ const weAppUrl = 'https://draw.jdfcloud.com//pet';
     }
   }
 })()
-    .catch(async (e) => {
-      await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
+    .catch((e) => {
+      $.notice += `\n${e}`
+      $.notice += `\n${e}`
+      $.name += `错误`
     })
     .finally(async () => {
       $.done()

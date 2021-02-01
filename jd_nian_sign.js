@@ -71,7 +71,6 @@ async function jdNian() {
     await queryMaterials2()
     await $.wait(2000)
     await getHomeData(true)
-    await showMsg()
   } catch (e) {
     $.logErr(e)
   }

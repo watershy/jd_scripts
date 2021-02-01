@@ -66,7 +66,9 @@ const inviteCodes = [
   }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    $.notice += `\n${e}`
+    $.notice += `\n${e}`
+      $.name += `错误`
   })
   .finally(async () => {
     await ck.methodEnd($)
@@ -76,7 +78,6 @@ async function jdNian() {
   if(!$.secretp) return
   await getArInfo()
   await getHomeData(true)
-  await showMsg()
 }
 function encode(data, aa, extraData) {
   const temp = {

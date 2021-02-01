@@ -49,9 +49,9 @@ const ck = require('./jdCookie.js')
     notice = notice + '\n' + message
   }
 })()
-    .catch(async (e) => {
-
-      await notify.sendNotify(` ${$.name}失败`, `❌ ${$.name}, 失败! 原因: ${e}!`,'',true);
+    .catch((e) => {
+      $.notice += `\n${e}`
+      $.name += `错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -59,8 +59,6 @@ const ck = require('./jdCookie.js')
 
 async function jdDreamFactory() {
   await userInfo();
-
-  // await showMsg();
 }
 
 

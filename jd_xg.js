@@ -64,10 +64,12 @@ const ck = require('./jdCookie')
   }
 })()
   .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    $.notice += `\n${e}`
+    $.notice += `\n${e}`
+      $.name += `错误`
   })
-  .finally(() => {
-    $.done();
+  .finally(async () => {
+    await ck.methodEnd($)
   })
 
 async function jdXg() {
@@ -77,8 +79,7 @@ async function jdXg() {
     await draw()
     await getUserInfo()
     await $.wait(500)
-  }
-  await showMsg();
+  };
 }
 
 function showMsg() {
