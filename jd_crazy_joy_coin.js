@@ -401,7 +401,7 @@ function getJoyShop() {
           if (data.success && data.data && data.data.shop) {
             const shop = data.data.shop.filter(vo => vo.status === 1) || [];
             $.joyPrices = shop;
-            $.buyJoyLevel = 14;//可购买的最大等级
+            $.buyJoyLevel = 21;//可购买的最大等级
             if ($.isNode() && process.env.BUY_JOY_LEVEL) {
               $.log(`当前可购买的最高JOY等级为${$.buyJoyLevel}级\n`)
               $.buyJoyLevel = (process.env.BUY_JOY_LEVEL * 1) > $.buyJoyLevel ? $.buyJoyLevel : process.env.BUY_JOY_LEVEL * 1;

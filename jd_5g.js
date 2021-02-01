@@ -65,8 +65,7 @@ const inviteCodes = [
   }
 })()
   .catch((e) => {
-    $.notice += `\n${e}`
-    $.notice += `\n${e}`
+      $.notice += `\n${e}`
       $.name += `错误`
   })
   .finally(async () => {

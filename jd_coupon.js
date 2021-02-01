@@ -59,8 +59,7 @@ const JD_API_HOST = 'https://api.m.jd.com/';
   }
 })()
   .catch((e) => {
-    $.notice += `\n${e}`
-    $.notice += `\n${e}`
+      $.notice += `\n${e}`
       $.name += `错误`
   })
   .finally(async () => {

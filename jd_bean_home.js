@@ -51,7 +51,8 @@ $.notice = ''
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
         if ($.isNode()) {
-          await notify.sendNotify(`京东账号${$.index},${$.name}cookie失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`,'',true);
+          $.name += `cookie失效`
+          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
         }
         continue
       }
@@ -60,8 +61,7 @@ $.notice = ''
   }
 })()
   .catch((e) => {
-    $.notice += `\n${e}`
-    $.notice += `\n${e}`
+      $.notice += `\n${e}`
       $.name += `错误`
   })
   .finally(async () => {

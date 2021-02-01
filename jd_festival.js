@@ -64,8 +64,7 @@ const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
   }
 })()
   .catch((e) => {
-    $.notice += `\n${e}`
-    $.notice += `\n${e}`
+      $.notice += `\n${e}`
       $.name += `错误`
   })
   .finally(async () => {
