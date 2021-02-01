@@ -14,11 +14,9 @@
 50 0,1,8 * * * node /scripts/jd_nian_ar.js >> /scripts/logs/jd_nian_ar.log 2>&1
 # 京东炸年兽小程序
 50 0,1,8 * * * node /scripts/jd_nian_wechat.js >> /scripts/logs/jd_nian_wechat.log 2>&1
-
-#京东神仙书院(活动时间:2021-1-20至2021-2-5)
-30 6 * * * node /scripts/jd_immortal.js >> /scripts/logs/jd_immortal.log 2>&1
-
-#京东神仙书院答题(活动时间:2021-1-20至2021-2-5)
+# 京东神仙书院(活动时间:2021-1-20至2021-2-5)
+30 6,8,12,22 * * * node /scripts/jd_immortal.js >> /scripts/logs/jd_immortal.log 2>&1
+# 京东神仙书院答题(活动时间:2021-1-20至2021-2-5)
 5 1 * * * node /scripts/jd_immortal_answer.js >> /scripts/logs/jd_immortal_answer.log 2>&1
 # 5G狂欢城(2021-1-30至2021-2-4)
 0 */6 * * * node /scripts/jd_5g.js >> /scripts/logs/jd_5g.log 2>&1
