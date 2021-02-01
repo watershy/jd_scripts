@@ -31,7 +31,7 @@ let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭�
 const randomCount = $.isNode() ? 20 : 5;
 
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', message;
+let cookiesArr = [], cookie = '', message, sendAccount = [], receiveAccount = [], receiveCardList = [];
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const inviteCodes = [
   `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
