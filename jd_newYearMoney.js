@@ -26,32 +26,33 @@ const $ = new Env('京东压岁钱');
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const ck = require('./jdCookie')
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const inviteCodes = [
-  `vcZlG6w0w8MoYaRNQO88s64MRrPevSiBlZZmrnhvIYCEMQ@oMZeXe9K8o8BBeMxYrEk_m16ERwOhASbAsCDDExyAjBScoVo@IgCqjVzgdTTH1EiF7y7wKtNNekKIwZI_m613kzU40leY64MXeqIV4A@oMZeXbUcqYgCBeMyZbAl-satYdK21PuqgGHNWJe9ioYocKg7`,
-  `vcZlG6w0w8MoYaRNQO88s64MRrPevSiBlZZmrnhvIYCEMQ@oMZeXe9K8o8BBeMxYrEk_m16ERwOhASbAsCDDExyAjBScoVo@IgCqjVzgdTTH1EiF7y7wKtNNekKIwZI_m613kzU40leY64MXeqIV4A@oMZeXbUcqYgCBeMyZbAl-satYdK21PuqgGHNWJe9ioYocKg7`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
+  `oMZeG5Qg6uELQptvfvkrs9DTAkQWNoRMkw1i5kkxMNyzMbo`,
 ];
 !(async () => {
+  cookiesArr = await ck.getCookie('select * from jd_cookie')
   await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -71,7 +72,7 @@ const inviteCodes = [
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
 
         if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
       }
@@ -331,10 +332,10 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
-    const readShareCodeRes = await readShareCode();
-    if (readShareCodeRes && readShareCodeRes.code === 200) {
-      $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
-    }
+    // const readShareCodeRes = await readShareCode();
+    // if (readShareCodeRes && readShareCodeRes.code === 200) {
+    //   $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
+    // }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
