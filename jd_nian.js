@@ -95,7 +95,7 @@ const ck = require('./jdCookie')
       await jdNian()
     }
   }
-
+  if(superAssist.length)
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
