@@ -33,7 +33,7 @@ const ck = require('./jdCookie.js')
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 let scoreToBeans = $.isNode()?(process.env.JD_IMMORTAL_SCORE || 700):$.getdata('scoreToBeans') || 700; //兑换多少数量的京豆（20或者1000），0表示不兑换，默认兑换20京豆，如需兑换把0改成20或者1000，或者'商品名称'(商品名称放到单引号内)即可
-
+$.notice = ''
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
@@ -85,6 +85,7 @@ const inviteCodes = [
       }
       await shareCodesFormat();
       await jdNian()
+      $.notice += `\n本次运行获得${$.earn}金币，当前${$.coin}金币`
     }
   }
 })()
@@ -112,7 +113,7 @@ async function jdNian() {
 
 function showMsg() {
   return new Promise(resolve => {
-    message += `本次运行获得${$.earn}金币，当前${$.coin}金币`
+    message += ``
     if (!jdNotify) {
       $.msg($.name, '', `${message}`);
     } else {
