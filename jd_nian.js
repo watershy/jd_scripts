@@ -21,13 +21,13 @@ cron "0 9,12,20,21 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/m
 ============小火箭=========
 京东炸年兽🧨 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian.js, cronexpr="0 9,12,20,21 * * *", timeout=3600, enable=true
  */
-const $ = new Env('京东炸年兽🧨');
+const $ = new Env('京东炸年兽');
 
 
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', message;
+let cookiesArr = [], cookie = '', message, superAssist = [];
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const inviteCodes = [
   `cgxZdTXtZMiyoGSVSXz3pniyHYtEsXle_hm9bgFcDu8nh7SaiAkj5gg`,
@@ -45,28 +45,26 @@ const inviteCodes = [
   `cgxZdTXtZMiyoGSVSXz3pniyHYtEsXle_hm9bgFcDu8nh7SaiAkj5gg`,
 ];
 const pkInviteCodes = [
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
-    'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaw',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
+  'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
 ]
 const ck = require('./jdCookie')
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie')
+  cookiesArr = await ck.getCookie('select * from jd_cookie where id = 16')
   await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -95,7 +93,6 @@ const ck = require('./jdCookie')
       await jdNian()
     }
   }
-  if(superAssist.length)
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];

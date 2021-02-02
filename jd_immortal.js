@@ -59,7 +59,7 @@ const inviteCodes = [
   '40xIs4YwE5Z7DsWOzDBEOhgX6kizqAEwzFwvxyZhyHMcZB9hjY7xVSUG2CiokPD',
   ];
 !(async () => {
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie('select * from jd_cookie');
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -89,7 +89,8 @@ const inviteCodes = [
   }
 })()
     .catch((e) => {
-
+      $.notice += `\n${e}`
+      $.name += `错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
