@@ -57,7 +57,8 @@ $.notice = ''
 function execShell() {
     return new Promise(async resolve => {
         //从数据库查询所有数据
-        let cron = '\n\n\n\n'
+        let cron = '\n# 定时更新git文件\n'
+        cron += `0 18 * * * sh /app/shell/jd_updateGit >> /app/jd/logs/updateGit 2>&1\n`
         const sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path,c.flag from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name'
         const cronList = await ck.query(sql)
         for (let i = 0; i < cronList.length; i++) {
@@ -66,7 +67,6 @@ function execShell() {
                 cron += `${cronList[i].cron} ${cronList[i].js_path} >> ${cronList[i].log_path} 2>&1\n`
             }
         }
-        console.log(cron)
         const cronPath = '/app/jd/crontab/cron'
         await fs.writeFileSync(cronPath, cron, 'utf8');
         await exec(`crontab ${cronPath}`);
