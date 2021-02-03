@@ -5,41 +5,41 @@ const fs = require('fs')
 $.notice = ''
 !(async () => {
     //拼接js路径和log路径。后续存储至数据库
-    // const jsPath = 'mkdir -p /app/jd/logs/$(date +\\%Y-\\%m-\\%d)/dirPath && /usr/local/bin/node /app/jd/jd_scripts/js_path'
-    // const logPath = '/app/jd/logs/$(date +\\%Y-\\%m-\\%d)/dirPath/dirPath_$(date +\\%H)'
-    // const regexStr = await getCronFile()
-    // console.log(`定时任务总数：${regexStr.length - 1}`)
-    // for (let i = 1; i < regexStr.length; i++) {
-    //     const str = regexStr[i].split(/>>/g)[0].split(/node \/scripts\/| cd \/scripts && node /g)
-    //     //插入数据库
-    //     if (str.length === 2) {
-    //         const notifyTable = []
-    //         const cron = str[0]
-    //         const fileName = str[1].replace('undefined').replace(' ','')
-    //         const dirPath = fileName.replace(/jd_|.js/g,'')
-    //         notifyTable.push(cron)
-    //         notifyTable.push(new Date().toLocaleString())
-    //         notifyTable.push(fileName)
-    //         notifyTable.push(jsPath.replace(/dirPath/g,dirPath).replace(/js_path/g,fileName))
-    //         notifyTable.push(logPath.replace(/dirPath/g,dirPath).replace(/js_path/g,fileName))
-    //         let sql = 'select cron from jd_cron_table where file_name = ? and cron is not null'
-    //         let res = await ck.query(sql, [fileName])
-    //         if (res.length === 0) {
-    //             $.notice += `\n新增`
-    //             $.notice += `\n文件名：${fileName} cron：${cron}`
-    //             sql = 'insert into jd_cron_table(cron,date,file_name,js_path,log_path) value(?,?,?,?,?)'
-    //             await ck.query(sql, notifyTable)
-    //         } else if (res[0].cron !== cron ) {
-    //             $.notice += `\n更新`
-    //             $.notice += `\n文件名：${fileName} cron：${cron}`
-    //             sql = 'update jd_cron_table set cron = ?, date = ? where file_name = ?'
-    //             await ck.query(sql, notifyTable)
-    //         }
-    //     } else {
-    //         $.name += '需手动处理'
-    //         await ck.methodEnd($,str)
-    //     }
-    // }
+    const jsPath = 'mkdir -p /app/jd/logs/$(date +\\%Y-\\%m-\\%d)/dirPath && /usr/local/bin/node /app/jd/jd_scripts/js_path'
+    const logPath = '/app/jd/logs/$(date +\\%Y-\\%m-\\%d)/dirPath/dirPath_$(date +\\%H)'
+    const regexStr = await getCronFile()
+    console.log(`定时任务总数：${regexStr.length - 1}`)
+    for (let i = 1; i < regexStr.length; i++) {
+        const str = regexStr[i].split(/>>/g)[0].split(/node \/scripts\/| cd \/scripts && node /g)
+        //插入数据库
+        if (str.length === 2) {
+            const notifyTable = []
+            const cron = str[0]
+            const fileName = str[1].replace('undefined').replace(' ','')
+            const dirPath = fileName.replace(/jd_|.js/g,'')
+            notifyTable.push(cron)
+            notifyTable.push(new Date().toLocaleString())
+            notifyTable.push(fileName)
+            notifyTable.push(jsPath.replace(/dirPath/g,dirPath).replace(/js_path/g,fileName))
+            notifyTable.push(logPath.replace(/dirPath/g,dirPath).replace(/js_path/g,fileName))
+            let sql = 'select cron from jd_cron_table where file_name = ? and cron is not null'
+            let res = await ck.query(sql, [fileName])
+            if (res.length === 0) {
+                $.notice += `\n新增`
+                $.notice += `\n文件名：${fileName} cron：${cron}`
+                sql = 'insert into jd_cron_table(cron,date,file_name,js_path,log_path) value(?,?,?,?,?)'
+                await ck.query(sql, notifyTable)
+            } else if (res[0].cron !== cron ) {
+                $.notice += `\n更新`
+                $.notice += `\n文件名：${fileName} cron：${cron}`
+                sql = 'update jd_cron_table set cron = ?, date = ? where file_name = ?'
+                await ck.query(sql, notifyTable)
+            }
+        } else {
+            $.name += '需手动处理'
+            await ck.methodEnd($,str)
+        }
+    }
     await execShell()
 
 })() .catch((e) => {
@@ -57,16 +57,24 @@ $.notice = ''
 function execShell() {
     return new Promise(async resolve => {
         //从数据库查询所有数据
-        let cron = ''
-        const sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name'
+        let cron = '\n\n\n\n'
+        const sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path,c.flag from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name'
         const cronList = await ck.query(sql)
         for (let i = 0; i < cronList.length; i++) {
-            cron += `# ${cronList[i].active_name}\n`
-            cron += `${cronList[i].cron} ${cronList[i].js_path} >> ${cronList[i].log_path} 2>&1\n`
+            if (cronList[i].flag === 1) {
+                cron += `# ${cronList[i].active_name}\n`
+                cron += `${cronList[i].cron} ${cronList[i].js_path} >> ${cronList[i].log_path} 2>&1\n`
+            }
         }
         console.log(cron)
-        await fs.writeFileSync('/app/jd/crontab/cron', cron, 'utf8');
-        await exec(`crontab /app/jd/crontab/cron`);
+        const cronPath = '/app/jd/crontab/cron'
+        await fs.writeFileSync(cronPath, cron, 'utf8');
+        await exec(`crontab ${cronPath}`);
+        // 查看文件result.txt是否存在,如果存在,先删除
+        const fileExists = await fs.existsSync(cronPath);
+        if (fileExists) {
+            await fs.unlinkSync(cronPath);
+        }
         resolve();
     })
 }
