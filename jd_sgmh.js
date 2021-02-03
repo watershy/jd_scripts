@@ -32,6 +32,11 @@ const inviteCodes = [
   'T0205KkcAGxxvz6LYWOq3b5RCjVWmIaW5kRrbA',
   'T0205KkcAGxxvz6LYWOq3b5RCjVWmIaW5kRrbA',
   'T0205KkcAGxxvz6LYWOq3b5RCjVWmIaW5kRrbA',
+  'T0205KkcAGxxvz6LYWOq3b5RCjVWmIaW5kRrbA',
+  'T0205KkcAGxxvz6LYWOq3b5RCjVWmIaW5kRrbA',
+  'T0205KkcAGxxvz6LYWOq3b5RCjVWmIaW5kRrbA',
+  'T0205KkcAGxxvz6LYWOq3b5RCjVWmIaW5kRrbA',
+  'T0205KkcAGxxvz6LYWOq3b5RCjVWmIaW5kRrbA',
 ];
 const randomCount = $.isNode() ? 20 : 5;
 
@@ -41,7 +46,7 @@ let cookiesArr = [], cookie = '';
 const ck = require('./jdCookie.js')
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 !(async () => {
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie('select * from jd_cookie');
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
