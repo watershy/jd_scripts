@@ -1,6 +1,7 @@
 const $ = new Env('京东cron定时任务');
 const ck = require('./jdCookie')
 const exec = require('child_process').execSync
+const fs = require('fs')
 $.notice = ''
 !(async () => {
     //拼接js路径和log路径。后续存储至数据库
@@ -56,13 +57,16 @@ $.notice = ''
 function execShell() {
     return new Promise(async resolve => {
         //从数据库查询所有数据
-        const list = []
-        const cronList = await ck.query('select * from jd_cron_table where file_name = \'jd_bean_sign.js\'')
+        let cron = ''
+        const sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name'
+        const cronList = await ck.query(sql)
         for (let i = 0; i < cronList.length; i++) {
-            const cron = `${cronList[i].cron} ${cronList[i].js_path} >> ${cronList[i].log_path} 2>&1`
-            list.push(cron)
+            cron += `# ${cronList[i].active_name}\n`
+            cron += `${cronList[i].cron} ${cronList[i].js_path} >> ${cronList[i].log_path} 2>&1\n`
         }
-        await exec(``);
+        console.log(cron)
+        await fs.writeFileSync('/app/jd/crontab/cron', cron, 'utf8');
+        await exec(`crontab /app/jd/crontab/cron`);
         resolve();
     })
 }
