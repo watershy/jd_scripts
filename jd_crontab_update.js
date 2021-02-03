@@ -56,26 +56,33 @@ $.notice = ''
 //执行shell命令
 function execShell() {
     return new Promise(async resolve => {
-        //从数据库查询所有数据
-        let cron = '\n# 定时更新git文件\n'
-        cron += `0 18 * * * sh /app/shell/jd_updateGit >> /app/jd/logs/updateGit 2>&1\n`
-        const sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path,c.flag from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name'
-        const cronList = await ck.query(sql)
-        for (let i = 0; i < cronList.length; i++) {
-            if (cronList[i].flag === 1) {
-                cron += `# ${cronList[i].active_name}\n`
-                cron += `${cronList[i].cron} ${cronList[i].js_path} >> ${cronList[i].log_path} 2>&1\n`
+        try {
+            //从数据库查询所有数据
+            let cron = '\n# 定时更新git文件\n'
+            cron += `0 18 * * * sh /app/shell/jd_updateGit >> /app/jd/logs/updateGit 2>&1\n`
+            const sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path,c.flag from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name'
+            const cronList = await ck.query(sql)
+            for (let i = 0; i < cronList.length; i++) {
+                if (cronList[i].flag === 1) {
+                    cron += `# ${cronList[i].active_name}\n`
+                    cron += `${cronList[i].cron} ${cronList[i].js_path} >> ${cronList[i].log_path} 2>&1\n`
+                }
             }
+            const cronPath = '/app/jd/crontab/cron'
+            await fs.writeFileSync(cronPath, cron, 'utf8');
+            await exec(`crontab ${cronPath}`);
+            // 查看文件result.txt是否存在,如果存在,先删除
+            const fileExists = await fs.existsSync(cronPath);
+            if (fileExists) {
+                await fs.unlinkSync(cronPath);
+            }
+        }catch (e) {
+            $.name += '错误'
+            $.notice = e
+        } finally {
+            await ck.methodEnd($)
+            resolve();
         }
-        const cronPath = '/app/jd/crontab/cron'
-        await fs.writeFileSync(cronPath, cron, 'utf8');
-        await exec(`crontab ${cronPath}`);
-        // 查看文件result.txt是否存在,如果存在,先删除
-        const fileExists = await fs.existsSync(cronPath);
-        if (fileExists) {
-            await fs.unlinkSync(cronPath);
-        }
-        resolve();
     })
 }
 //获取定时任务文件数据
