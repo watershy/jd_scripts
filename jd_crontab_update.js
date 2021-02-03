@@ -1,40 +1,46 @@
 const $ = new Env('京东cron定时任务');
 const ck = require('./jdCookie')
+const exec = require('child_process').execSync
 $.notice = ''
 !(async () => {
-    const regexStr = await getCronFile()
-    console.log(`定时任务总数：${regexStr.length}`)
-    for (let i = 0; i < regexStr.length; i++) {
-        regexStr[i]
-        const str = regexStr[i].replace(/(?=(\(https)).*?(?<=(js\)))/)
-        if (str) {
-            const notifyTable = []
-            const strArr = str.split('|')
-            const st = strArr[0].replace(']', '')
-                .replace(/\|/g, '')
-                .replace('undefined', '')
-                .replace('[', '')
-            const st2 = strArr[1].replace(']', '')
-                .replace(/\|/g, '')
-                .replace('undefined', '')
-                .replace('[', '')
-                .replace('🐕','')
-                .replace('🧨','')
-                .replace('✈','')
-                .replace('️','')
-            notifyTable.push(st)
-            notifyTable.push(st2)
-            notifyTable.push(new Date().toLocaleString())
-            notifyTable.push(0)
-            let sql = 'select 1 from jd_notify_table where file_name = ? and active_name = ?'
-            let res = await ck.query(sql, notifyTable)
-            if (res.length === 0) {
-                $.notice += `\n文件名：${st2} 活动名：${st}`
-                sql = 'insert into jd_notify_table(file_name,active_name,date,notify) value(?,?,?,?)'
-                await ck.query(sql, notifyTable)
-            }
-        }
-    }
+    //拼接js路径和log路径。后续存储至数据库
+    // const jsPath = 'mkdir -p /app/jd/logs/$(date +\\%Y-\\%m-\\%d)/dirPath && /usr/local/bin/node /app/jd/jd_scripts/js_path'
+    // const logPath = '/app/jd/logs/$(date +\\%Y-\\%m-\\%d)/dirPath/dirPath_$(date +\\%H)'
+    // const regexStr = await getCronFile()
+    // console.log(`定时任务总数：${regexStr.length - 1}`)
+    // for (let i = 1; i < regexStr.length; i++) {
+    //     const str = regexStr[i].split(/>>/g)[0].split(/node \/scripts\/| cd \/scripts && node /g)
+    //     //插入数据库
+    //     if (str.length === 2) {
+    //         const notifyTable = []
+    //         const cron = str[0]
+    //         const fileName = str[1].replace('undefined').replace(' ','')
+    //         const dirPath = fileName.replace(/jd_|.js/g,'')
+    //         notifyTable.push(cron)
+    //         notifyTable.push(new Date().toLocaleString())
+    //         notifyTable.push(fileName)
+    //         notifyTable.push(jsPath.replace(/dirPath/g,dirPath).replace(/js_path/g,fileName))
+    //         notifyTable.push(logPath.replace(/dirPath/g,dirPath).replace(/js_path/g,fileName))
+    //         let sql = 'select cron from jd_cron_table where file_name = ? and cron is not null'
+    //         let res = await ck.query(sql, [fileName])
+    //         if (res.length === 0) {
+    //             $.notice += `\n新增`
+    //             $.notice += `\n文件名：${fileName} cron：${cron}`
+    //             sql = 'insert into jd_cron_table(cron,date,file_name,js_path,log_path) value(?,?,?,?,?)'
+    //             await ck.query(sql, notifyTable)
+    //         } else if (res[0].cron !== cron ) {
+    //             $.notice += `\n更新`
+    //             $.notice += `\n文件名：${fileName} cron：${cron}`
+    //             sql = 'update jd_cron_table set cron = ?, date = ? where file_name = ?'
+    //             await ck.query(sql, notifyTable)
+    //         }
+    //     } else {
+    //         $.name += '需手动处理'
+    //         await ck.methodEnd($,str)
+    //     }
+    // }
+    await execShell()
+
 })() .catch((e) => {
     $.name += '错误'
     $.notice = e
@@ -42,30 +48,46 @@ $.notice = ''
     if ($.notice) {
         await ck.methodEnd($)
     } else {
-        console.log('没有新活动')
+        console.log('没有更新或新增')
         console.log(new Date().toLocaleString())
     }
 })
-
+//执行shell命令
+function execShell() {
+    return new Promise(async resolve => {
+        //从数据库查询所有数据
+        const list = []
+        const cronList = await ck.query('select * from jd_cron_table where file_name = \'jd_bean_sign.js\'')
+        for (let i = 0; i < cronList.length; i++) {
+            const cron = `${cronList[i].cron} ${cronList[i].js_path} >> ${cronList[i].log_path} 2>&1`
+            list.push(cron)
+        }
+        await exec(``);
+        resolve();
+    })
+}
+//获取定时任务文件数据
 function getCronFile(url = 'https://gitee.com/lxk0301/jd_scripts/raw/master/docker/crontab_list.sh') {
     return new Promise(async resolve => {
         $.get({url,
             headers:{
                 "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-            }}, (err, resp, data) => {
+            }}, async (err, resp, data) => {
+            const cronList = []
             try {
                 if (data) {
                     data = data.split(/\n/g)
                     for (let i = 0; i <data.length; i++) {
                         if (data[i] && !data[i].match(/^#/g)) {
-                            console.log(data[i])
+                            cronList.push(data[i])
                         }
                     }
                 }
             } catch (e) {
-                $.logErr(e, resp)
+                $.name += `错误`
+                await ck.methodEnd($,e)
             } finally {
-                resolve(data);
+                resolve(cronList);
             }
         })
         await $.wait(3000)
