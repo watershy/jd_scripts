@@ -62,6 +62,8 @@ const pkInviteCodes = [
   'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
   'IgNWdiLGaPaAvmGJem3jhVfq1HcD09RJn7gv42N0o81Bz8OgbG56UcczrxODaA',
 ]
+let nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000);
+const openUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wbbny.m.jd.com/babelDiy/Zeus/2cKMj86srRdhgWcKonfExzK4ZMBy/index.html%22%20%7D`;
 const ck = require('./jdCookie')
 !(async () => {
   cookiesArr = await ck.getCookie('select * from jd_cookie')
@@ -124,6 +126,7 @@ const ck = require('./jdCookie')
     })
 async function jdNian() {
   try {
+    $.full = false
     await getHomeData()
     if (!$.secretp) return
     let hour = new Date().getUTCHours()
@@ -141,6 +144,7 @@ async function jdNian() {
       if ($.hasGroup) await pkInfo()
       await helpFriendsPK()
     }
+    if($.full) return
     await $.wait(2000)
     await killCouponList()
     await $.wait(2000)
@@ -353,7 +357,12 @@ function getHomeData(info = false) {
               $.secretp = null
               return
             }
-            console.log(`\n\n当前等级:${$.userInfo.raiseInfo.curMaxLevel}\n当前爆竹${$.userInfo.raiseInfo.remainScore}🧨，下一关需要${$.userInfo.raiseInfo.nextLevelScore - $.userInfo.raiseInfo.curLevelStartScore}🧨\n\n`)
+            if ($.userInfo.raiseInfo.fullFlag) {
+              console.log(`当前等级已满，不再做日常任务！\n`)
+              $.full = true
+              return
+            }
+            console.log(`\n\n当前等级:${$.userInfo.raiseInfo.scoreLevel}\n当前爆竹${$.userInfo.raiseInfo.remainScore}🧨，下一关需要${$.userInfo.raiseInfo.nextLevelScore - $.userInfo.raiseInfo.curLevelStartScore}🧨\n\n`)
 
             if (info) {
               message += `当前爆竹${$.userInfo.raiseInfo.remainScore}🧨\n`
