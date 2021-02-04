@@ -36,10 +36,10 @@ inputs:
           argument: jd_bookshop&jd_jxnc
     - timer: # 宠汪汪喂食# 宠汪汪# 摇钱树# 京喜工厂
         parameters:
-          name: feedPets_joy_moneyTree_dreamFactory_nC
+          name: feedPets_joy_moneyTree_dreamFactory
           cronExpression: "0 3 */1 * * * *"
           enable: true
-          argument: jd_joy_feedPets&jd_joy&jd_moneyTree&jd_dreamFactory&jd_nianCollect
+          argument: jd_joy_feedPets&jd_joy&jd_moneyTree&jd_dreamFactory
     - timer: #宠汪汪偷好友积分与狗 #点点券 #东东小窝 #京东直播18豆
         parameters:
           name: joysteal_necklace_smallhome_live
@@ -64,12 +64,12 @@ inputs:
           cronExpression: "0 30 7 * * * *"
           enable: true
           argument: jd_crazy_joy&jd_rankingList&jd_sgmh&jd_nh&jd_immortal&jd_immortal_answer&jd_mh
-    - timer: #十元街 #京东快递 #签到领现金 #京喜签到 #京东炸年兽签到任务 #京东炸年兽AR #京东炸年兽小程序 #京东手机年终奖
+    - timer: #十元街 #京东快递 #签到领现金 #京喜签到 #京东手机年终奖
         parameters:
-          name: syj_kd_cash_sign_niansign_nianar_nianwechat_fes
+          name: syj_kd_cash_sign_fes
           cronExpression: "0 3 1 * * * *"
           enable: true
-          argument: jd_syj&jd_kd&jd_cash&jx_sign&jd_nian_sign&jd_nian_ar&jd_nian_wechat&jd_festival
+          argument: jd_syj&jd_kd&jd_cash&jx_sign&jd_festival
   environment: #  环境变量
     variables: #  环境变量对象
       AAA: BBB # 不要删除，用来格式化对齐追加的变量的

@@ -6,8 +6,9 @@ $.notice = ''
 !(async () => {
     const regexStr = await getReadMeFile()
     // const notifyContent = await fs.readFileSync(resultPath, "utf8");
-    // const regexStr = notifyContent.match(/(?<=(\|\d{1,3}\|)).*(\|)/g)
+    // const regexStr = notifyContent.match(/(?<=(\|\d{1,3}\|)).*(\|a)/g)
     console.log(`活动总数：${regexStr.length}`)
+    const fileNameList = []
     for (let i = 0; i < regexStr.length; i++) {
         const str = regexStr[i].replace(/(?=(\(https)).*?(?<=(js\)))/)
         if (str) {
@@ -25,6 +26,7 @@ $.notice = ''
                 .replace('🧨','')
                 .replace('✈','')
                 .replace('️','')
+            fileNameList.push(st)
             notifyTable.push(st)
             notifyTable.push(st2)
             notifyTable.push(new Date().toLocaleString())
@@ -37,6 +39,18 @@ $.notice = ''
                 await ck.query(sql, notifyTable)
             }
         }
+    }
+    //查询是否存在过期活动
+    let sql = 'select active_name from jd_notify_table where file_name not in (?) and flag != 1'
+    let res = await ck.query(sql, [fileNameList])
+    if (res.length !== 0) {
+        $.notice += `过期活动\n`
+        for (let i = 0; i <res.length; i++) {
+            $.notice += `${res[i].active_name}\n`
+        }
+        //删除不存在的活动
+        sql = 'delete from jd_notify_table where file_name not in (?) and flag != 1'
+        await ck.query(sql, [fileNameList])
     }
 })() .catch((e) => {
     $.name += '错误'
