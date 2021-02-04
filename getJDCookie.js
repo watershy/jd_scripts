@@ -62,6 +62,7 @@ function generateQrcode() {
           console.log(url)
           qrcode.generate(url, {small: true}); // 输出二维码
           console.log("请打开 京东APP 扫码登录(二维码有效期为3分钟)");
+          console.log(`\n\n注：如扫描不到，请使用工具(例如在线二维码工具：https://cli.im)手动生成如下url二维码\n\n${url}\n\n`);
         }
       } catch (e) {
         $.logErr(e, resp)
