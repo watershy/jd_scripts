@@ -74,7 +74,7 @@ const ck = require('./jdCookie')
   }
 })()
     .catch((e) => {
-        $.notice += `\n${e}`
+      $.notice += `\n${e}`
       $.name += `错误`
     })
     .finally(async () => {
@@ -296,9 +296,9 @@ async function slaveHelp() {
       console.log(`助力好友结果: ${response.message}`);
     }
   }
-  if (helpPeoples && helpPeoples.length > 0) {
-    message += `【您助力的好友】${helpPeoples.substr(0, helpPeoples.length - 1)}\n`;
-  }
+  // if (helpPeoples && helpPeoples.length > 0) {
+  //   message += `【您助力的好友】${helpPeoples.substr(0, helpPeoples.length - 1)}\n`;
+  // }
 }
 // 遛狗, 每天次数上限10次, 随机给狗粮, 每次遛狗结束需调用getSportReward领取奖励, 才能进行下一次遛狗
 async function petSport() {
@@ -310,7 +310,7 @@ async function petSport() {
     let response = await request(arguments.callee.name.toString())
     console.log(`第${times}次遛狗完成: ${JSON.stringify(response)}`);
     resultCode = response.resultCode;
-    if (resultCode == 0) {
+    if (resultCode === 0) {
       let sportRevardResult = await request('getSportReward');
       console.log(`领取遛狗奖励完成: ${JSON.stringify(sportRevardResult)}`);
     }

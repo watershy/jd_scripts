@@ -22,7 +22,7 @@ let cookiesArr = [], cookie = '';
 $.notice = ''
 const ck = require('./jdCookie.js')
 !(async () => {
-    cookiesArr = await ck.getCookie();
+    cookiesArr = await ck.getCookie('select * from jd_cookie where possessor = \'hyk\' and id != \'3\'');
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         return;

@@ -30,7 +30,7 @@ const JD_API_HOST = 'https://api.m.jd.com/';
 const ck = require('./jdCookie.js')
 $.notice = ''
 !(async () => {
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie('select * from jd_cookie where possessor = \'hyk\' and id not in (\'2\',\'3\')');
   $.newShareCodes = []
   // await getAuthorShareCode();
   // await getAuthorShareCode2();
