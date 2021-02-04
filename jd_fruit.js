@@ -40,7 +40,7 @@ const urlSchema = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%2
 const ck = require('./jdCookie.js')
 notify = $.isNode() ? require('./sendNotify') : '';
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie');
+  cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
