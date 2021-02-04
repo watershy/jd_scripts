@@ -31,11 +31,28 @@ cron "0 0-18/6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/maste
  */
 const $ = new Env('京东手机狂欢城');
 
+const notify = $.isNode() ? require('../sendNotify') : '';
 let jdNotify = false;//是否开启推送互助码
-
+//Node.js用户请在jdCookie.js处填写京东ck;
+const jdCookieNode = $.isNode() ? require('../jdCookie.js') : '';
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+} else {
+  let cookiesData = $.getdata('CookiesJD') || "[]";
+  cookiesData = jsonParse(cookiesData);
+  cookiesArr = cookiesData.map(item => item.cookie);
+  cookiesArr.reverse();
+  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
+  cookiesArr.reverse();
+  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+}
 
 const JD_API_HOST = 'https://rdcseason.m.jd.com/api/';
 const activeEndTime = '2021/2/4 00:59:59+08:00';
@@ -62,7 +79,7 @@ let helpCode = []
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
 
         if ($.isNode()) {
-          await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
       }
@@ -75,11 +92,10 @@ let helpCode = []
   // console.log(JSON.stringify($.temp))
 })()
     .catch((e) => {
-        $.notice += `\n${e}`
-      $.name += `错误`
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
-    .finally(async () => {
-      await ck.methodEnd($)
+    .finally(() => {
+      $.done();
     })
 async function main() {
   // await getHelp();
@@ -102,6 +118,7 @@ async function main() {
     getListRank(),
     getListIntegral(),
   ]);
+  await showMsg()
 }
 async function JD818() {
   try {
@@ -119,6 +136,7 @@ async function JD818() {
     await getListJbean();
     await getListRank();
     await getListIntegral();
+    await showMsg()
   } catch (e) {
     $.logErr(e)
   }
@@ -843,7 +861,7 @@ function updateShareCodes(url = 'https://raw.githubusercontent.com/LXK9301/updat
 function updateShareCodesCDN(url = 'https://gitee.com/lxk0301/updateTeam/raw/master/shareCodes/jd_shareCodes.json') {
   return new Promise(resolve => {
     //https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_shareCodes.json
-    $.get({url , headers:{"User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")}}, async (err, resp, data) => {
+    $.get({url , headers:{"User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('../USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")}}, async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
