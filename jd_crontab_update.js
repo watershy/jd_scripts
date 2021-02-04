@@ -37,16 +37,13 @@ $.notice = ''
                 sql = 'update jd_cron_table set cron = ?, date = ? where file_name = ?'
                 await ck.query(sql, notifyTable)
             }
-        } else {
-            $.name += '需手动处理'
-            await ck.methodEnd($,str)
         }
     }
     //查询是否存在过期活动
     let sql = 'select file_name from jd_cron_table where file_name not in (?) and flag != 1'
     let res = await ck.query(sql, [fileNameList])
     if (res.length !== 0) {
-        $.notice += `过期活动\n`
+        $.notice += `过期活动：\n`
         for (let i = 0; i <res.length; i++) {
             $.notice += `${res[i].file_name}\n`
         }
@@ -94,7 +91,6 @@ function execShell() {
             $.name += '错误'
             $.notice = e
         } finally {
-            await ck.methodEnd($)
             resolve();
         }
     })

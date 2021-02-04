@@ -44,7 +44,7 @@ $.notice = ''
     let sql = 'select active_name from jd_notify_table where file_name not in (?) and flag != 1'
     let res = await ck.query(sql, [fileNameList])
     if (res.length !== 0) {
-        $.notice += `过期活动\n`
+        $.notice += `过期活动：\n`
         for (let i = 0; i <res.length; i++) {
             $.notice += `${res[i].active_name}\n`
         }
