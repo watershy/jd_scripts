@@ -108,6 +108,7 @@ async function downFile () {
     await download(url, outPutUrl, options);
     console.log('文件下载完毕');
   } catch (e) {
+$.name += `错误`
     console.log("文件下载异常:" + e);
   }
 }
@@ -128,6 +129,7 @@ async function changeFile (content) {
     await fs.writeFileSync(JD_DailyBonusPath, newContent, 'utf8');
     console.log('替换变量完毕');
   } catch (e) {
+$.name += `错误`
     console.log("京东签到写入文件异常:" + e);
   }
 }
@@ -173,6 +175,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -204,6 +207,7 @@ function downloadUrl(url = 'https://raw.githubusercontent.com/NobyDa/Script/mast
           $.body = data;
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();

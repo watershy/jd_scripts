@@ -111,6 +111,7 @@ function getIsvToken() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -144,6 +145,7 @@ function getIsvToken2() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -173,6 +175,7 @@ function getActCk() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -198,6 +201,7 @@ function getActInfo() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -222,6 +226,7 @@ function getMyPing() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -252,6 +257,7 @@ function getUserInfo() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -305,6 +311,7 @@ function getActContent(info=false, shareUuid = '') {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -332,6 +339,7 @@ function getTaskInfo(taskType, value) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -361,6 +369,7 @@ function doTask(taskType, value) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -397,6 +406,7 @@ function draw() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -471,6 +481,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -484,6 +495,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
+$.name += `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -494,6 +506,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

@@ -159,6 +159,7 @@ function jDSpeedUp(sourceId) {
           }
         }
       } catch (e) {
+$.name += `错误`
         // $.msg("京东天天-加速" + e.name + "‼️", JSON.stringify(e), e.message)
         $.logErr(e, resp);
       } finally {
@@ -214,6 +215,7 @@ function spaceEventList() {
           }
         }
       } catch (e) {
+$.name += `错误`
         // $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
         $.logErr(e, resp)
       } finally {
@@ -262,6 +264,7 @@ function spaceEventHandleEvent(spaceEventList) {
               }
             }
           } catch (e) {
+$.name += `错误`
             // $.msg("天天加速-查询处理太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
             $.logErr(e, resp)
           } finally {
@@ -535,6 +538,7 @@ function getMemBerList() {
           }
         }
       } catch (e) {
+$.name += `错误`
         // $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
         $.logErr(e, resp)
       } finally {
@@ -569,6 +573,7 @@ function getMemBerGetTask(sourceId) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve()
@@ -601,6 +606,7 @@ function getReward(uuid) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve()
@@ -641,6 +647,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -653,6 +660,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
@@ -665,6 +673,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
+$.name += `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;

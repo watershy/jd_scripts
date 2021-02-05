@@ -86,6 +86,7 @@ async function jdNian() {
     await getHomeData(true)
     await showMsg()
   } catch (e) {
+$.name += `错误`
     $.logErr(e)
   }
 }
@@ -144,6 +145,7 @@ function getHomeData(info=false) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -178,6 +180,7 @@ function queryMaterials2() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -205,6 +208,7 @@ function signInRead(shopSign) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -248,6 +252,7 @@ function signInWrite(shopSign) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -270,6 +275,7 @@ function pkInfo() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -291,6 +297,7 @@ function pkCollectScore() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -312,6 +319,7 @@ function pkTaskDetail() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -347,6 +355,7 @@ function pkAssignGroup(inviteId) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -369,6 +378,7 @@ function readShareCode() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -474,6 +484,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -487,6 +498,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
+$.name += `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -497,6 +509,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

@@ -85,6 +85,7 @@ function delCoupon(couponId, couponTitle) {
         console.log(`删除优惠券---${couponTitle}----失败\n`);
       }
     } catch (e) {
+$.name += `错误`
       $.logErr(e, resp);
     } finally {
 
@@ -141,6 +142,7 @@ function getCoupon() {
             }
           }
         } catch (e) {
+$.name += `错误`
           $.logErr(e, resp);
         } finally {
         }
@@ -206,6 +208,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -218,6 +221,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

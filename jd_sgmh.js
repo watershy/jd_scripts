@@ -164,6 +164,7 @@ function interact_template_getHomeData(timeout = 0) {
           }
           if (scorePerLottery) await interact_template_getLotteryResult();
         } catch (e) {
+$.name += `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -201,6 +202,7 @@ function harmony_collectScore(taskToken,taskId,itemId = "",actionType = 0,timeou
             console.log(data.data.bizMsg)
           }
         } catch (e) {
+$.name += `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -244,6 +246,7 @@ function interact_template_getLotteryResult(taskId,timeout = 0) {
             }
           }
         } catch (e) {
+$.name += `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -308,6 +311,7 @@ function readShareCode() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -350,6 +354,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -362,6 +367,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

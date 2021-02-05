@@ -88,6 +88,7 @@ function execShell() {
                 await fs.unlinkSync(cronPath);
             }
         }catch (e) {
+$.name += `错误`
             $.name += '错误'
             $.notice = e
         } finally {
@@ -113,6 +114,7 @@ function getCronFile(url = 'https://gitee.com/lxk0301/jd_scripts/raw/master/dock
                     }
                 }
             } catch (e) {
+$.name += `错误`
                 $.name += `错误`
                 await ck.methodEnd($,e)
             } finally {

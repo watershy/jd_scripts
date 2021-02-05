@@ -386,6 +386,7 @@ function getDeskGoodDetails() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -411,6 +412,7 @@ function followScan(sku) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -435,6 +437,7 @@ function scanMarket(type, body, cType = 'application/json') {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -457,6 +460,7 @@ function appScanMarket(type, body) {
           console.log(`京东app逛会场结果::${data}`)
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -479,6 +483,7 @@ function getFood(type) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -501,6 +506,7 @@ function followShop(shopId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -528,6 +534,7 @@ function enterRoom() {
           message = `现有积分: ${$.roomData.data.petCoin}\n现有狗粮: ${$.roomData.data.petFood}\n喂养次数: ${$.roomData.data.feedCount}\n宠物等级: ${$.roomData.data.petLevel}\n`
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -549,6 +556,7 @@ function appGetPetTaskConfig() {
           $.appGetPetTaskConfigRes = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -601,6 +609,7 @@ function feedPets(feedNum) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -622,6 +631,7 @@ function getPetTaskConfig() {
           $.getPetTaskConfigRes = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -645,6 +655,7 @@ function getPetRace() {
           $.petRaceResult = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -669,6 +680,7 @@ function getRankList() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -695,6 +707,7 @@ function runMatch(teamLevel, timeout = 5000) {
           $.runMatchResult = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -718,6 +731,7 @@ function getBackupInfo() {
           $.getBackupInfoResult = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -741,6 +755,7 @@ function getWinCoin() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -764,6 +779,7 @@ function receiveJoyRunAward() {
           $.receiveJoyRunAwardRes = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -808,6 +824,7 @@ function getSupplyInfo(showOrder) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -848,6 +865,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -892,6 +910,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

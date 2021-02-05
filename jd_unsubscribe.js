@@ -144,6 +144,7 @@ function getFollowGoods() {
         $.goodsTotalNum = data.totalNum;
         // console.log('data', data.data.length)
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -172,6 +173,7 @@ function unsubscribeGoodsFun(commId) {
         // console.log('data', data);
         // console.log('data', data.errMsg);
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -234,6 +236,7 @@ function getFollowShops() {
         data = JSON.parse(data.slice(14, -13));
         $.shopsTotalNum = data.totalNum;
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -260,6 +263,7 @@ function unsubscribeShopsFun(shopId) {
       try {
         data = JSON.parse(data.slice(14, -13));
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -300,6 +304,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -333,6 +338,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

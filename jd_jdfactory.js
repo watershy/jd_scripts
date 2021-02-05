@@ -216,6 +216,7 @@ async function algorithm() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -354,6 +355,7 @@ function jdfactory_collectScore(taskToken) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -380,6 +382,7 @@ function jdfactory_addEnergy() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -406,6 +409,7 @@ function jdfactory_collectElectricity() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -436,6 +440,7 @@ function jdfactory_getTaskDetail() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -462,6 +467,7 @@ function jdfactory_makeProduct(skuId) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -498,6 +504,7 @@ function queryVkComponent() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -540,6 +547,7 @@ function jdfactory_getProductList(flag = false) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -592,6 +600,7 @@ function jdfactory_getHomeData() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -614,6 +623,7 @@ function jdfactory_getHomeData() {
 //           }
 //         }
 //       } catch (e) {
+$.name += `错误`
 //         $.logErr(e, resp)
 //       } finally {
 //         resolve(data);
@@ -680,6 +690,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -693,6 +704,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
+$.name += `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -703,6 +715,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

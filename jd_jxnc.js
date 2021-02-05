@@ -120,6 +120,7 @@ function changeShareCodeJson(code) {
         let json = code && JSON.parse(code);
         return json['smp'] && json['active'] && json['joinnum'] ? json : '';
     } catch (e) {
+$.name += `错误`
         return '';
     }
 }
@@ -189,6 +190,7 @@ function requireConfig() {
                 }
             });
         } catch (e) {
+$.name += `错误`
             // 获取内置助力码失败
         }
         resolve()
@@ -229,6 +231,7 @@ function TotalBean() {
                     }
                 }
             } catch (e) {
+$.name += `错误`
                 $.logErr(e, resp)
             } finally {
                 resolve();
@@ -332,6 +335,7 @@ function getTaskList() {
                 }
                 resolve(other);
             } catch (e) {
+$.name += `错误`
                 $.logErr(e, resp);
             } finally {
                 resolve(true);
@@ -414,6 +418,7 @@ function answerTask() {
                         await answerTask();
                     }
                 } catch (e) {
+$.name += `错误`
                     $.logErr(e, resp);
                 } finally {
                     resolve();
@@ -474,6 +479,7 @@ function submitInviteId(userName) {
                             message += '【邀请码】提交成功！\n';
                         }
                     } catch (e) {
+$.name += `错误`
                         // $.logErr(e, resp);
                         $.log('邀请码提交失败 API 返回异常');
                     } finally {
@@ -482,6 +488,7 @@ function submitInviteId(userName) {
                 },
             );
         } catch (e) {
+$.name += `错误`
             // $.logErr(e, resp);
             resolve();
         }
@@ -507,6 +514,7 @@ function getAssistUser() {
                         $.log(`获取随机助力码失败 ${code}`);
                     }
                 } catch (e) {
+$.name += `错误`
                     // $.logErr(e, resp);
                     $.log('获取随机助力码失败 API 返回异常');
                 } finally {
@@ -514,6 +522,7 @@ function getAssistUser() {
                 }
             });
         } catch (e) {
+$.name += `错误`
             // $.logErr(e, resp);
             resolve(false);
         }
@@ -577,6 +586,7 @@ function helpShareCode(smp, active, joinnum) {
                     resolve(true);
                     return;
                 } catch (e) {
+$.name += `错误`
                     $.logErr(e, resp);
                 } finally {
                     resolve(false);
@@ -609,6 +619,7 @@ function doTask({tasklevel, left, taskname, eachtimeget}) {
                     }
                     resolve(ret);
                 } catch (e) {
+$.name += `错误`
                     $.logErr(e, resp);
                 } finally {
                     resolve();

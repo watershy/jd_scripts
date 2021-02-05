@@ -165,6 +165,7 @@ async function jdJoySteal() {
       message += `${$.getFriendsData && $.getFriendsData.errorMessage}\n`;
     }
   } catch (e) {
+$.name += `错误`
     $.logErr(e)
   }
 }
@@ -284,6 +285,7 @@ function getFriends(currentPage = '1') {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -332,6 +334,7 @@ function enterFriendRoom(friendPin) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -355,6 +358,7 @@ function getFriendCoin(friendPin) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -378,6 +382,7 @@ function helpFeed(friendPin) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -399,6 +404,7 @@ function doubleRandomFood(friendPin) {
           // $.appGetPetTaskConfigRes = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -423,6 +429,7 @@ function getRandomFood(friendPin) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -474,6 +481,7 @@ function getCoinChanges() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -536,6 +544,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -573,6 +582,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

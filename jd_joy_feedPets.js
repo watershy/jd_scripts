@@ -140,6 +140,7 @@ function feedPets(feedNum) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve($.data);
@@ -175,6 +176,7 @@ function ThreeMeals() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(resp, e);
       } finally {
         resolve(data);
@@ -187,6 +189,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
@@ -226,6 +229,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();

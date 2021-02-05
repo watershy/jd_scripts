@@ -255,6 +255,7 @@ function receiveBlueCoin(timeout = 0) {
             await receiveBlueCoin(3000);
           }
         } catch (e) {
+$.name += `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -305,6 +306,7 @@ function smtgSign(body) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -805,6 +807,7 @@ function smtg_shopIndex() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -826,6 +829,7 @@ function smtg_shelfUnlock(body) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -846,6 +850,7 @@ function smtg_shelfUpgrade(body) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -867,6 +872,7 @@ function smtg_sellMerchandise(body) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -887,6 +893,7 @@ function updatePkActivityId(url = 'https://raw.githubusercontent.com/LXK9301/upd
           $.updatePkActivityIdRes = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -909,6 +916,7 @@ function updatePkActivityIdCDN(url) {
           $.updatePkActivityIdRes = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -937,6 +945,7 @@ function smtgDoShopTask(taskId, itemId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -959,6 +968,7 @@ function smtgObtainShopTaskPrize(taskId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -978,6 +988,7 @@ function smtgQueryShopTask() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -998,6 +1009,7 @@ function smtgSignList() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1023,6 +1035,7 @@ function smtgHome() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1068,6 +1081,7 @@ function smtgQueryPkTask() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1088,6 +1102,7 @@ function smtgDoAssistPkTask(code) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1107,6 +1122,7 @@ function smtgReceiveCoin(body) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1127,6 +1143,7 @@ function smtgObtainPkTaskPrize(taskId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1146,6 +1163,7 @@ function smtgDoPkTask(taskId, itemId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1165,6 +1183,7 @@ function smtg_joinPkTeam(teamId, inviteCode, sharePkActivityId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1184,6 +1203,7 @@ function smtg_getTeamPkDetailInfo() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1203,6 +1223,7 @@ function smtg_businessCirclePKDetail() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1222,6 +1243,7 @@ function smtg_getBusinessCircleList() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1242,6 +1264,7 @@ function smtg_joinBusinessCircle(circleId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1261,6 +1284,7 @@ function smtg_businessCircleIndex() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1280,6 +1304,7 @@ function smtg_receivedPkTeamPrize() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1300,6 +1325,7 @@ function smtg_getPkPrize() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1319,6 +1345,7 @@ function smtg_quitBusinessCircle() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1339,6 +1366,7 @@ function smtg_shelfList() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1361,6 +1389,7 @@ function smtg_shelfProductList(shelfId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1383,6 +1412,7 @@ function smtg_upgradeProduct(productId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1405,6 +1435,7 @@ function smtg_unlockProduct(productId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1427,6 +1458,7 @@ function smtg_upgradeShelf(shelfId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1449,6 +1481,7 @@ function smtg_unlockShelf(shelfId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1469,6 +1502,7 @@ function smtg_ground(productId, shelfId) {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1488,6 +1522,7 @@ function smtg_productList() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1507,6 +1542,7 @@ function smtg_lotteryIndex() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1527,6 +1563,7 @@ function smtg_drawLottery() {
           data = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -1592,6 +1629,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1627,6 +1665,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

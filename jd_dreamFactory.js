@@ -149,6 +149,7 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -179,6 +180,7 @@ function investElectric() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -236,6 +238,7 @@ function taskList() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -278,6 +281,7 @@ function getUserElectricity() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -313,6 +317,7 @@ function QueryHireReward() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -342,6 +347,7 @@ function hireAward(date, type = 0) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -414,6 +420,7 @@ function queryFriendInfo(sharepin) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(nickname);
@@ -458,6 +465,7 @@ function assistFriend(sharepin) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -491,6 +499,7 @@ function QueryFriendList() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -531,6 +540,7 @@ function completeTask(taskId, taskName) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -559,6 +569,7 @@ function doTask(taskId) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -638,6 +649,7 @@ function userInfo() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -666,6 +678,7 @@ function GetCommodityDetails() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -698,6 +711,7 @@ function GetShelvesList(pageNo = 1) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -726,6 +740,7 @@ function DrawProductionStagePrize() {
           // }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -791,6 +806,7 @@ function GetUserComponent(pin = $.encryptPin, timeout = 0) {
             }
           }
         } catch (e) {
+$.name += `错误`
           $.logErr(e, resp)
         } finally {
           resolve(data);
@@ -830,6 +846,7 @@ function PickUpComponent(index, encryptPin) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -884,6 +901,7 @@ function getFriendList(sort = 0) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -914,6 +932,7 @@ function getFactoryIdByPin(pin) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -999,6 +1018,7 @@ function QueryActiveConfig() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -1037,6 +1057,7 @@ function QueryTuan(activeId, tuanId) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -1077,6 +1098,7 @@ function CreateTuan() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1131,6 +1153,7 @@ function JoinTuan(tuanId) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1188,6 +1211,7 @@ function QueryAllTuan() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -1244,6 +1268,7 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1261,6 +1286,7 @@ function updateTuanIds(url = 'https://raw.githubusercontent.com/LXK9301/updateTe
           $.tuanIdS = JSON.parse(data);
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1283,6 +1309,7 @@ function updateTuanIdsCDN(url) {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1385,6 +1412,7 @@ function readShareCode() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -1447,6 +1475,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
+$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1460,6 +1489,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
+$.name += `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -1529,6 +1559,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
+$.name += `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
