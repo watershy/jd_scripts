@@ -52,12 +52,12 @@ inputs:
           cronExpression: "0 10 0 * * * *"
           enable: true
           argument: jd_redPacket&jd_shop&jd_unsubscribe&jd_unbind&jd_lotteryMachine&jd_car&jd_ms&jd_xg&jd_xgyl
-    - timer: #京东天天加速 #天天提鹅 #京东炸年兽
+    - timer: #京东天天加速 #天天提鹅
         parameters:
-          name: speed_daily_egg_nian
+          name: speed_daily_egg
           cronExpression: "0 8 */3 * * * *"
           enable: true
-          argument: jd_speed&jd_daily_egg&jd_nian
+          argument: jd_speed&jd_daily_egg
     - timer: #疯狂的joy #京东排行榜 #闪购盲盒 #京东年货节 #京东神仙书院 #京东神仙书院答题 #盲盒抽京豆
         parameters:
           name: crazyjoy_rankingList_sgmh_nh_immortal_mh

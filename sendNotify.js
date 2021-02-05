@@ -69,10 +69,10 @@ function getKey (mode) {
     let res = await dbUtils.query('select * from jd_notify')
     for (let i = 0; i < res.length; i++) {
       if(res[i].notify_name === 'QQ_SKEY') {
-        QQ_SKEY = res[i].notify_key
+        QQ_SKEY = res[i].notif_key
         QQ_MODE = res[i].remark
       } else if (res[i].notify_name === 'SCKEY') {
-        SCKEY = res[i].notify_key
+        SCKEY = res[i].notif_key
       }
     }
     resolve()

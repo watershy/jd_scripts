@@ -10,7 +10,7 @@ crazy joy
 
 const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
-$.buyJoyLevel = 1;
+$.buyJoyLevel = 22;
 
 let cookiesArr = [], cookie = '', message = '';
 const ck = require('./jdCookie.js')
