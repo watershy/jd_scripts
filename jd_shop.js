@@ -90,10 +90,10 @@ async function jdShop() {
       if (beanCount > 0) {
         $.msg($.name, '', `京东账号 ${$.index} ${$.nickName}\n成功领取${beanCount}京豆`);
         // if ($.isNode()) {
-        //   await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `京东账号${$.index} ${UserName}\n成功领取${beanCount}京豆`);
+        //   await ck.methodEnd($, `京东账号${$.index} ${UserName}\n成功领取${beanCount}京豆`);
         // }
         // if ($.isNode()) {
-        //   await notify.BarkNotify(`${$.name}`, `京东账号${$.index} ${UserName}\n成功领取${beanCount}京豆`);
+        //   await ck.methodEnd($, `京东账号${$.index} ${UserName}\n成功领取${beanCount}京豆`);
         // }
       }
     }

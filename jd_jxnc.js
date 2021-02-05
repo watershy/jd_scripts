@@ -128,7 +128,6 @@ function changeShareCodeJson(code) {
 function requireConfig() {
     return new Promise(async resolve => {
         $.log('开始获取配置文件\n')
-        notify = $.isNode() ? require('./sendNotify') : '';
 
         const jdTokenNode = $.isNode() ? require('./jdJxncTokens.js') : '';
         const jdJxncShareCodeNode = $.isNode() ? require('./jdJxncShareCodes.js') : '';
@@ -160,7 +159,7 @@ function requireConfig() {
                     $.log('互助码格式已变更，请重新填写互助码');
                     $.msg($.name, '互助码格式变更通知', '互助码格式变更，请重新填写 ‼️‼️', option);
                     if ($.isNode()) {
-                        await notify.sendNotify(`${$.name}`, `互助码格式变更，请重新填写 ‼️‼️`);
+                        await ck.methodEnd($, `互助码格式变更，请重新填写 ‼️‼️`);
                     }
                 }
                 break;

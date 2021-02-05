@@ -67,7 +67,7 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
 
         if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
       }
@@ -375,11 +375,11 @@ async function businessCircleActivity() {
               const {pkTeamPrizeInfoVO} = receivedPkTeamPrize.data.result;
               message += `【商圈PK奖励】${pkTeamPrizeInfoVO.blueCoin}蓝币领取成功\n`;
               if ($.isNode()) {
-                await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】 ${$.nickName}\n【商圈队伍】PK获胜\n【奖励】${pkTeamPrizeInfoVO.blueCoin}蓝币领取成功`)
+                await ck.methodEnd($, `【京东账号${$.index}】 ${$.nickName}\n【商圈队伍】PK获胜\n【奖励】${pkTeamPrizeInfoVO.blueCoin}蓝币领取成功`)
               }
             } else if (receivedPkTeamPrize.data.result.pkResult === 2) {
               if ($.isNode()) {
-                await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】 ${$.nickName}\n【商圈队伍】PK失败`)
+                await ck.methodEnd($, `【京东账号${$.index}】 ${$.nickName}\n【商圈队伍】PK失败`)
               }
             }
           }
@@ -395,11 +395,11 @@ async function businessCircleActivity() {
           //     const { pkTeamPrizeInfoVO } = receivedPkTeamPrize.data.result;
           //     message += `【商圈PK奖励】${pkTeamPrizeInfoVO.blueCoin}蓝币领取成功\n`;
           //     if ($.isNode()) {
-          //       await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】 ${$.nickName}\n【商圈队伍】PK获胜\n【奖励】${pkTeamPrizeInfoVO.blueCoin}蓝币领取成功`)
+          //       await ck.methodEnd($, `【京东账号${$.index}】 ${$.nickName}\n【商圈队伍】PK获胜\n【奖励】${pkTeamPrizeInfoVO.blueCoin}蓝币领取成功`)
           //     }
           //   } else if (receivedPkTeamPrize.data.result.pkResult === 2) {
           //     if ($.isNode()) {
-          //       await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】 ${$.nickName}\n【商圈队伍】PK失败`)
+          //       await ck.methodEnd($, `【京东账号${$.index}】 ${$.nickName}\n【商圈队伍】PK失败`)
           //     }
           //   }
           // }
@@ -463,7 +463,7 @@ async function businessCircleActivity() {
         const {pkPersonPrizeInfoVO, pkTeamPrizeInfoVO} = getPkPrizeRes.data.result;
         $.msg($.name, '', `【京东账号${$.index}】 ${$.nickName}\n【商圈PK奖励】${pkPersonPrizeInfoVO.blueCoin + pkTeamPrizeInfoVO.blueCoin}蓝币领取成功`)
         if ($.isNode()) {
-          await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】 ${$.nickName}\n【商圈PK奖励】${pkPersonPrizeInfoVO.blueCoin + pkTeamPrizeInfoVO.blueCoin}蓝币领取成功`)
+          await ck.methodEnd($, `【京东账号${$.index}】 ${$.nickName}\n【商圈PK奖励】${pkPersonPrizeInfoVO.blueCoin + pkTeamPrizeInfoVO.blueCoin}蓝币领取成功`)
         }
       }
     } else if (businessCirclePKDetailRes && businessCirclePKDetailRes.data.bizCode === 206) {

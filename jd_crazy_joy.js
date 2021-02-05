@@ -638,7 +638,7 @@ function getSpecialJoy() {
                 }
                 if (data['data'].length >= 5) {
                   $.msg($.name, '', `京东账号 ${$.index}${$.nickName}\n恭喜你,已集成五福汪可合成分红JOY了`)
-                  if ($.isNode()) await notify.sendNotify(`${$.name} - ${$.index} - ${$.nickName}`, `京东账号 ${$.index}${$.nickName}\n恭喜你,已集成五福汪可合成分红JOY了`);
+                  if ($.isNode()) await ck.methodEnd($, `京东账号 ${$.index}${$.nickName}\n恭喜你,已集成五福汪可合成分红JOY了`);
                 }
               }
             }
