@@ -78,7 +78,6 @@ $.notice = ''
         } else {
           console.log('查询到您设置的是不兑换京豆选项，现在为您跳过兑换京豆。如需兑换，请去BoxJs设置或者修改脚本coinToBeans\n')
         }
-        await msgShow();
       } catch (e) {
         $.logErr(e)
       }

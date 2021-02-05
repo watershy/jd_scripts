@@ -260,7 +260,7 @@ async function masterHelpInit() {
           str += (item.nickName || "匿名用户") + '，';
         }
       })
-      message += `【助力您的好友】${str.length}\n`;
+      message += `【助力您的好友】${str.split('，').length}\n`;
     }
   }
 }
