@@ -10,71 +10,128 @@ IOS软件用户请使用 https://raw.githubusercontent.com/NobyDa/Script/master/
 Modified From github https://github.com/ruicky/jd_sign_bot
  */
 const $ = new Env('京豆签到');
-
-const exec = require('child_process').execSync
-const fs = require('fs')
-const download = require('download');
+const notify = $.isNode() ? require('./sendNotify') : '';
+//Node.js用户请在jdCookie.js处填写京东ck;
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const exec = $.isNode() ? require('child_process').execSync : '';
+const fs = $.isNode() ? require('fs') : '';
+const download = $.isNode() ? require('download') : '';
 let resultPath = "./result.txt";
 let JD_DailyBonusPath = "./JD_DailyBonus.js";
 let outPutUrl = './';
 let NodeSet = 'CookieSet.json';
 let cookiesArr = [], cookie = '';
-$.notice = ''
-const ck = require('./jdCookie.js')
-!(async () => {
-    cookiesArr = await ck.getCookie('select * from jd_cookie where possessor = \'hyk\' and id != \'3\'');
-    if (!cookiesArr[0]) {
-        $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-        return;
-    }
+
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+} else {
+  let cookiesData = $.getdata('CookiesJD') || "[]";
+  cookiesData = jsonParse(cookiesData);
+  cookiesArr = cookiesData.map(item => item.cookie);
+  cookiesArr.reverse();
+  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
+  cookiesArr.reverse();
+  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+}
+!(async() => {
+  if (!cookiesArr[0]) {
+    $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+    return;
+  }
+  if ($.isNode()) {
     await requireConfig();
     // 下载最新代码
     await downFile();
     const content = await fs.readFileSync(JD_DailyBonusPath, 'utf8')
-    for (let i = 0; i < cookiesArr.length; i++) {
+    for (let i =0; i < cookiesArr.length; i++) {
+      cookie = cookiesArr[i];
+      if (cookie) {
+        $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+        $.index = i + 1;
+        $.nickName = '';
+        await TotalBean();
+        console.log(`*****************开始京东账号${$.index} ${$.nickName || $.UserName}京豆签到*******************\n`);
+        console.log(`⚠️⚠️⚠️⚠️目前Bark APP推送通知消息对推送内容长度有限制，如推送通知中包含此推送方式脚本会默认转换成简洁内容推送 ⚠️⚠️⚠️⚠️\n`)
+        await changeFile(content);
+        await execSign();
+      }
+    }
+  } else {
+    await downloadUrl();
+    if (!$.body) {
+      await downloadUrl('https://cdn.jsdelivr.net/gh/NobyDa/Script@master/JD-DailyBonus/JD_DailyBonus.js');
+      for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
         if (cookie) {
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-            $.index = i + 1;
-            $.nickName = '';
-            await TotalBean();
-            console.log(`*****************开始京东账号${$.index} ${$.UserName}京豆签到*******************\n`);
-            console.log(`⚠️⚠️⚠️⚠️目前Bark APP推送通知消息对推送内容长度有限制，如推送通知中包含此推送方式脚本会默认转换成简洁内容推送 ⚠️⚠️⚠️⚠️\n`)
-            await changeFile(content);
-            await execSign();
+          $.body = $.body.replace(/var Key = '.*'/, `var Key = '${cookie}'`)
+          console.log(`*****************开始京东账号${i + 1}京豆签到*******************\n`);
+          await eval($.body);
+          await $.wait(10 * 1000)
+          // console.log($.body)
+          // await evalSign($.body);
         }
+      }
     }
+  }
 })()
-    .catch((e) => {
-      $.notice += `\n${e}`
-      $.notice += `\n${e}`
-      $.name += `错误`
-    })
-    .finally(async () => {
-        await ck.methodEnd($)
-    })
-
+    .catch((e) => $.logErr(e))
+    .finally(() => $.done())
 async function execSign() {
-    console.log(`\n开始执行脚本签到，请稍等`)
-    await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
-    let notifyContent = await fs.readFileSync(resultPath, "utf8");
+  console.log(`\n开始执行脚本签到，请稍等`)
+  try {
+    // if (notify.SCKEY || notify.BARK_PUSH || notify.DD_BOT_TOKEN || (notify.TG_BOT_TOKEN && notify.TG_USER_ID) || notify.IGOT_PUSH_KEY || notify.QQ_SKEY) {
+    //   await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`);
+    //   const notifyContent = await fs.readFileSync(resultPath, "utf8");
+    //   console.log(`👇👇👇👇👇👇👇👇👇👇👇LOG记录👇👇👇👇👇👇👇👇👇👇👇\n${notifyContent}\n👆👆👆👆👆👆👆👆👆LOG记录👆👆👆👆👆👆👆👆👆👆👆`);
+    // } else {
+    //   console.log('没有提供通知推送，则打印脚本执行日志')
+    //   await exec(`${process.execPath} ${JD_DailyBonusPath}`, { stdio: "inherit" });
+    // }
+    await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`);
+    const notifyContent = await fs.readFileSync(resultPath, "utf8");
     console.log(`👇👇👇👇👇👇👇👇👇👇👇LOG记录👇👇👇👇👇👇👇👇👇👇👇\n${notifyContent}\n👆👆👆👆👆👆👆👆👆LOG记录👆👆👆👆👆👆👆👆👆👆👆`);
-    let BarkContent = '';
-    if (fs.existsSync(resultPath)) {
+    // await exec("node JD_DailyBonus.js", { stdio: "inherit" });
+    // console.log('执行完毕', new Date(new Date().getTime() + 8 * 3600000).toLocaleDateString())
+    //发送通知
+    if ($.isNode()) {
+      let notifyContent = "";
+      let BarkContent = '';
+      if (fs.existsSync(resultPath)) {
         notifyContent = await fs.readFileSync(resultPath, "utf8");
         const barkContentStart = notifyContent.indexOf('【签到概览】')
         const barkContentEnd = notifyContent.length;
-        if (barkContentStart > -1 && barkContentEnd > -1) {
+        if (process.env.JD_BEAN_SIGN_STOP_NOTIFY === 'true') return
+        if (process.env.BARK_PUSH || notify.BARK_PUSH) process.env.JD_BEAN_SIGN_NOTIFY_SIMPLE = 'true';
+        if (process.env.JD_BEAN_SIGN_NOTIFY_SIMPLE === 'true') {
+          if (barkContentStart > -1 && barkContentEnd > -1) {
             BarkContent = notifyContent.substring(barkContentStart, barkContentEnd);
-            $.notice += `【京东账号${$.index}】${$.UserName}\n`
-            $.notice += `${BarkContent}\n--------------------\n`
+          }
+          BarkContent = BarkContent.split('\n\n')[0];
+        } else {
+          if (barkContentStart > -1 && barkContentEnd > -1) {
+            BarkContent = notifyContent.substring(barkContentStart, barkContentEnd);
+          }
         }
+      }
+      //不管哪个时区,这里得到的都是北京时间的时间戳;
+      const UTC8 = new Date().getTime() + new Date().getTimezoneOffset()*60000 + 28800000;
+      $.beanSignTime = timeFormat(UTC8);
+      console.log(`脚本执行完毕时间：${$.beanSignTime}`)
+      if (BarkContent) {
+        await notify.sendNotify(`京豆签到 - 账号${$.index} - ${$.nickName || $.UserName}`, `【签到号 ${$.index}】: ${$.nickName || $.UserName}\n【签到时间】:  ${$.beanSignTime}\n${BarkContent}`);
+      }
     }
     //运行完成后，删除下载的文件
     console.log('运行完成后，删除下载的文件\n')
     await deleteFile(resultPath);//删除result.txt
     await deleteFile(JD_DailyBonusPath);//删除JD_DailyBonus.js
-    console.log(`*****************京东账号${$.index} ${$.UserName}京豆签到完成*******************\n`);
+    console.log(`*****************京东账号${$.index} ${$.nickName || $.UserName}京豆签到完成*******************\n`);
+  } catch (e) {
+    console.log("京东签到脚本执行异常:" + e);
+  }
 }
 async function downFile () {
   let url = '';
@@ -108,7 +165,6 @@ async function downFile () {
     await download(url, outPutUrl, options);
     console.log('文件下载完毕');
   } catch (e) {
-$.name += `错误`
     console.log("文件下载异常:" + e);
   }
 }
@@ -129,7 +185,6 @@ async function changeFile (content) {
     await fs.writeFileSync(JD_DailyBonusPath, newContent, 'utf8');
     console.log('替换变量完毕');
   } catch (e) {
-$.name += `错误`
     console.log("京东签到写入文件异常:" + e);
   }
 }
@@ -175,7 +230,6 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -207,7 +261,6 @@ function downloadUrl(url = 'https://raw.githubusercontent.com/NobyDa/Script/mast
           $.body = data;
         }
       } catch (e) {
-$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -215,17 +268,40 @@ $.name += `错误`
     })
   })
 }
+function evalSign(data) {
+  return new Promise(async resolve => {
+    try {
+      await eval(data);
+      await $.wait(10 * 1000);
+    } catch (e) {
+      $.logErr(e)
+    } finally {
+      resolve()
+    }
+  })
+}
 function requireConfig() {
-    return new Promise(resolve => {
-        const file = 'jd_bean_sign.js';
-        fs.access(file, fs.constants.W_OK, (err) => {
-            resultPath = err ? '/app/jd/jd_scripts/result.txt' : resultPath;
-            JD_DailyBonusPath = err ? '/app/jd/jd_scripts/JD_DailyBonus.js' : JD_DailyBonusPath;
-            outPutUrl = err ? '/app/jd/jd_scripts/' : outPutUrl;
-            NodeSet = err ? '/app/jd/jd_scripts/CookieSet.json' : NodeSet;
-            resolve()
-        });
-    })
+  return new Promise(resolve => {
+    const file = 'jd_bean_sign.js';
+    fs.access(file, fs.constants.W_OK, (err) => {
+      resultPath = err ? '/tmp/result.txt' : resultPath;
+      JD_DailyBonusPath = err ? '/tmp/JD_DailyBonus.js' : JD_DailyBonusPath;
+      outPutUrl = err ? '/tmp/' : outPutUrl;
+      NodeSet = err ? '/tmp/CookieSet.json' : NodeSet;
+      resolve()
+    });
+  })
+}
+function jsonParse(str) {
+  if (typeof str == "string") {
+    try {
+      return JSON.parse(str);
+    } catch (e) {
+      console.log(e);
+      $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
+      return [];
+    }
+  }
 }
 function timeFormat(time) {
   let date;
