@@ -74,7 +74,7 @@ function execShell() {
             const sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path,c.status from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name where status = 1'
             const cronList = await ck.query(sql)
             for (let i = 0; i < cronList.length; i++) {
-                if (cronList[i].flag === 1) {
+                if (cronList[i].status === 1) {
                     cron += `# ${cronList[i].active_name}\n`
                     cron += `${cronList[i].cron} ${cronList[i].js_path} >> ${cronList[i].log_path} 2>&1\n`
                 }
