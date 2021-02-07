@@ -110,21 +110,21 @@ remainder_h=`expr $current_h % 8`
 
 case ${remainder_h} in
     0)  run_hour="0,8,16"
-    ;;
+    ;
     1)  run_hour="1,9,17"
-    ;;
+    ;
     2)  run_hour="2,10,18"
-    ;;
+    ;
     3)  run_hour="3,11,19"
-    ;;
+    ;
     4)  run_hour="4,12,20"
-    ;;
+    ;
     5)  run_hour="5,13,21"
-    ;;
+    ;
     6)  run_hour="6,14,22"
-    ;;
+    ;
     7)  run_hour="7,15,23"
-    ;;
+    ;
 
 esac
 

@@ -1369,7 +1369,7 @@ function taskurl(functionId, body = '') {
       'Host': 'wq.jd.com',
       'Accept': '*/*',
       'Connection': 'keep-alive',
-      'User-Agent': 'jdpingou;android;3.17.0;10;1a332c2cd0458a16-35355334688244;network/wifi;model/TNY-AL00;appBuild/14687;partner/huawei01;;session/343;aid/1a332c2cd0458a16;oaid/de57ff7d-35ef-c66f-afff-ff9efede9f94;pap/JA2019_3111789;brand/HUAWEI;Mozilla/5.0 (Linux; Android 10; TNY-AL00 Build/HUAWEITNY-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36',
+      'User-Agent': 'jdpingou;android;3.17.0;10;1a332c2cd0458a16-35355334688244;network/wifi;model/TNY-AL00;appBuild/14687;partner/huawei01;session/343;aid/1a332c2cd0458a16;oaid/de57ff7d-35ef-c66f-afff-ff9efede9f94;pap/JA2019_3111789;brand/HUAWEI;Mozilla/5.0 (Linux; Android 10; TNY-AL00 Build/HUAWEITNY-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36',
       'Accept-Language': 'zh-cn',
       'Referer': 'https://wqactive.jd.com/cube/front/activePublish/step_reward/470098.html?PTAG=138762.3.3',
       'Accept-Encoding': 'gzip, deflate, br',
