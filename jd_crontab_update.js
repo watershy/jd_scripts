@@ -40,7 +40,7 @@ $.notice = ''
         }
     }
     //查询是否存在过期活动
-    let sql = 'select file_name from jd_cron_table where file_name not in (?) and flag == 0'
+    let sql = 'select file_name from jd_cron_table where file_name not in (?) and flag = 0'
     let res = await ck.query(sql, [fileNameList])
     if (res.length !== 0) {
         $.notice += `过期活动：\n`
@@ -88,7 +88,6 @@ function execShell() {
                 await fs.unlinkSync(cronPath);
             }
         }catch (e) {
-$.name += `错误`
             $.name += '错误'
             $.notice = e
         } finally {
