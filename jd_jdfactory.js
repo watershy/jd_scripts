@@ -40,7 +40,7 @@ $.notice = ''
 const ck = require('./jdCookie.js')
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie where possessor = \'hyk\'');
+  cookiesArr = await ck.getCookie('select * from jd_cookie where id = 5');
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;

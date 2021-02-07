@@ -260,7 +260,7 @@ function getUserInfo() {
           }
         }
       } catch (e) {
-$.name += `错误`
+        $.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -276,7 +276,6 @@ function getActContent(info = false, shareUuid = '') {
     $.post(taskPostUrl('dingzhi/book/develop/activityContent', body), async (err, resp, data) => {
       try {
         if (err) {
-          console.log(`${err},${jsonParse(resp.body)['message']}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (data && safeGet(data)) {
@@ -329,7 +328,6 @@ function getActContent(info = false, shareUuid = '') {
           }
         }
       } catch (e) {
-$.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -416,7 +414,7 @@ function draw() {
           }
         }
       } catch (e) {
-$.name += `错误`
+        $.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -449,7 +447,7 @@ function getAllBook() {
           }
         }
       } catch (e) {
-$.name += `错误`
+        $.name += `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);

@@ -37,7 +37,7 @@ let teamLevel = `2`;//参加多少人的赛跑比赛，默认是双人赛跑，�
 //是否参加宠汪汪双人赛跑（据目前观察，参加双人赛跑不消耗狗粮,如需参加其他多人赛跑，请关闭）
 // 默认 'true' 参加双人赛跑，如需关闭 ，请改成 'false';
 let joyRunFlag = true;
-let jdNotify = true;//是否开启静默运行，默认true开启
+$.notice = ''
 const JD_API_HOST = 'https://jdjoy.jd.com/pet'
 const weAppUrl = 'https://draw.jdfcloud.com//pet';
 !(async () => {
@@ -67,19 +67,19 @@ const weAppUrl = 'https://draw.jdfcloud.com//pet';
         continue
       }
       message = '';
-      subTitle = '';
       await jdJoy();
+      await ck.notice($)
+      $.notice += `\n${message}`
       // await joinTwoPeopleRun();
     }
   }
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.notice += `\n${e}`
       $.name += `错误`
     })
     .finally(async () => {
-      $.done()
+      await ck.methodEnd($)
     })
 async function jdJoy() {
   await getPetTaskConfig();

@@ -42,7 +42,7 @@ let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = ['wUjR_aJ43-uLjZU5cS9KGg=='];
 const ck = require('./jdCookie.js')
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie');
+  cookiesArr = await ck.getCookie();
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
@@ -78,8 +78,7 @@ const ck = require('./jdCookie.js')
       }
       await jdDreamFactory()
     }
-    message += `【收取自己零件】获得${$.pickEle}电力\n【收取好友零件】获得${$.pickFriendEle}电力\n`
-    $.notice += `----------------------------\n`
+    await ck.notice($)
     $.notice = $.notice + '\n' + message
   }
 })()
@@ -617,7 +616,6 @@ function userInfo() {
                 console.log(`商品电力：${production.needElectric}`);
                 console.log(`生产进度：${((production.investedElectric / production.needElectric) * 100).toFixed(2)}%`);
                 console.log(`还需电力： ${(production.needElectric - production.investedElectric)}`)
-                message += `【京东账号${$.index}】${$.nickName}\n`
                 message += `【生产商品】${$.productName}\n`;
                 message += `【当前等级】${data.user.userIdentity} ${data.user.currentLevel}\n`;
                 message += `【当前电力】${data.user.electric}\n`

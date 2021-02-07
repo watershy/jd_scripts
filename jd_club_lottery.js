@@ -62,14 +62,14 @@ $.notice = ''
         continue
       }
       await clubLottery();
+      await ck.notice($)
       $.notice += `\n【获得】${$.prizeBeanCount}京豆\n【账号总计】${$.totalBeanCount}京豆`
     }
   }
 })()
     .catch((e) => {
-      $.notice += `\n${e}`
-      $.notice += `\n${e}`
       $.name += `错误`
+      $.notice += `\n${e}`
     })
     .finally(async () => {
       await ck.methodEnd($)
