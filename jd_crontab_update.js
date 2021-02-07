@@ -40,7 +40,7 @@ $.notice = ''
         }
     }
     //查询是否存在过期活动
-    let sql = 'select file_name from jd_cron_table where file_name not in (?) and flag != 1'
+    let sql = 'select file_name from jd_cron_table where file_name not in (?) and flag == 0'
     let res = await ck.query(sql, [fileNameList])
     if (res.length !== 0) {
         $.notice += `过期活动：\n`
@@ -48,7 +48,7 @@ $.notice = ''
             $.notice += `${res[i].file_name}\n`
         }
         //删除不存在的活动
-        sql = 'delete from jd_cron_table where file_name not in (?) and flag != 1'
+        sql = 'delete from jd_cron_table where file_name not in (?) and flag == 0'
         await ck.query(sql, [fileNameList])
     }
     await execShell()
@@ -71,7 +71,7 @@ function execShell() {
             //从数据库查询所有数据
             let cron = `\n# 定时更新git文件\n`
             cron += `0 18 * * * sh /app/shell/jd_updateGit >> /app/jd/logs/updateGit 2>&1\n\n\n`
-            const sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path,c.flag from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name'
+            const sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path,c.flag from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name where status = 1'
             const cronList = await ck.query(sql)
             for (let i = 0; i < cronList.length; i++) {
                 if (cronList[i].flag === 1) {
@@ -114,7 +114,6 @@ function getCronFile(url = 'https://gitee.com/lxk0301/jd_scripts/raw/master/dock
                     }
                 }
             } catch (e) {
-$.name += `错误`
                 $.name += `错误`
                 await ck.methodEnd($,e)
             } finally {
