@@ -40,7 +40,7 @@ $.notice = ''
 const ck = require('./jdCookie.js')
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie where id = 5');
+  cookiesArr = await ck.getCookie('select * from jd_cookie');
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -72,7 +72,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.noticeName =  `错误`
+              $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -216,8 +216,8 @@ async function algorithm() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -355,8 +355,8 @@ function jdfactory_collectScore(taskToken) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -382,8 +382,8 @@ function jdfactory_addEnergy() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -409,8 +409,8 @@ function jdfactory_collectElectricity() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -440,8 +440,8 @@ function jdfactory_getTaskDetail() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -467,8 +467,8 @@ function jdfactory_makeProduct(skuId) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -504,8 +504,8 @@ function queryVkComponent() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -547,8 +547,8 @@ function jdfactory_getProductList(flag = false) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -600,39 +600,14 @@ function jdfactory_getHomeData() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
     })
   })
 }
-// function readShareCode() {
-//   console.log(`开始`)
-//   return new Promise(async resolve => {
-//     $.get({url: `http://api.turinglabs.net/api/v1/jd/ddfactory/read/${randomCount}/`}, (err, resp, data) => {
-//       try {
-//         if (err) {
-//           console.log(`${JSON.stringify(err)}`)
-//           console.log(`${$.name} API请求失败，请检查网路重试`)
-//         } else {
-//           if (data) {
-//             console.log(`随机取${randomCount}个码放到您固定的互助码后面`)
-//              data = JSON.parse(data);
-//           }
-//         }
-//       } catch (e) {
-$.noticeName =  `错误`
-//         $.logErr(e, resp)
-//       } finally {
-//         resolve(data);
-//       }
-//     })
-//     await $.wait(10000);
-//     resolve()
-//   })
-// }
 function taskPostUrl(function_id, body = {}, function_id2) {
   let url = `${JD_API_HOST}`;
   if (function_id2) {
@@ -690,8 +665,8 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -704,7 +679,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -715,7 +690,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

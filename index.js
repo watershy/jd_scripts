@@ -16,7 +16,7 @@ exports.main_handler = async (event, context, callback) => {
             try {
                 require('./' + v + '.js')
             } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
                 console.log(e.message)
                 await notify.sendNotify(v + '.js', e.message);
                 notice = v + '.js 文件执行失败，请查看日志处理'

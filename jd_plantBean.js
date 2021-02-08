@@ -77,7 +77,7 @@ const ck = require('./jdCookie')
 })().catch((e) => {
   $.notice += `\n${e}`
   $.notice += `\n${e}`
-      $.noticeName =  `错误`
+              $.noticeName = `${$.name}错误`
 }).finally(async () => {
   await ck.methodEnd($)
 })
@@ -112,7 +112,7 @@ async function jdPlantBean() {
       console.log(`种豆得豆-初始失败:  ${JSON.stringify($.plantBeanIndexResult)}`);
     }
   } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
     $.logErr(e);
   }
 }
@@ -543,8 +543,8 @@ function requestGet(function_id, body = {}) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -585,8 +585,8 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -606,8 +606,8 @@ function request(function_id, body = {}){
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -645,7 +645,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

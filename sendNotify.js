@@ -130,8 +130,8 @@ function serverNotify(text, desp, timeout = 2100) {
                             }
                         }
                     } catch (e) {
-                        $.noticeName =  `错误`
-                        $.logErr(e, resp);
+                                $.noticeName = `${$.name}错误`
+                        $.notice += `${e}`;
                     } finally {
                         resolve(data);
                     }
@@ -211,8 +211,8 @@ function CoolPush(text, desp) {
                         }
                     }
                 } catch (e) {
-                    $.noticeName =  `错误`
-                    $.logErr(e, resp);
+                            $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve(data);
                 }
@@ -247,8 +247,8 @@ function BarkNotify(text, desp, params={}) {
                         }
                     }
                 } catch (e) {
-                    $.noticeName =  `错误`
-                    $.logErr(e, resp);
+                            $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve();
                 }
@@ -298,8 +298,8 @@ function tgBotNotify(text, desp) {
                         }
                     }
                 } catch (e) {
-                    $.noticeName =  `错误`
-                    $.logErr(e, resp);
+                            $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve(data);
                 }
@@ -345,8 +345,8 @@ function ddBotNotify(text, desp) {
                         }
                     }
                 } catch (e) {
-                    $.noticeName =  `错误`
-                    $.logErr(e, resp);
+                            $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve(data);
                 }
@@ -366,8 +366,8 @@ function ddBotNotify(text, desp) {
                         }
                     }
                 } catch (e) {
-                    $.noticeName =  `错误`
-                    $.logErr(e, resp);
+                            $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve(data);
                 }
@@ -408,8 +408,8 @@ function qywxBotNotify(text, desp) {
                         }
                     }
                 } catch (e) {
-                    $.noticeName =  `错误`
-                    $.logErr(e, resp);
+                            $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve(data);
                 }
@@ -495,8 +495,8 @@ function qywxamNotify(text, desp) {
                             }
                         }
                     } catch (e) {
-                        $.noticeName =  `错误`
-                        $.logErr(e, resp);
+                                $.noticeName = `${$.name}错误`
+                        $.notice += `${e}`;
                     } finally {
                         resolve(data);
                     }
@@ -540,8 +540,8 @@ function iGotNotify(text, desp, params={}){
                         }
                     }
                 } catch (e) {
-                    $.noticeName =  `错误`
-                    $.logErr(e, resp);
+                            $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve(data);
                 }
@@ -584,8 +584,8 @@ function pushPlusNotify(text, desp) {
                         }
                     }
                 } catch (e) {
-                    $.noticeName =  `错误`
-                    $.logErr(e, resp);
+                            $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve(data);
                 }

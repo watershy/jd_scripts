@@ -107,7 +107,7 @@ const ck = require('./jdCookie.js')
     .catch((e) => {
       $.notice += `\n${e}`
       $.notice += `\n${e}`
-      $.noticeName =  `错误`
+              $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
         await ck.methodEnd($)
@@ -120,7 +120,7 @@ function changeShareCodeJson(code) {
         let json = code && JSON.parse(code);
         return json['smp'] && json['active'] && json['joinnum'] ? json : '';
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
         return '';
     }
 }
@@ -191,7 +191,7 @@ function requireConfig() {
                 }
             });
         } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
             // 获取内置助力码失败
         }
         resolve()
@@ -232,8 +232,8 @@ function TotalBean() {
                     }
                 }
             } catch (e) {
-$.noticeName =  `错误`
-                $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+                $.notice += `${e}`
             } finally {
                 resolve();
             }
@@ -343,8 +343,8 @@ function getTaskList() {
                 }
                 resolve(other);
             } catch (e) {
-$.noticeName =  `错误`
-                $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+                $.notice += `${e}`;
             } finally {
                 resolve(true);
             }
@@ -426,8 +426,8 @@ function answerTask() {
                         await answerTask();
                     }
                 } catch (e) {
-$.noticeName =  `错误`
-                    $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve();
                 }
@@ -487,8 +487,8 @@ function submitInviteId(userName) {
                             message += '【邀请码】提交成功！\n';
                         }
                     } catch (e) {
-$.noticeName =  `错误`
-                        // $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+                        // $.notice += `${e}`;
                         $.log('邀请码提交失败 API 返回异常');
                     } finally {
                         resolve();
@@ -496,8 +496,8 @@ $.noticeName =  `错误`
                 },
             );
         } catch (e) {
-$.noticeName =  `错误`
-            // $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+            // $.notice += `${e}`;
             resolve();
         }
     });
@@ -522,16 +522,16 @@ function getAssistUser() {
                         $.log(`获取随机助力码失败 ${code}`);
                     }
                 } catch (e) {
-$.noticeName =  `错误`
-                    // $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+                    // $.notice += `${e}`;
                     $.log('获取随机助力码失败 API 返回异常');
                 } finally {
                     resolve(false);
                 }
             });
         } catch (e) {
-$.noticeName =  `错误`
-            // $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+            // $.notice += `${e}`;
             resolve(false);
         }
     });
@@ -594,8 +594,8 @@ function helpShareCode(smp, active, joinnum) {
                     resolve(true);
                     return;
                 } catch (e) {
-$.noticeName =  `错误`
-                    $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve(false);
                 }
@@ -627,8 +627,8 @@ function doTask({tasklevel, left, taskname, eachtimeget}) {
                     }
                     resolve(ret);
                 } catch (e) {
-$.noticeName =  `错误`
-                    $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+                    $.notice += `${e}`;
                 } finally {
                     resolve();
                 }

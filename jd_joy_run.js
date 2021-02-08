@@ -119,7 +119,7 @@ async function getToken() {
 }
 function readToken() {
   return new Promise(resolve => {
-    $.get({url: `http://jd.turinglabs.net/api/v2/jd/joy/read/1/`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({url: `http://jd.turinglabs.net/api/v2/jd/joy/read/1/`}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -131,8 +131,8 @@ function readToken() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -266,8 +266,8 @@ function enterRoom(invitePin) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -296,8 +296,8 @@ function helpInviteFriend(friendPin) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -356,8 +356,8 @@ function combatHelp(friendPin) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -381,8 +381,8 @@ function combatDetail(invitePin) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName =  `错误`
-        $.logErr(e, resp)
+                $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -398,7 +398,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
@@ -434,7 +434,7 @@ function getFriendPins() {
           }
         }
       } catch (e) {
-        $.logErr(e, resp)
+        $.notice += `${e}`
       } finally {
         resolve();
       }

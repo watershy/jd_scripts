@@ -137,7 +137,7 @@ async function JD818() {
     await getListIntegral();
     await showMsg()
   } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
     $.logErr(e)
   }
 }
@@ -181,8 +181,8 @@ function listMeeting() {
         }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -228,8 +228,8 @@ function listGoods() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -281,8 +281,8 @@ function shopInfo() {
         }
         // console.log('data1', data);
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve()
       }
@@ -316,8 +316,8 @@ function browseGoods(id) {
         }
         // console.log('data1', data);
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -350,8 +350,8 @@ function getGoodsPrize(id) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -384,8 +384,8 @@ function browseShop(id) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -418,8 +418,8 @@ function getShopPrize(id) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -453,8 +453,8 @@ function browseMeeting(id) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -487,8 +487,8 @@ function getMeetingPrize(id) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -550,8 +550,8 @@ function myRank() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -584,8 +584,8 @@ function saveJbean(id) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -635,8 +635,8 @@ function printAPI() {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -672,8 +672,8 @@ function toHelp(code) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -733,8 +733,8 @@ function getHelp() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -769,8 +769,8 @@ function getListJbean() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -805,8 +805,8 @@ function getListIntegral() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -848,8 +848,8 @@ function getListRank() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -868,8 +868,8 @@ function updateShareCodes(url = 'https://raw.githubusercontent.com/LXK9301/updat
           $.updatePkActivityIdRes = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -888,8 +888,8 @@ function updateShareCodesCDN(url = 'https://gitee.com/lxk0301/updateTeam/raw/mas
           $.updatePkActivityIdRes = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -929,8 +929,8 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -951,7 +951,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

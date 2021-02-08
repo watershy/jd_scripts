@@ -72,7 +72,7 @@ const ck = require('./jdCookie')
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.noticeName =  `错误`
+              $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -159,9 +159,9 @@ function jDSpeedUp(sourceId) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
         // $.msg("京东天天-加速" + e.name + "‼️", JSON.stringify(e), e.message)
-        $.logErr(e, resp);
+        $.notice += `${e}`;
       } finally {
         resolve()
       }
@@ -215,9 +215,9 @@ function spaceEventList() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
         // $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
-        $.logErr(e, resp)
+        $.notice += `${e}`
       } finally {
         resolve(spaceEvents)
       }
@@ -264,9 +264,9 @@ function spaceEventHandleEvent(spaceEventList) {
               }
             }
           } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
             // $.msg("天天加速-查询处理太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
-            $.logErr(e, resp)
+            $.notice += `${e}`
           } finally {
             if (spaceEventList.length === spaceNumTask) {
               console.log("\n天天加速-已成功处理" + spaceNumTask + "个太空特殊事件")
@@ -323,7 +323,7 @@ function energyPropList() {
         }
       } catch (eor) {
         // $.msg("天天加速-查询燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
-        $.logErr(e, resp)
+        $.notice += `${e}`
       } finally {
         resolve(TaskID)
       }
@@ -369,7 +369,7 @@ function receiveEnergyProp(CID) {
             }
           } catch (eor) {
             // $.msg("天天加速-领取可用燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
-            $.logErr(e, resp)
+            $.notice += `${e}`
           } finally {
             if (CID.length === count) {
               console.log("\n天天加速-已成功领取" + NumTask + "个可用燃料")
@@ -428,7 +428,7 @@ function energyPropUsaleList(EID) {
         }
       } catch (eor) {
         // $.msg("天天加速-燃料ID" + eor.name + "‼️", JSON.stringify(eor), eor.message)
-        $.logErr(e, resp)
+        $.notice += `${e}`
       } finally {
         resolve(TaskCID)
       }
@@ -479,7 +479,7 @@ function useEnergy(PropID) {
             }
           } catch (eor) {
             // $.msg("天天加速-使用燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
-            $.logErr(e, resp)
+            $.notice += `${e}`
           } finally {
             if (PropID.length === PropCount) {
               console.log("\n天天加速-已成功使用" + PropNumTask + "个燃料")
@@ -538,9 +538,9 @@ function getMemBerList() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
         // $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
-        $.logErr(e, resp)
+        $.notice += `${e}`
       } finally {
         resolve()
       }
@@ -573,8 +573,8 @@ function getMemBerGetTask(sourceId) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve()
       }
@@ -606,8 +606,8 @@ function getReward(uuid) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve()
       }
@@ -647,8 +647,8 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -660,7 +660,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
@@ -673,7 +673,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;

@@ -102,8 +102,8 @@ function stall_collectProduceScore(body) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve();
       }
@@ -124,8 +124,8 @@ function getHomeData() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve();
       }
@@ -188,8 +188,8 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -201,7 +201,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

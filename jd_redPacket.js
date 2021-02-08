@@ -71,7 +71,7 @@ const ck = require('./jdCookie')
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.noticeName =  `错误`
+              $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -120,8 +120,8 @@ function taskHomePage() {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -142,8 +142,8 @@ function startTask(taskType) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -186,8 +186,8 @@ function getTaskDetailForColor(taskType) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -208,8 +208,8 @@ function taskReportForColor(taskType, detailId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -232,8 +232,8 @@ function receiveTaskRedpacket(taskType) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve(data);
       }
@@ -251,7 +251,7 @@ function showMsg() {
 //       console.log(`领券结果:${JSON.stringify(response)}`);
 //       step.next();
 //     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
 //       console.log(e);
 //       console.log('初始化任务异常');
 //     }
@@ -290,8 +290,8 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -323,7 +323,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

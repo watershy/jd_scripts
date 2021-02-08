@@ -26,7 +26,7 @@ let getShareCode = function (name, userName) {
             }
             console.log(`助力码： ${newShareCodes}`)
         } catch (e) {
-            $.noticeName =  `错误`
+                    $.noticeName = `${$.name}错误`
             console.log(`错误：${e}`)
         } finally {
             resolve(newShareCodes)
@@ -90,7 +90,7 @@ let methodEnd = function ($,notice) {
                 $.done()
             }
         } catch (e) {
-            $.noticeName =  `错误`
+                    $.noticeName = `${$.name}错误`
             await notify.sendNotify(`${$.name}通知错误`, `${e}`)
             $.done()
         }finally {
@@ -110,7 +110,7 @@ let addShareCode = function ($) {
                 await query(sql, [$.name, $.shareCode, $.UserName])
             }
         } catch (e) {
-            $.noticeName =  `错误`
+                    $.noticeName = `${$.name}错误`
             console.log('错误')
         } finally {
             resolve()
@@ -133,7 +133,7 @@ let updateShareCode = function ($) {
             }
 
         } catch (e) {
-            $.noticeName =  `错误`
+                    $.noticeName = `${$.name}错误`
             console.log(`错误: ${e}`)
         } finally {
             resolve()
@@ -153,7 +153,7 @@ let notice = function ($) {
             }
 
         } catch (e) {
-            $.noticeName =  `错误`
+                    $.noticeName = `${$.name}错误`
             console.log(`错误: ${e}`)
         } finally {
             resolve()

@@ -46,12 +46,11 @@ let cookiesArr = [], cookie = '';
 const ck = require('./jdCookie.js')
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie');
+  cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
-  await requireConfig();
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -76,9 +75,12 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
     }
   }
 })()
-  .catch((e) => $.logErr(e))
+  .catch((e) => {
+    $.notice += `\n${e}`
+            $.noticeName = `${$.name}错误`
+  })
   .finally(async () => {
-    $.done()
+    await ck.methodEnd($)
   })
 //获取活动信息
 function interact_template_getHomeData(timeout = 0) {
@@ -164,8 +166,8 @@ function interact_template_getHomeData(timeout = 0) {
           }
           if (scorePerLottery) await interact_template_getLotteryResult();
         } catch (e) {
-$.noticeName =  `错误`
-          $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+          $.notice += `${e}`;
         } finally {
           resolve()
         }
@@ -202,8 +204,8 @@ function harmony_collectScore(taskToken,taskId,itemId = "",actionType = 0,timeou
             console.log(data.data.bizMsg)
           }
         } catch (e) {
-$.noticeName =  `错误`
-          $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+          $.notice += `${e}`;
         } finally {
           resolve()
         }
@@ -246,8 +248,8 @@ function interact_template_getLotteryResult(taskId,timeout = 0) {
             }
           }
         } catch (e) {
-$.noticeName =  `错误`
-          $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+          $.notice += `${e}`;
         } finally {
           resolve()
         }
@@ -263,32 +265,6 @@ function showMsg() {
   return new Promise(resolve => {
     if ($.beans) $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
     $.log(`【京东账号${$.index}】${$.nickName}\n${message}`);
-    resolve()
-  })
-}
-
-function requireConfig() {
-  return new Promise(async resolve => {
-    console.log(`开始获取${$.name}配置文件\n`);
-
-    let shareCodes = []
-    console.log(`共${cookiesArr.length}个京东账号\n`);
-    if ($.isNode() && process.env.JDSGMH_SHARECODES) {
-      if (process.env.JDSGMH_SHARECODES.indexOf('\n') > -1) {
-        shareCodes = process.env.JDSGMH_SHARECODES.split('\n');
-      } else {
-        shareCodes = process.env.JDSGMH_SHARECODES.split('&');
-      }
-    }
-    $.shareCodesArr = [];
-    if ($.isNode()) {
-      Object.keys(shareCodes).forEach((item) => {
-        if (shareCodes[item]) {
-          $.shareCodesArr.push(shareCodes[item])
-        }
-      })
-    }
-    console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码\n`);
     resolve()
   })
 }
@@ -311,8 +287,8 @@ function readShareCode() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -354,8 +330,8 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -367,7 +343,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

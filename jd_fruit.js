@@ -75,7 +75,7 @@ const ck = require('./jdCookie.js')
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.noticeName =  `错误`
+              $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -124,7 +124,7 @@ async function jdFruit() {
       message = `【数据异常】请手动登录京东app查看此账号${$.name}是否正常`;
     }
   } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
     console.log(`任务执行异常，请检查执行日志 ‼️‼️`);
     message = `任务执行异常，请检查执行日志 ‼️‼️`;
     $.logErr(e);
@@ -949,8 +949,8 @@ async function getFullCollectionReward() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -1190,8 +1190,8 @@ async function initForFarm() {
           }
         }
       } catch (e) {
-        $.noticeName =  `错误`
-        $.logErr(e, resp)
+                $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -1243,8 +1243,8 @@ function readShareCode() {
           }
         }
       } catch (e) {
-        $.noticeName =  `错误`
-        $.logErr(e, resp)
+                $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve(data);
       }
@@ -1287,8 +1287,8 @@ function TotalBean() {
           }
         }
       } catch (e) {
-        $.noticeName =  `错误`
-        $.logErr(e, resp)
+                $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
@@ -1311,8 +1311,8 @@ function request(function_id, body = {}, timeout = 1000){
             }
           }
         } catch (e) {
-          $.noticeName =  `错误`
-          $.logErr(e, resp);
+                  $.noticeName = `${$.name}错误`
+          $.notice += `${e}`;
         } finally {
           resolve(data);
         }
@@ -1326,7 +1326,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -1347,7 +1347,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

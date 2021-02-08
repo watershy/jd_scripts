@@ -77,7 +77,7 @@ const ck = require('./jdCookie.js')
     .catch((e) => {
       $.notice += `\n${e}`
       $.notice += `\n${e}`
-      $.noticeName =  `错误`
+              $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       $.done()
@@ -140,8 +140,8 @@ function feedPets(feedNum) {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp);
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`;
       } finally {
         resolve($.data);
       }
@@ -176,7 +176,7 @@ function ThreeMeals() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
         $.logErr(resp, e);
       } finally {
         resolve(data);
@@ -189,7 +189,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.noticeName =  `错误`
+        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
@@ -229,8 +229,8 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.noticeName =  `错误`
-        $.logErr(e, resp)
+        $.noticeName = `${$.name}错误`
+        $.notice += `${e}`
       } finally {
         resolve();
       }
