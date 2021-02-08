@@ -72,7 +72,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.name += `错误`
+      $.noticeName =  `错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -137,7 +137,7 @@ async function algorithm() {
                     console.log(`\n提供的心仪商品${name}目前数量：${couponCount}，且当前总电量为：${remainScore * 1 + useScore * 1}，【满足】兑换此商品所需总电量：${totalScore + 100000}`);
                     console.log(`请去活动页面更换成心仪商品并手动投入电量兑换\n`);
                     $.msg($.name, '', `京东账号${$.index}${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请点击弹窗直达活动页面\n更换成心仪商品并手动投入电量兑换`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
-                    $.name += `可兑换`
+                    $.noticeName =  `可兑换`
                     await ck.methodEnd($,`【京东账号${$.index}】${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请去活动页面更换成心仪商品并手动投入电量兑换`)
                   } else {
                     console.log(`您心仪商品${name}\n当前数量为：${couponCount}\n兑换所需电量为：${totalScore}\n您当前总电量为：${remainScore * 1 + useScore * 1}\n不满足兑换心仪商品的条件\n`)
@@ -149,7 +149,7 @@ async function algorithm() {
                     console.log(`BoxJs或环境变量暂未提供心仪商品，下面为您目前选的${name} 发送提示通知\n`);
                     // await jdfactory_addEnergy();
                     $.msg($.name, '', `京东账号${$.index}${$.nickName}\n您所选商品${name}目前数量：${couponCount}\n当前总电量为：${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请点击弹窗直达活动页面查看`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
-                    $.name += `可兑换`
+                    $.noticeName =  `可兑换`
                     await ck.methodEnd($,`【京东账号${$.index}】${$.nickName}\n【所选商品】${name}\n【目前数量】${couponCount}\n【当前总电量】${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}`)
                   } else {
                     console.log(`\n所选商品${name}目前数量：${couponCount}，且当前总电量为：${remainScore * 1 + useScore * 1}，【不满足】兑换此商品所需总电量：${totalScore}`)
@@ -184,7 +184,7 @@ async function algorithm() {
                       console.log(`\n提供的心仪商品${name}目前数量：${couponCount}，且当前总电量为：${$.batteryValue * 1}，【满足】兑换此商品所需总电量：${totalScore}`);
                       console.log(`请去活动页面选择心仪商品并手动投入电量兑换\n`);
                       $.msg($.name, '', `京东账号${$.index}${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${$.batteryValue * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请点击弹窗直达活动页面\n选择此心仪商品并手动投入电量兑换`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
-                      $.name += `可兑换`
+                      $.noticeName =  `可兑换`
                       await ck.methodEnd($,`【京东账号${$.index}】${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${$.batteryValue * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请去活动页面选择此心仪商品并手动投入电量兑换`)
                     } else {
                       console.log(`您心仪商品${name}\n当前数量为：${couponCount}\n兑换所需电量为：${totalScore}\n您当前总电量为：${$.batteryValue * 1}\n不满足兑换心仪商品的条件\n`)
@@ -202,7 +202,7 @@ async function algorithm() {
                     let nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000);
                     if (new Date(nowTimes).getHours() === 12) {
                       $.msg($.name, '', `京东账号${$.index}${$.nickName}\n${message}【满足】兑换${$.canMakeList[0] && $.canMakeList[0] && [0].name}所需总电量：${$.canMakeList[0] && $.canMakeList[0].fullScore}\n请点击弹窗直达活动页面\n选择此心仪商品并手动投入电量兑换`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
-                      $.name += `可兑换`
+                      $.noticeName =  `可兑换`
                       await ck.methodEnd($,`【京东账号${$.index}】${$.nickName}\n${message}【满足】兑换${$.canMakeList[0] && $.canMakeList[0].name}所需总电量：${$.canMakeList[0].fullScore}\n请速去活动页面查看`)
                     }
                   } else {
@@ -216,7 +216,7 @@ async function algorithm() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -355,7 +355,7 @@ function jdfactory_collectScore(taskToken) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -382,7 +382,7 @@ function jdfactory_addEnergy() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -409,7 +409,7 @@ function jdfactory_collectElectricity() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -440,7 +440,7 @@ function jdfactory_getTaskDetail() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -467,7 +467,7 @@ function jdfactory_makeProduct(skuId) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -504,7 +504,7 @@ function queryVkComponent() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -547,7 +547,7 @@ function jdfactory_getProductList(flag = false) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -600,7 +600,7 @@ function jdfactory_getHomeData() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -623,7 +623,7 @@ $.name += `错误`
 //           }
 //         }
 //       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
 //         $.logErr(e, resp)
 //       } finally {
 //         resolve(data);
@@ -690,7 +690,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -704,7 +704,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -715,7 +715,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

@@ -56,7 +56,7 @@ const ck = require('./jdCookie')
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          $.name += `cookie失效`
+          $.noticeName =  `cookie失效`
           await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
         }
         continue
@@ -74,7 +74,7 @@ const ck = require('./jdCookie')
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.name += `错误`
+      $.noticeName =  `错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -137,7 +137,7 @@ async function jdPet() {
       console.log(`初始化萌宠失败:  ${initPetTownRes.message}`);
     }
   } catch (e) {
-    $.name += `错误`
+    $.noticeName =  `错误`
     $.logErr(e)
   }
 }
@@ -459,7 +459,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -481,7 +481,7 @@ async function request(function_id, body = {}) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data)
@@ -517,7 +517,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

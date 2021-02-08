@@ -41,7 +41,7 @@ let randomCount = $.isNode() ? 20 : 5;
 $.notice = ''
 const ck = require('./jdCookie')
 !(async () => {
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie('select * from jd_cookie where id = 3');
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -61,7 +61,7 @@ const ck = require('./jdCookie')
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          $.name += `cookie失效`
+          $.noticeName =  `cookie失效`
           await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
         }
         continue
@@ -77,7 +77,7 @@ const ck = require('./jdCookie')
 })().catch((e) => {
   $.notice += `\n${e}`
   $.notice += `\n${e}`
-      $.name += `错误`
+      $.noticeName =  `错误`
 }).finally(async () => {
   await ck.methodEnd($)
 })
@@ -112,7 +112,7 @@ async function jdPlantBean() {
       console.log(`种豆得豆-初始失败:  ${JSON.stringify($.plantBeanIndexResult)}`);
     }
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     $.logErr(e);
   }
 }
@@ -543,7 +543,7 @@ function requestGet(function_id, body = {}) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -585,7 +585,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -606,7 +606,7 @@ function request(function_id, body = {}){
           data = JSON.parse(data);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -645,7 +645,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

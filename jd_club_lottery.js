@@ -54,7 +54,7 @@ $.notice = ''
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          $.name += `cookie失效`
+          $.noticeName =  `cookie失效`
           await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
         } else {
           $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
@@ -68,7 +68,7 @@ $.notice = ''
   }
 })()
     .catch((e) => {
-      $.name += `错误`
+      $.noticeName =  `错误`
       $.notice += `\n${e}`
     })
     .finally(async () => {
@@ -180,7 +180,7 @@ function vvipclub_shaking_info() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -213,7 +213,7 @@ function vvipclub_shaking_lottery() {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -246,7 +246,7 @@ function vvipclub_receive_lottery_times() {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -271,7 +271,7 @@ function getFreeTimes() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -291,7 +291,7 @@ function getTask(info) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -311,7 +311,7 @@ function doTask(taskName, taskItemId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -331,7 +331,7 @@ function shakeBean() {
           data = JSON.parse(data);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -372,7 +372,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -385,7 +385,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

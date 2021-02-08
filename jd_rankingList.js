@@ -30,7 +30,7 @@ function updateShareCodes(url = 'https://raw.githubusercontent.com/yangtingxiao/
           $.body = data;
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -49,7 +49,7 @@ function scriptsCDN(url = 'https://raw.fastgit.org/yangtingxiao/QuantumultX/mast
           $.body = data;
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();

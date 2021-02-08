@@ -53,7 +53,7 @@ $.notice = ''
         await ck.query(sql, [fileNameList])
     }
 })() .catch((e) => {
-    $.name += '错误'
+    $.noticeName =  '错误'
     $.notice = e
 }).finally(async () => {
     if ($.notice) {
@@ -76,7 +76,7 @@ function getReadMeFile(url = 'https://gitee.com/lxk0301/jd_scripts/raw/master/RE
                     notifyContent = data.match(/(?<=(\|\d{1,3}\|)).*(\|)/g)
                 }
             } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
                 $.logErr(e, resp)
             } finally {
                 resolve(notifyContent);

@@ -91,7 +91,7 @@ const inviteCodes = [
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.name += `错误`
+      $.noticeName =  `错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -107,7 +107,7 @@ async function jdNian() {
     await $.wait(2000)
     await getHomeData(true)
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     $.logErr(e)
   }
 }
@@ -154,7 +154,7 @@ function doTask(itemToken) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -186,7 +186,7 @@ function doTask2(taskToken) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -222,7 +222,7 @@ function getHomeData(info = false) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -254,7 +254,7 @@ function getExchangeInfo() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -287,7 +287,7 @@ function exchange() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve();
@@ -342,7 +342,7 @@ function getTaskList(body = {}) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -422,7 +422,7 @@ function getLatLng() {
         resolve({});
       });
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log('自动获取经纬度 lat lng 失败，触发异常');
       resolve({});
     }
@@ -499,7 +499,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -514,7 +514,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -526,7 +526,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

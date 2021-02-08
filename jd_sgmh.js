@@ -46,7 +46,7 @@ let cookiesArr = [], cookie = '';
 const ck = require('./jdCookie.js')
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie where id != 3');
+  cookiesArr = await ck.getCookie('select * from jd_cookie');
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -164,7 +164,7 @@ function interact_template_getHomeData(timeout = 0) {
           }
           if (scorePerLottery) await interact_template_getLotteryResult();
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -202,7 +202,7 @@ function harmony_collectScore(taskToken,taskId,itemId = "",actionType = 0,timeou
             console.log(data.data.bizMsg)
           }
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -246,7 +246,7 @@ function interact_template_getLotteryResult(taskId,timeout = 0) {
             }
           }
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -311,7 +311,7 @@ function readShareCode() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -354,7 +354,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -367,7 +367,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

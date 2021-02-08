@@ -73,7 +73,7 @@ const JD_API_HOST = 'https://api.m.jd.com/';
 })()
   .catch((e) => {
       $.notice += `\n${e}`
-      $.name += `错误`
+      $.noticeName =  `错误`
   })
   .finally(async () => {
     await ck.methodEnd($)
@@ -138,7 +138,7 @@ function getTask() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -176,7 +176,7 @@ function getTaskDetail(taskId,taskType) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -212,7 +212,7 @@ function doTask(taskId,taskType,itemId) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -252,7 +252,7 @@ function drawInfo(share=true) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -288,7 +288,7 @@ function draw() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -316,7 +316,7 @@ function doSupport(shareId) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -400,7 +400,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -415,7 +415,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -427,7 +427,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];
@@ -499,7 +499,7 @@ function readShareCode() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);

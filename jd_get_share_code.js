@@ -194,7 +194,7 @@ function getJdFactory() {
             }
           }
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve();
@@ -270,7 +270,7 @@ function getJxFactory(){
             }
           }
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -328,7 +328,7 @@ function getJxNc(){
             }
           }
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -400,7 +400,7 @@ function getJdPet(){
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp);
       } finally {
         resolve(data);
@@ -429,7 +429,7 @@ async function getJdZZ() {
             }
           }
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp)
         } finally {
           resolve(data);
@@ -475,7 +475,7 @@ async function getPlantBean() {
             data = JSON.parse(data);
           }
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve(data);
@@ -578,7 +578,7 @@ async function getJDFruit() {
             }
           }
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve();
@@ -642,7 +642,7 @@ async function getJoy(){
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -682,7 +682,7 @@ async function getSgmh(timeout = 0) {
             }
           }
         } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve()
@@ -711,7 +711,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -750,7 +750,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -788,7 +788,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

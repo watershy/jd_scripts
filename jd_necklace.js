@@ -57,7 +57,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          $.name += `cookie失效`
+          $.noticeName =  `cookie失效`
           await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
         } else {
           $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
@@ -70,7 +70,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.name += `错误`
+      $.noticeName =  `错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -148,7 +148,7 @@ function necklace_sign() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -183,7 +183,7 @@ function necklace_exchangeGift(scoreNums) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -215,7 +215,7 @@ function necklace_chargeScores(bubleId) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -246,7 +246,7 @@ function necklace_startTask(taskId) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -277,7 +277,7 @@ function necklace_homePage() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -328,7 +328,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -342,7 +342,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -353,7 +353,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

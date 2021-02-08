@@ -3,7 +3,6 @@ const notify = require('./sendNotify');
 
 //获取助力码
 let getShareCode = function (name, userName) {
-    name = name.replace('错误',"")
     return new Promise(async resolve => {
         let newShareCodes = []
         console.log('开始获取配置文件\n')
@@ -27,7 +26,7 @@ let getShareCode = function (name, userName) {
             }
             console.log(`助力码： ${newShareCodes}`)
         } catch (e) {
-            $.name += `错误`
+            $.noticeName =  `错误`
             console.log(`错误：${e}`)
         } finally {
             resolve(newShareCodes)
@@ -75,13 +74,10 @@ let methodEnd = function ($,notice) {
             if (notice) {
                 console.log(notice)
                 await notify.sendNotify(`${$.name}`, `${notice}`)
-            } else if ($.name.indexOf('错误') > 0) {
+            } else if ($.noticeName) {
                 console.log($.notice)
-                await notify.sendNotify(`${$.name}`, `${$.notice}`)
-            } else {
-                if ($.notice){
-                    console.log($.notice)
-                }
+                await notify.sendNotify(`${$.noticeName}`, `${$.notice}`)
+            } else if($.notice){
                 //查询是否需要通知
                 let sql = 'select notify from jd_notify_table where active_name = ?'
                 let res = await query(sql, [$.name])
@@ -94,7 +90,7 @@ let methodEnd = function ($,notice) {
                 $.done()
             }
         } catch (e) {
-$.name += `错误`
+            $.noticeName =  `错误`
             await notify.sendNotify(`${$.name}通知错误`, `${e}`)
             $.done()
         }finally {
@@ -114,7 +110,7 @@ let addShareCode = function ($) {
                 await query(sql, [$.name, $.shareCode, $.UserName])
             }
         } catch (e) {
-$.name += `错误`
+            $.noticeName =  `错误`
             console.log('错误')
         } finally {
             resolve()
@@ -137,7 +133,7 @@ let updateShareCode = function ($) {
             }
 
         } catch (e) {
-            $.name += `错误`
+            $.noticeName =  `错误`
             console.log(`错误: ${e}`)
         } finally {
             resolve()
@@ -157,7 +153,7 @@ let notice = function ($) {
             }
 
         } catch (e) {
-            $.name += `错误`
+            $.noticeName =  `错误`
             console.log(`错误: ${e}`)
         } finally {
             resolve()

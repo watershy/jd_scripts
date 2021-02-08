@@ -35,7 +35,7 @@ function loginEntrance() {
           await formatSetCookies($.headers, $.data);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -66,7 +66,7 @@ function generateQrcode() {
           console.log(`\n\n注：如扫描不到，请使用工具(例如在线二维码工具：https://cli.im)手动生成如下url二维码\n\n${url}\n\n`);
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -100,7 +100,7 @@ function checkLogin() {
           // $.log(`errcode:${data['errcode']}`)
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);

@@ -38,7 +38,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const urlSchema = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/3KSjXqQabiTuD1cJ28QskrpWoBKT/index.html%22%20%7D`;
 const ck = require('./jdCookie.js')
 !(async () => {
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie('select * from jd_cookie');
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -57,7 +57,7 @@ const ck = require('./jdCookie.js')
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
 
         if ($.isNode()) {
-          $.name += `cookie失效`
+          $.noticeName =  `cookie失效`
           await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
         } else {
           $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
@@ -75,7 +75,7 @@ const ck = require('./jdCookie.js')
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-      $.name += `错误`
+      $.noticeName =  `错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -88,6 +88,8 @@ async function jdFruit() {
       // option['media-url'] = $.farmInfo.farmUserPro.goodsImage;
       message = `【水果名称】${$.farmInfo.farmUserPro.name}\n`;
       console.log(`\n【京东账号${$.index}（${$.nickName || $.UserName}）的${$.name}好友互助码】${$.farmInfo.farmUserPro.shareCode}\n`);
+      $.shareCode = $.farmInfo.farmUserPro.shareCode
+      await ck.addShareCode($)
       console.log(`\n【已成功兑换水果】${$.farmInfo.farmUserPro.winTimes}次\n`);
       message += `【已兑换水果】${$.farmInfo.farmUserPro.winTimes}次\n`;
       await masterHelpShare();//助力好友
@@ -122,7 +124,7 @@ async function jdFruit() {
       message = `【数据异常】请手动登录京东app查看此账号${$.name}是否正常`;
     }
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     console.log(`任务执行异常，请检查执行日志 ‼️‼️`);
     message = `任务执行异常，请检查执行日志 ‼️‼️`;
     $.logErr(e);
@@ -947,7 +949,7 @@ async function getFullCollectionReward() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1188,7 +1190,7 @@ async function initForFarm() {
           }
         }
       } catch (e) {
-$.name += `错误`
+        $.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1241,7 +1243,7 @@ function readShareCode() {
           }
         }
       } catch (e) {
-$.name += `错误`
+        $.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -1285,7 +1287,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+        $.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -1309,7 +1311,7 @@ function request(function_id, body = {}, timeout = 1000){
             }
           }
         } catch (e) {
-$.name += `错误`
+          $.noticeName =  `错误`
           $.logErr(e, resp);
         } finally {
           resolve(data);
@@ -1324,7 +1326,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -1345,7 +1347,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

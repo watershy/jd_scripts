@@ -63,7 +63,7 @@ const ck = require('./jdCookie')
 })()
   .catch((e) => {
       $.notice += `\n${e}`
-      $.name += `错误`
+      $.noticeName =  `错误`
   })
   .finally(async () => {
     await ck.methodEnd($)
@@ -100,7 +100,7 @@ function getInfo() {
         $.prize = JSON.parse($.info.prize)
         resolve()
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         console.log(e)
       }
     })
@@ -127,7 +127,7 @@ function getUserInfo() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -152,7 +152,7 @@ function doTask(taskId) {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -179,7 +179,7 @@ function draw() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve(data);
@@ -255,7 +255,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -270,7 +270,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -282,7 +282,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

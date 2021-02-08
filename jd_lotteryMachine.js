@@ -31,7 +31,7 @@ function updateShareCodes(url = 'https://raw.githubusercontent.com/yangtingxiao/
           $.body = data;
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
@@ -50,7 +50,7 @@ function updateShareCodesCDN(url = 'https://raw.fastgit.org/yangtingxiao/Quantum
           $.body = data;
         }
       } catch (e) {
-$.name += `错误`
+$.noticeName =  `错误`
         $.logErr(e, resp)
       } finally {
         resolve();
