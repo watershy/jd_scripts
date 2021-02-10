@@ -78,6 +78,7 @@ let methodEnd = function ($,notice) {
                 console.log($.notice)
                 await notify.sendNotify(`${$.noticeName}`, `${$.notice}`)
             } else if($.notice){
+                console.log($.notice)
                 //查询是否需要通知
                 let sql = 'select notify from jd_notify_table where active_name = ?'
                 let res = await query(sql, [$.name])
