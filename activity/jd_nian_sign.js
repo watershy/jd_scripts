@@ -146,7 +146,7 @@ function getHomeData(info=false) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -181,7 +181,7 @@ function queryMaterials2() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -209,7 +209,7 @@ function signInRead(shopSign) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -253,7 +253,7 @@ function signInWrite(shopSign) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -276,7 +276,7 @@ function pkInfo() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -298,7 +298,7 @@ function pkCollectScore() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -320,7 +320,7 @@ function pkTaskDetail() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -356,7 +356,7 @@ function pkAssignGroup(inviteId) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -379,7 +379,7 @@ function readShareCode() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -485,7 +485,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

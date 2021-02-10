@@ -123,7 +123,7 @@ function getUserInfo(info = false) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -149,7 +149,7 @@ function doTask(taskId) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -225,7 +225,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

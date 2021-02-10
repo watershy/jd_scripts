@@ -102,7 +102,7 @@ function userSignIn() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -172,7 +172,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

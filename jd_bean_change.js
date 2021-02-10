@@ -151,7 +151,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -185,7 +185,7 @@ function getJingBeanBalanceDetail(page) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -229,7 +229,7 @@ function queryexpirejingdou() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

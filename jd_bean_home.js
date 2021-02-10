@@ -113,7 +113,7 @@ function doTask2() {
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`
+          $.notice += `\n${e}`
         } finally {
           resolve();
         }
@@ -133,7 +133,7 @@ function getAuthorShareCode() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -154,7 +154,7 @@ function getAuthorShareCode2() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -190,7 +190,7 @@ function getUserInfo() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -225,7 +225,7 @@ function hitGroup() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -261,7 +261,7 @@ function help(shareCode, groupCode, isTask = 0) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -305,7 +305,7 @@ function getTaskList() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -333,7 +333,7 @@ function receiveTask(itemId = "zddd", type = "3") {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -364,7 +364,7 @@ function award(source="home") {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -443,7 +443,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

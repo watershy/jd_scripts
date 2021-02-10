@@ -132,7 +132,7 @@ function readToken() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -267,7 +267,7 @@ function enterRoom(invitePin) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -297,7 +297,7 @@ function helpInviteFriend(friendPin) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -357,7 +357,7 @@ function combatHelp(friendPin) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -382,7 +382,7 @@ function combatDetail(invitePin) {
         }
       } catch (e) {
                 $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -434,7 +434,7 @@ function getFriendPins() {
           }
         }
       } catch (e) {
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

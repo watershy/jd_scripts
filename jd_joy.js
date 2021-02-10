@@ -387,7 +387,7 @@ function getDeskGoodDetails() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -413,7 +413,7 @@ function followScan(sku) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -438,7 +438,7 @@ function scanMarket(type, body, cType = 'application/json') {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -461,7 +461,7 @@ function appScanMarket(type, body) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -484,7 +484,7 @@ function getFood(type) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -507,7 +507,7 @@ function followShop(shopId) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -535,7 +535,7 @@ function enterRoom() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -557,7 +557,7 @@ function appGetPetTaskConfig() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -610,7 +610,7 @@ function feedPets(feedNum) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -632,7 +632,7 @@ function getPetTaskConfig() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -656,7 +656,7 @@ function getPetRace() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -681,7 +681,7 @@ function getRankList() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -708,7 +708,7 @@ function runMatch(teamLevel, timeout = 5000) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -732,7 +732,7 @@ function getBackupInfo() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -756,7 +756,7 @@ function getWinCoin() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -780,7 +780,7 @@ function receiveJoyRunAward() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -825,7 +825,7 @@ function getSupplyInfo(showOrder) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -866,7 +866,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

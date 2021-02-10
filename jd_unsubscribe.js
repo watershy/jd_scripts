@@ -145,7 +145,7 @@ function getFollowGoods() {
         // console.log('data', data.data.length)
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -174,7 +174,7 @@ function unsubscribeGoodsFun(commId) {
         // console.log('data', data.errMsg);
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -237,7 +237,7 @@ function getFollowShops() {
         $.shopsTotalNum = data.totalNum;
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -264,7 +264,7 @@ function unsubscribeShopsFun(shopId) {
         data = JSON.parse(data.slice(14, -13));
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -305,7 +305,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

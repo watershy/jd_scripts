@@ -460,7 +460,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -482,7 +482,7 @@ async function request(function_id, body = {}) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data)
       }

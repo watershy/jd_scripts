@@ -122,7 +122,7 @@ function getUserInfo() {
         });
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -145,7 +145,7 @@ function querySignList() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -168,7 +168,7 @@ async function userSignReward(dwUserFlag,ddwMoney) {
           $.log(`\n📌签到：${sErrMsg}，获得财富 ¥ ${ddwMoney || 0}\n${$.showLog ? data : ""}`);
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve();
         }
@@ -195,7 +195,7 @@ function getMoney() {
                 $.log(`\n【${sceneList[sceneId].strSceneName}】👬好友${strPin} : 获取助力财富值：¥ ${dwMoney || 0}\n${$.showLog ? data : ""}`);
               } catch (e) {
         $.noticeName = `${$.name}错误`
-                $.notice += `${e}`;
+                $.notice += `\n${e}`;
               } finally {
                 resolve();
               }
@@ -211,7 +211,7 @@ function getMoney() {
             $.log(`\n【${sceneList[sceneId].strSceneName}】🏝岛主 : ${sErrMsg} 获取财富值：¥ ${dwMoney || 0}\n${$.showLog ? data : ""}`);
           } catch (e) {
         $.noticeName = `${$.name}错误`
-            $.notice += `${e}`;
+            $.notice += `\n${e}`;
           } finally {
             resolve();
           }
@@ -236,7 +236,7 @@ function friendCircle() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -262,7 +262,7 @@ function queryFriendIsland(strShareId,){
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve();
         }
@@ -280,7 +280,7 @@ function stealMoney(strShareId, sceneId, strFriendNick, strSceneName){
         $.log(`\n🤏偷取好友【${strFriendNick}】【${strSceneName}】财富值：¥ ${dwGetMoney ? dwGetMoney : sErrMsg}\n${$.showLog ? data: ""}`);
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -319,7 +319,7 @@ function doTreasureHunt(place) {
           resolve(iRet)
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve();
         }
@@ -340,7 +340,7 @@ function getTaskList(taskType) {
             $.log(`\n获取【📆日常任务】列表 ${msg}，总共${$.allTask.length}个任务！\n${$.showLog ? data : ""}`);
           } catch (e) {
         $.noticeName = `${$.name}错误`
-            $.notice += `${e}`;
+            $.notice += `\n${e}`;
           } finally {
             resolve();
           }
@@ -354,7 +354,7 @@ function getTaskList(taskType) {
             $.log(`\n获取【🎖成就任务】列表 ${sErrMsg}，总共${$.allTask.length}个任务！\n${$.showLog ? data : ""}`);
           } catch (e) {
         $.noticeName = `${$.name}错误`
-            $.notice += `${e}`;
+            $.notice += `\n${e}`;
           } finally {
             resolve();
           }
@@ -432,7 +432,7 @@ function doTask(taskinfo) {
         resolve(ret === 0);
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -459,7 +459,7 @@ function awardTask( taskType, taskinfo) {
             resolve(ret === 0);
           } catch (e) {
         $.noticeName = `${$.name}错误`
-            $.notice += `${e}`;
+            $.notice += `\n${e}`;
           } finally {
             resolve();
           }
@@ -473,7 +473,7 @@ function awardTask( taskType, taskinfo) {
             $.log(`\n${strTaskDescr}【领成就奖励】： success 获得财富值：¥ ${dwExpericnce}\n${ $.showLog ? data : '' }`);
           } catch (e) {
         $.noticeName = `${$.name}错误`
-            $.notice += `${e}`;
+            $.notice += `\n${e}`;
           } finally {
             resolve();
           }
@@ -498,7 +498,7 @@ function funCenterState() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -515,7 +515,7 @@ function soltMachine(strCouponPool,strGoodsPool,ddwConfVersion) {
         $.log(`\n【抽奖结果】🎰 ${strAwardPoolName != "" ? "未中奖" : strAwardPoolName} \n${ $.showLog ? data : '' }`);
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -544,7 +544,7 @@ function submitInviteId(userName) {
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve();
         }
@@ -567,14 +567,14 @@ function createSuperAssistUser(shareCode) {
             $.log(`\n【👫🏻超级助力】超级助力：${sErrMsg}\n${$.showLog ? data : ''}`);
           } catch (e) {
         $.noticeName = `${$.name}错误`
-            $.notice += `${e}`;
+            $.notice += `\n${e}`;
           } finally {
             resolve();
           }
         });
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -597,14 +597,14 @@ function createAssistUser() {
             $.log(`\n【👬普通助力】助力：${sErrMsg}\n${$.showLog ? data : ''}`);
           } catch (e) {
         $.noticeName = `${$.name}错误`
-            $.notice += `${e}`;
+            $.notice += `\n${e}`;
           } finally {
             resolve();
           }
         });
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
       	resolve();
       }
@@ -639,7 +639,7 @@ function submitGroupId() {
               	}
             	} catch (e) {
         $.noticeName = `${$.name}错误`
-              	$.notice += `${e}`;
+              	$.notice += `\n${e}`;
             	} finally {
               	resolve();
             	}
@@ -648,7 +648,7 @@ function submitGroupId() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -666,7 +666,7 @@ function openGroup() {
         resolve(0);
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -687,14 +687,14 @@ function joinGroup() {
             $.log(`\n【🏝寻宝大作战】助力：${sErrMsg}\n${$.showLog ? data : ''}`);
           } catch (e) {
         $.noticeName = `${$.name}错误`
-            $.notice += `${e}`;
+            $.notice += `\n${e}`;
           } finally {
             resolve();
           }
         });
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
       	resolve();
       }

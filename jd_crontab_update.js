@@ -48,7 +48,7 @@ $.notice = ''
             $.notice += `${res[i].file_name}\n`
         }
         //删除不存在的活动
-        sql = 'delete from jd_cron_table where file_name not in (?) and flag == 0'
+        sql = 'delete from jd_cron_table where file_name not in (?) and flag = 0'
         await ck.query(sql, [fileNameList])
     }
     await execShell()

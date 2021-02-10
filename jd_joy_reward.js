@@ -196,7 +196,7 @@ function getExchangeRewards() {
                 }
             } catch (e) {
         $.noticeName = `${$.name}错误`
-                $.notice += `${e}`;
+                $.notice += `\n${e}`;
             } finally {
                 resolve();
             }
@@ -259,7 +259,7 @@ function exchange(saleInfoId, orderSource) {
                 }
             } catch (e) {
         $.noticeName = `${$.name}错误`
-                $.notice += `${e}`;
+                $.notice += `\n${e}`;
             } finally {
                 resolve();
             }
@@ -301,7 +301,7 @@ function TotalBean() {
                 }
             } catch (e) {
         $.noticeName = `${$.name}错误`
-                $.notice += `${e}`
+                $.notice += `\n${e}`
             } finally {
                 resolve();
             }
@@ -329,7 +329,7 @@ function getJDServerTime() {
                 }
             } catch (e) {
         $.noticeName = `${$.name}错误`
-                $.notice += `${e}`
+                $.notice += `\n${e}`
             } finally {
                 resolve($.jdTime);
             }

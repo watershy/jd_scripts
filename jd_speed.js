@@ -161,7 +161,7 @@ function jDSpeedUp(sourceId) {
       } catch (e) {
         $.noticeName = `${$.name}错误`
         // $.msg("京东天天-加速" + e.name + "‼️", JSON.stringify(e), e.message)
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve()
       }
@@ -217,7 +217,7 @@ function spaceEventList() {
       } catch (e) {
         $.noticeName = `${$.name}错误`
         // $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(spaceEvents)
       }
@@ -266,7 +266,7 @@ function spaceEventHandleEvent(spaceEventList) {
           } catch (e) {
         $.noticeName = `${$.name}错误`
             // $.msg("天天加速-查询处理太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
-            $.notice += `${e}`
+            $.notice += `\n${e}`
           } finally {
             if (spaceEventList.length === spaceNumTask) {
               console.log("\n天天加速-已成功处理" + spaceNumTask + "个太空特殊事件")
@@ -323,7 +323,7 @@ function energyPropList() {
         }
       } catch (eor) {
         // $.msg("天天加速-查询燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(TaskID)
       }
@@ -369,7 +369,7 @@ function receiveEnergyProp(CID) {
             }
           } catch (eor) {
             // $.msg("天天加速-领取可用燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
-            $.notice += `${e}`
+            $.notice += `\n${e}`
           } finally {
             if (CID.length === count) {
               console.log("\n天天加速-已成功领取" + NumTask + "个可用燃料")
@@ -428,7 +428,7 @@ function energyPropUsaleList(EID) {
         }
       } catch (eor) {
         // $.msg("天天加速-燃料ID" + eor.name + "‼️", JSON.stringify(eor), eor.message)
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(TaskCID)
       }
@@ -479,7 +479,7 @@ function useEnergy(PropID) {
             }
           } catch (eor) {
             // $.msg("天天加速-使用燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
-            $.notice += `${e}`
+            $.notice += `\n${e}`
           } finally {
             if (PropID.length === PropCount) {
               console.log("\n天天加速-已成功使用" + PropNumTask + "个燃料")
@@ -540,7 +540,7 @@ function getMemBerList() {
       } catch (e) {
         $.noticeName = `${$.name}错误`
         // $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve()
       }
@@ -574,7 +574,7 @@ function getMemBerGetTask(sourceId) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve()
       }
@@ -607,7 +607,7 @@ function getReward(uuid) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve()
       }
@@ -648,7 +648,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

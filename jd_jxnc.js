@@ -233,7 +233,7 @@ function TotalBean() {
                 }
             } catch (e) {
         $.noticeName = `${$.name}错误`
-                $.notice += `${e}`
+                $.notice += `\n${e}`
             } finally {
                 resolve();
             }
@@ -344,7 +344,7 @@ function getTaskList() {
                 resolve(other);
             } catch (e) {
         $.noticeName = `${$.name}错误`
-                $.notice += `${e}`;
+                $.notice += `\n${e}`;
             } finally {
                 resolve(true);
             }
@@ -427,7 +427,7 @@ function answerTask() {
                     }
                 } catch (e) {
         $.noticeName = `${$.name}错误`
-                    $.notice += `${e}`;
+                    $.notice += `\n${e}`;
                 } finally {
                     resolve();
                 }
@@ -488,7 +488,7 @@ function submitInviteId(userName) {
                         }
                     } catch (e) {
         $.noticeName = `${$.name}错误`
-                        // $.notice += `${e}`;
+                        // $.notice += `\n${e}`;
                         $.log('邀请码提交失败 API 返回异常');
                     } finally {
                         resolve();
@@ -497,7 +497,7 @@ function submitInviteId(userName) {
             );
         } catch (e) {
         $.noticeName = `${$.name}错误`
-            // $.notice += `${e}`;
+            // $.notice += `\n${e}`;
             resolve();
         }
     });
@@ -523,7 +523,7 @@ function getAssistUser() {
                     }
                 } catch (e) {
         $.noticeName = `${$.name}错误`
-                    // $.notice += `${e}`;
+                    // $.notice += `\n${e}`;
                     $.log('获取随机助力码失败 API 返回异常');
                 } finally {
                     resolve(false);
@@ -531,7 +531,7 @@ function getAssistUser() {
             });
         } catch (e) {
         $.noticeName = `${$.name}错误`
-            // $.notice += `${e}`;
+            // $.notice += `\n${e}`;
             resolve(false);
         }
     });
@@ -595,7 +595,7 @@ function helpShareCode(smp, active, joinnum) {
                     return;
                 } catch (e) {
         $.noticeName = `${$.name}错误`
-                    $.notice += `${e}`;
+                    $.notice += `\n${e}`;
                 } finally {
                     resolve(false);
                 }
@@ -628,7 +628,7 @@ function doTask({tasklevel, left, taskname, eachtimeget}) {
                     resolve(ret);
                 } catch (e) {
         $.noticeName = `${$.name}错误`
-                    $.notice += `${e}`;
+                    $.notice += `\n${e}`;
                 } finally {
                     resolve();
                 }

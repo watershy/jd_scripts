@@ -85,7 +85,7 @@ function delCoupon(couponId, couponTitle) {
           delCount++;
         }
       } catch (e) {
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -144,7 +144,7 @@ function getCoupon() {
           }
         } catch (e) {
           $.name += `错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve();
         }
@@ -216,7 +216,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.name += `错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

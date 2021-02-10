@@ -247,7 +247,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -278,7 +278,7 @@ function downloadUrl(url = 'https://raw.githubusercontent.com/NobyDa/Script/mast
           $.body = data;
         }
       } catch (e) {
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

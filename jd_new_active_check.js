@@ -77,7 +77,7 @@ function getReadMeFile(url = 'https://gitee.com/lxk0301/jd_scripts/raw/master/RE
                 }
             } catch (e) {
         $.noticeName = `${$.name}错误`
-                $.notice += `${e}`
+                $.notice += `\n${e}`
             } finally {
                 resolve(notifyContent);
             }

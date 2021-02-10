@@ -76,8 +76,7 @@ const ck = require('./jdCookie')
   }
 })().catch((e) => {
   $.notice += `\n${e}`
-  $.notice += `\n${e}`
-              $.noticeName = `${$.name}错误`
+  $.noticeName = `${$.name}错误`
 }).finally(async () => {
   await ck.methodEnd($)
 })
@@ -112,8 +111,8 @@ async function jdPlantBean() {
       console.log(`种豆得豆-初始失败:  ${JSON.stringify($.plantBeanIndexResult)}`);
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
-    $.logErr(e);
+    $.noticeName = `${$.name}错误`
+    $.notice += `\n${e}`
   }
 }
 async function doGetReward() {
@@ -544,7 +543,7 @@ function requestGet(function_id, body = {}) {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -586,7 +585,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -607,7 +606,7 @@ function request(function_id, body = {}){
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }

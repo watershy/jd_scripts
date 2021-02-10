@@ -77,7 +77,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
 })()
   .catch((e) => {
     $.notice += `\n${e}`
-            $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
   })
   .finally(async () => {
     await ck.methodEnd($)
@@ -167,7 +167,7 @@ function interact_template_getHomeData(timeout = 0) {
           if (scorePerLottery) await interact_template_getLotteryResult();
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve()
         }
@@ -205,7 +205,7 @@ function harmony_collectScore(taskToken,taskId,itemId = "",actionType = 0,timeou
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve()
         }
@@ -249,7 +249,7 @@ function interact_template_getLotteryResult(taskId,timeout = 0) {
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve()
         }
@@ -288,7 +288,7 @@ function readShareCode() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -331,7 +331,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

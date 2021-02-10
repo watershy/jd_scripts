@@ -127,7 +127,7 @@ async function jdFruit() {
         $.noticeName = `${$.name}错误`
     console.log(`任务执行异常，请检查执行日志 ‼️‼️`);
     message = `任务执行异常，请检查执行日志 ‼️‼️`;
-    $.logErr(e);
+    $.notice += `\n${e}`
   }
 }
 async function doDailyTask() {
@@ -950,7 +950,7 @@ async function getFullCollectionReward() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -1191,7 +1191,7 @@ async function initForFarm() {
         }
       } catch (e) {
                 $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -1244,7 +1244,7 @@ function readShareCode() {
         }
       } catch (e) {
                 $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
@@ -1288,7 +1288,7 @@ function TotalBean() {
         }
       } catch (e) {
                 $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -1312,7 +1312,7 @@ function request(function_id, body = {}, timeout = 1000){
           }
         } catch (e) {
                   $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve(data);
         }

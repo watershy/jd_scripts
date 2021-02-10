@@ -195,7 +195,7 @@ function getJdFactory() {
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve();
         }
@@ -271,7 +271,7 @@ function getJxFactory(){
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve()
         }
@@ -329,7 +329,7 @@ function getJxNc(){
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve()
         }
@@ -401,7 +401,7 @@ function getJdPet(){
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve(data);
       }
@@ -430,7 +430,7 @@ async function getJdZZ() {
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`
+          $.notice += `\n${e}`
         } finally {
           resolve(data);
         }
@@ -476,7 +476,7 @@ async function getPlantBean() {
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve(data);
         }
@@ -579,7 +579,7 @@ async function getJDFruit() {
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve();
         }
@@ -643,7 +643,7 @@ async function getJoy(){
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
@@ -683,7 +683,7 @@ async function getSgmh(timeout = 0) {
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve()
         }
@@ -751,7 +751,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }

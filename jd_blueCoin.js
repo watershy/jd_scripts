@@ -219,7 +219,7 @@ function smtg_materialPrizeIndex(timeout = 0) {
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve()
         }
@@ -259,7 +259,7 @@ function smtg_queryPrize(timeout = 0){
           }
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve()
         }
@@ -315,7 +315,7 @@ function smtg_obtainPrize(prizeId, timeout = 0) {
           await  smtg_obtainPrize(prizeId,3000);
         } catch (e) {
         $.noticeName = `${$.name}错误`
-          $.notice += `${e}`;
+          $.notice += `\n${e}`;
         } finally {
           resolve()
         }
@@ -346,7 +346,7 @@ function smtgHome() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`;
+        $.notice += `\n${e}`;
       } finally {
         resolve();
       }
@@ -388,7 +388,7 @@ function TotalBean() {
         }
       } catch (e) {
         $.noticeName = `${$.name}错误`
-        $.notice += `${e}`
+        $.notice += `\n${e}`
       } finally {
         resolve();
       }
