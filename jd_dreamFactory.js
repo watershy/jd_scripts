@@ -42,7 +42,7 @@ let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = ['wUjR_aJ43-uLjZU5cS9KGg=='];
 const ck = require('./jdCookie.js')
 !(async () => {
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie('select * from jd_cookie where possessor = \'hyk\' or possessor = \'yyg\'');
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
