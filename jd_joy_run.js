@@ -78,7 +78,7 @@ async function getToken() {
       count ++;
       console.log(`count: ${count}`)
       $.setdata(`${count}`, 'countFlag');
-      if ($.getdata('countFlag') * 1 === 2) {
+      if ($.getdata('countFlag') * 1 >= 2) {
         count = 0;
         $.setdata(`${count}`, 'countFlag');
         $.msg($.name, '更新Token: 成功🎉', ``);
