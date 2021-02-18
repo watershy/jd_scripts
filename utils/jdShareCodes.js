@@ -1,17 +1,11 @@
-// 从日志中获取互助码
-
-// process.env.SHARE_CODE_FILE = "/scripts/logs/sharecode.log";
-// process.env.JD_COOKIE = "cookie1&cookie2";
-
-exports.JDZZ_SHARECODES = [];
+// 从日志中获取互助码// process.env.SHARE_CODE_FILE = "/scripts/logs/sharecode.log";
+// process.env.JD_COOKIE = "cookie1&cookie2";exports.JDZZ_SHARECODES = [];
 exports.DDFACTORY_SHARECODES = [];
 exports.DREAM_FACTORY_SHARE_CODES = [];
 exports.PLANT_BEAN_SHARECODES = [];
 exports.FRUITSHARECODES = [];
 exports.PETSHARECODES = [];
-exports.JDJOY_SHARECODES = [];
-
-let fileContent = '';
+exports.JDJOY_SHARECODES = [];let fileContent = '';
 if (process.env.SHARE_CODE_FILE) {
   try {
     const fs = require('fs');
@@ -20,9 +14,7 @@ if (process.env.SHARE_CODE_FILE) {
     console.error(err)
   }
 }
-let lines = fileContent.split('\n');
-
-let shareCodesMap = {
+let lines = fileContent.split('\n');let shareCodesMap = {
   "JDZZ_SHARECODES": [],
   "DDFACTORY_SHARECODES": [],
   "DREAM_FACTORY_SHARE_CODES": [],
@@ -58,9 +50,7 @@ if (process.env.JD_COOKIE) {
   } else {
     cookieCount = process.env.JD_COOKIE.split('\n').length;
   }
-}
-
-for (let key in shareCodesMap) {
+}for (let key in shareCodesMap) {
   exports[key] = [];
   if (shareCodesMap[key].length === 0) {
     continue;
@@ -69,4 +59,3 @@ for (let key in shareCodesMap) {
     exports[key][i] = shareCodesMap[key].sort(() => Math.random() - 0.5).join('@');
   }
 }
-

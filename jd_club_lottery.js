@@ -19,15 +19,10 @@ Modified from https://github.com/Zero-S1/JD_tools/blob/master/JD_vvipclub.py
 cron "5 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_club_lottery.js,tag=摇京豆
 =================Surge==============
 [Script]
-摇京豆 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_club_lottery.js
-
-============小火箭=========
+摇京豆 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_club_lottery.js============小火箭=========
 摇京豆 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_club_lottery.js, cronexpr="5 0 * * *", timeout=3600, enable=true
 */
-
-const $ = new Env('摇京豆');
-
-//IOS等用户直接用NobyDa的jd cookie
+const $ = new Env('摇京豆');//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const ck = require('./jdCookie.js')
@@ -48,17 +43,8 @@ $.notice = ''
       $.totalBeanCount = 0;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
-        }
         continue
       }
       await clubLottery();
@@ -68,7 +54,7 @@ $.notice = ''
   }
 })()
     .catch((e) => {
-              $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       $.notice += `\n${e}`
     })
     .finally(async () => {
@@ -82,10 +68,11 @@ async function clubLottery() {
   await vvipclub_shaking_info();//新版：查询多少次摇奖次数
   await shaking();//开始摇奖
 }
+
 async function doTasks() {
   const browseTaskRes = await getTask('browseTask');
   if (browseTaskRes.success) {
-    const { totalPrizeTimes, currentFinishTimes, taskItems } = browseTaskRes.data[0];
+    const {totalPrizeTimes, currentFinishTimes, taskItems} = browseTaskRes.data[0];
     const taskTime = totalPrizeTimes - currentFinishTimes;
     if (taskTime > 0) {
       let taskID = [];
@@ -105,7 +92,7 @@ async function doTasks() {
   }
   const attentionTaskRes = await getTask('attentionTask');
   if (attentionTaskRes.success) {
-    const { totalPrizeTimes, currentFinishTimes, taskItems } = attentionTaskRes.data[0];
+    const {totalPrizeTimes, currentFinishTimes, taskItems} = attentionTaskRes.data[0];
     const taskTime = totalPrizeTimes - currentFinishTimes;
     if (taskTime > 0) {
       let taskID = [];
@@ -122,6 +109,7 @@ async function doTasks() {
     }
   }
 }
+
 async function shaking() {
   for (let i = 0; i < new Array($.leftShakingTimes).fill('').length; i++) {
     console.log(`开始新版-摇奖`)
@@ -150,6 +138,7 @@ async function shaking() {
     }
   }
 }
+
 //====================API接口=================
 //查询剩余摇奖次数API
 function vvipclub_shaking_info() {
@@ -188,6 +177,7 @@ function vvipclub_shaking_info() {
     })
   })
 }
+
 //新版摇奖API
 function vvipclub_shaking_lottery() {
   return new Promise(resolve => {
@@ -221,6 +211,7 @@ function vvipclub_shaking_lottery() {
     })
   })
 }
+
 //领取新版本摇一摇一次免费的次数
 function vvipclub_receive_lottery_times() {
   return new Promise(resolve => {
@@ -254,10 +245,11 @@ function vvipclub_receive_lottery_times() {
     })
   })
 }
+
 //查询多少次机会
 function getFreeTimes() {
   return new Promise(resolve => {
-    $.get(taskUrl('vvipclub_luckyBox', { "info": "freeTimes" }), (err, resp, data) => {
+    $.get(taskUrl('vvipclub_luckyBox', {"info": "freeTimes"}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`\n${$.name}: API查询请求失败 ‼️‼️`)
@@ -279,9 +271,10 @@ function getFreeTimes() {
     })
   })
 }
+
 function getTask(info) {
   return new Promise(resolve => {
-    $.get(taskUrl('vvipclub_lotteryTask', { info, "withItem": true }), (err, resp, data) => {
+    $.get(taskUrl('vvipclub_lotteryTask', {info, "withItem": true}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`\n${$.name}: API查询请求失败 ‼️‼️`)
@@ -299,9 +292,10 @@ function getTask(info) {
     })
   })
 }
+
 function doTask(taskName, taskItemId) {
   return new Promise(resolve => {
-    $.get(taskUrl('vvipclub_doTask', { taskName, taskItemId }), (err, resp, data) => {
+    $.get(taskUrl('vvipclub_doTask', {taskName, taskItemId}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`\n${$.name}: API查询请求失败 ‼️‼️`)
@@ -319,9 +313,10 @@ function doTask(taskName, taskItemId) {
     })
   })
 }
+
 function shakeBean() {
   return new Promise(resolve => {
-    $.get(taskUrl('vvipclub_shaking', { "type": '0' }), (err, resp, data) => {
+    $.get(taskUrl('vvipclub_shaking', {"type": '0'}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`\n${$.name}: API查询请求失败 ‼️‼️`)
@@ -339,6 +334,7 @@ function shakeBean() {
     })
   })
 }
+
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -380,18 +376,20 @@ function TotalBean() {
     })
   })
 }
+
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
     }
   }
 }
+
 function taskUrl(function_id, body = {}, appId = 'vip_h5') {
   return {
     url: `${JD_API_HOST}?functionId=${function_id}&appid=${appId}&body=${escape(JSON.stringify(body))}&_=${Date.now()}`,

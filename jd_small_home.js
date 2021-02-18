@@ -8,48 +8,28 @@
 东东小窝 https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js
 现有功能：
 做日常任务任务，每日抽奖（有机会活动京豆，使用的是免费机会，不消耗WO币）
-自动使用WO币购买装饰品可以获得京豆，分别可获得5,20，50,100,200,400,700，1200京豆）
-
-注：目前使用此脚本会给脚本内置的两个码进行助力，请知晓
-
-活动入口：京东APP我的-游戏与更多-东东小窝
+自动使用WO币购买装饰品可以获得京豆，分别可获得5,20，50,100,200,400,700，1200京豆）注：目前使用此脚本会给脚本内置的两个码进行助力，请知晓活动入口：京东APP我的-游戏与更多-东东小窝
 或 京东APP首页-搜索 玩一玩-DIY理想家
 微信小程序入口：
 来客有礼 - > 首页 -> 东东小窝
 网页入口（注：进入后不能再此刷新，否则会有问题，需重新输入此链接进入）
-https://h5.m.jd.com/babelDiy/Zeus/2HFSytEAN99VPmMGZ6V4EYWus1x/index.html
-
-已支持IOS双京东账号,Node.js支持N个京东账号
+https://h5.m.jd.com/babelDiy/Zeus/2HFSytEAN99VPmMGZ6V4EYWus1x/index.html已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
 ===============Quantumultx===============
 [task_local]
 #东东小窝
-16 22 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js, tag=东东小窝, img-url=https://raw.githubusercontent.com/58xinian/icon/master/ddxw.png, enabled=true
-
-================Loon==============
+16 22 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js, tag=东东小窝, img-url=https://raw.githubusercontent.com/58xinian/icon/master/ddxw.png, enabled=true================Loon==============
 [Script]
-cron "16 22 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js, tag=东东小窝
-
-===============Surge=================
-东东小窝 = type=cron,cronexp="16 22 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js
-
-============小火箭=========
+cron "16 22 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js, tag=东东小窝===============Surge=================
+东东小窝 = type=cron,cronexp="16 22 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js============小火箭=========
 东东小窝 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_small_home.js, cronexpr="16 22 * * *", timeout=3600, enable=true
  */
-const $ = new Env('东东小窝');
-
-const ck = require('./jdCookie')
+const $ = new Env('东东小窝');const ck = require('./jdCookie')
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message = '';
-let isPurchaseShops = false;//是否一键加购商品到购物车，默认不加购
-
-$.notice = ''
-const JD_API_HOST = 'https://lkyl.dianpusoft.cn/api';
-
-!(async () => {
-  cookiesArr = await ck.getCookie();
-
-  if (!cookiesArr[0]) {
+let isPurchaseShops = false;//是否一键加购商品到购物车，默认不加购$.notice = ''
+const JD_API_HOST = 'https://lkyl.dianpusoft.cn/api';!(async () => {
+  cookiesArr = await ck.getCookie();  if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
@@ -61,15 +41,12 @@ const JD_API_HOST = 'https://lkyl.dianpusoft.cn/api';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n*******开始【京东账号${$.index}】${$.UserName}********\n`);
+      await ck.TotalBean(cookie, $);
       $.flag = $.UserName === 'jd_pBXzZlqInyyk';
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
         if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
+          $.noticeName = `cookie失效`
         }
         continue
       }
@@ -98,17 +75,13 @@ async function smallHome() {
   await doAllTask();
   await queryByUserId();
   await queryFurnituresCenterList();
-}
-
-async function lottery() {
+}async function lottery() {
   if ($.freeDrawCount > 0) {
     await drawRecord($.lotteryId);
   } else {
     console.log(`免费抽奖机会今日已使用\n`)
   }
-}
-
-async function doChannelsListTask(taskId, taskType) {
+}async function doChannelsListTask(taskId, taskType) {
   await queryChannelsList(taskId);
   for (let item of $.queryChannelsList) {
     if (item.showOrder === 1) {
@@ -300,9 +273,7 @@ function furnituresCenterPurchase(id, jdBeanNum) {
       }
     })
   })
-}
-
-//获取详情
+}//获取详情
 function queryByUserId() {
   return new Promise(resolve => {
     $.get(taskUrl(`ssjj-wo-home-info/queryByUserId/2`), (err, resp, data) => {
@@ -357,9 +328,7 @@ function queryChannelsList(taskId) {
       }
     })
   })
-}
-
-//浏览频道，浏览会场，浏览商品，浏览店铺API
+}//浏览频道，浏览会场，浏览商品，浏览店铺API
 function browseChannels(functionID ,taskId, browseId) {
   return new Promise(resolve => {
     $.get(taskUrl(`/ssjj-task-record/${functionID}/${taskId}/${browseId}`), (err, resp, data) => {
@@ -500,9 +469,7 @@ function createInviteUser() {
       }
     })
   })
-}
-
-function createAssistUser(inviteId, taskId) {
+}function createAssistUser(inviteId, taskId) {
   return new Promise(resolve => {
     $.get(taskUrl(`/ssjj-task-record/createAssistUser/${inviteId}/${taskId}`), (err, resp, data) => {
       try {

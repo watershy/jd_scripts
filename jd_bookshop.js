@@ -6,21 +6,13 @@
 ============Quantumultx===============
 [task_local]
 #口袋书店
-1 8,12,18 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js, tag=口袋书店, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+1 8,12,18 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js, tag=口袋书店, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "1 8,12,18 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js,tag=口袋书店
-
-===============Surge=================
-口袋书店 = type=cron,cronexp="1 8,12,18 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js
-
-============小火箭=========
+cron "1 8,12,18 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js,tag=口袋书店===============Surge=================
+口袋书店 = type=cron,cronexp="1 8,12,18 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js============小火箭=========
 口袋书店 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js, cronexpr="1 8,12,18* * *", timeout=3600, enable=true
  */
 const $ = new Env('口袋书店');
-
-
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const ACT_ID = 'dz2010100034444201', shareUuid = '28a699ac78d74aa3b31f7103597f8927'
@@ -53,8 +45,7 @@ const ck = require('./jdCookie.js')
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
         if ($.isNode()) {
@@ -67,12 +58,11 @@ const ck = require('./jdCookie.js')
     }
   }
 })()
-  .catch((e) => {
-
-  })
-  .finally(async () => {
-    await ck.methodEnd($)
-  })
+    .catch((e) => {
+    })
+    .finally(async () => {
+      await ck.methodEnd($)
+    })
 
 async function jdBeauty() {
   $.score = 0
@@ -96,7 +86,7 @@ async function jdBeauty() {
       $.gold -= 800
     }
   }
-  if($.userInfo.storeGold) await chargeGold()
+  if ($.userInfo.storeGold) await chargeGold()
   await helpFriends()
 }
 
@@ -107,9 +97,7 @@ async function helpFriends() {
     await getActContent(true, code)
     await $.wait(500)
   }
-}
-
-// 获得IsvToken
+}// 获得IsvToken
 function getIsvToken() {
   return new Promise(resolve => {
     let body = 'body=%7B%22to%22%3A%22https%3A%5C%2F%5C%2Flzdz-isv.isvjcloud.com%5C%2Fdingzhi%5C%2Fbook%5C%2Fdevelop%5C%2Factivity%3FactivityId%3Ddz2010100034444201%22%2C%22action%22%3A%22to%22%7D&build=167490&client=apple&clientVersion=9.3.2&openudid=53f4d9c70c1c81f1c8769d2fe2fef0190a3f60d2&sign=f3eb9660e798c20372734baf63ab55f2&st=1610267023622&sv=111'
@@ -132,9 +120,7 @@ function getIsvToken() {
       }
     })
   })
-}
-
-// 获得对应游戏的访问Token
+}// 获得对应游戏的访问Token
 function getIsvToken2() {
   return new Promise(resolve => {
     let body = 'body=%7B%22url%22%3A%22https%3A%5C%2F%5C%2Flzdz-isv.isvjcloud.com%22%2C%22id%22%3A%22%22%7D&build=167490&client=apple&clientVersion=9.3.2&openudid=53f4d9c70c1c81f1c8769d2fe2fef0190a3f60d2&sign=6050f8b81f4ba562b357e49762a8f4b0&st=1610267024346&sv=121'
@@ -157,9 +143,7 @@ function getIsvToken2() {
       }
     })
   })
-}
-
-// 获得游戏的Cookie
+}// 获得游戏的Cookie
 function getActCk() {
   return new Promise(resolve => {
     $.get(taskUrl("dingzhi/book/develop/activity", `activityId=${ACT_ID}`), (err, resp, data) => {
@@ -168,11 +152,11 @@ function getActCk() {
           console.log(`${err},${jsonParse(resp.body)['message']}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-          if($.isNode())
+          if ($.isNode())
             for (let ck of resp['headers']['set-cookie']) {
               cookie = `${cookie}; ${ck.split(";")[0]};`
             }
-          else{
+          else {
             for (let ck of resp['headers']['Set-Cookie'].split(',')) {
               cookie = `${cookie}; ${ck.split(";")[0]};`
             }
@@ -186,9 +170,7 @@ function getActCk() {
       }
     })
   })
-}
-
-// 获得游戏信息
+}// 获得游戏信息
 function getActInfo() {
   return new Promise(resolve => {
     $.post(taskPostUrl('dz/common/getSimpleActInfoVo', `activityId=${ACT_ID}`), async (err, resp, data) => {
@@ -212,9 +194,7 @@ function getActInfo() {
       }
     })
   })
-}
-
-// 获得游戏的Token
+}// 获得游戏的Token
 function getToken() {
   return new Promise(resolve => {
     let body = `userId=${$.shopId}&token=${$.token2}&fromType=APP`
@@ -237,9 +217,7 @@ function getToken() {
       }
     })
   })
-}
-
-// 获得用户信息
+}// 获得用户信息
 function getUserInfo() {
   return new Promise(resolve => {
     let body = `pin=${encodeURIComponent($.token)}`
@@ -260,16 +238,14 @@ function getUserInfo() {
           }
         }
       } catch (e) {
-                $.noticeName = `${$.name}错误`
+        $.noticeName = `${$.name}错误`
         $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
     })
   })
-}
-
-// 获得游戏信息
+}// 获得游戏信息
 function getActContent(info = false, shareUuid = '') {
   return new Promise(resolve => {
     let body = `activityId=${ACT_ID}&pin=${encodeURIComponent($.token)}&pinImg=${$.pinImg}&nick=${$.nick}&cjyxPin=&cjhyPin=&shareUuid=${shareUuid}`
@@ -288,7 +264,7 @@ function getActContent(info = false, shareUuid = '') {
                 return
               }
               $.actorUuid = $.userInfo.actorUuid
-              if(!info) console.log(`您的好友助力码为${$.actorUuid}`)
+              if (!info) console.log(`您的好友助力码为${$.actorUuid}`)
               $.gold = $.userInfo.bookStore.hasStoreGold
               if (!info) {
                 const tasks = data.data.settingVo
@@ -306,7 +282,7 @@ function getActContent(info = false, shareUuid = '') {
                         await $.wait(500)
                       }
                     }
-                  } else if(task.title === '每日签到'){
+                  } else if (task.title === '每日签到') {
                     const hour = new Date().getUTCHours() + 8
                     if (8 <= hour && hour < 10 || 12 <= hour && hour < 14 || 18 <= hour && hour < 20) {
                       console.log(`去做${task.title}任务`)
@@ -335,6 +311,7 @@ function getActContent(info = false, shareUuid = '') {
     })
   })
 }
+
 function doHelpList(taskType, value) {
   let body = `activityId=${ACT_ID}&actorUuid=${$.actorUuid}&num=0&sortStatus=1`
   return new Promise(resolve => {
@@ -357,9 +334,7 @@ function doHelpList(taskType, value) {
       }
     })
   })
-
-}
-// 做任务
+}// 做任务
 function doTask(taskType, value) {
   let body = `activityId=${ACT_ID}&pin=${encodeURIComponent($.token)}&actorUuid=${$.actorUuid}&taskType=${taskType}&taskValue=${value}`
   return new Promise(resolve => {
@@ -387,10 +362,7 @@ function doTask(taskType, value) {
       }
     })
   })
-
-}
-
-// 抽奖
+}// 抽奖
 function draw() {
   let body = `activityId=${ACT_ID}&pin=${encodeURIComponent($.token)}&actorUuid=${$.actorUuid}`
   return new Promise(resolve => {
@@ -414,16 +386,14 @@ function draw() {
           }
         }
       } catch (e) {
-                $.noticeName = `${$.name}错误`
+        $.noticeName = `${$.name}错误`
         $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
     })
   })
-}
-
-// 获得图书
+}// 获得图书
 function getAllBook() {
   let body = `activityId=${ACT_ID}&actorUuid=${$.actorUuid}&pin=${encodeURIComponent($.token)}`
   return new Promise(resolve => {
@@ -436,7 +406,6 @@ function getAllBook() {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.result && data.data) {
-
               const book = data.data.bookConfigList[0]
               let num = Math.trunc(data.data.haveScore / book.buyBookScore)
               console.log(`拥有${data.data.haveScore}积分，可购买${num}本`)
@@ -447,16 +416,14 @@ function getAllBook() {
           }
         }
       } catch (e) {
-                $.noticeName = `${$.name}错误`
+        $.noticeName = `${$.name}错误`
         $.notice += `\n${e}`
       } finally {
         resolve(data);
       }
     })
   })
-}
-
-// 购买图书
+}// 购买图书
 function buyBook(bookUuid, num) {
   let body = `activityId=${ACT_ID}&actorUuid=${$.actorUuid}&pin=${encodeURIComponent($.token)}&bookUuid=${bookUuid}&buyNum=${num}`
   return new Promise(resolve => {
@@ -667,9 +634,7 @@ function TotalBean() {
       }
     })
   })
-}
-
-//格式化助力码
+}//格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
     // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
@@ -689,10 +654,10 @@ function shareCodesFormat() {
     resolve();
   })
 }
+
 function requireConfig() {
   return new Promise(resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
-
     let shareCodes = []
     console.log(`共${cookiesArr.length}个京东账号\n`);
     $.shareCodesArr = [];
@@ -722,7 +687,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -734,7 +699,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

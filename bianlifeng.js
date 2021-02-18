@@ -1,8 +1,4 @@
-const $ = new Env('便利蜂签到');
-
-
-
-const blfNode = $.isNode() ? require('./bianlifengToken.js') : '';
+const $ = new Env('便利蜂签到');const blfNode = $.isNode() ? require('./bianlifengToken.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 if ($.isNode()) {
@@ -27,26 +23,18 @@ const API_HOST = 'https://h5.bianlifeng.com/meepo/taskCenter/';
         }
     }
 })()
-    .catch((e) => {
-
-    })
+    .catch((e) => {    })
     .finally(async () => {
         await ck.methodEnd($)
-    })
-
-async function blfLogin() {
+    })async function blfLogin() {
     await userInfo()
     // await sign()
-}
-
-function showMsg() {
+}function showMsg() {
     return new Promise(resolve => {
         $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
         resolve()
     })
-}
-
-function userInfo() {
+}function userInfo() {
     return new Promise(resolve => {
         let body = {"all": true, "signInSwitch": true, "page": {"pageSize": 10, "pageNo": 1}, "version": 1}
         $.post(taskPostUrl('home/v1',body), async (err, resp, data) => {
@@ -75,9 +63,7 @@ function userInfo() {
             }
         })
     })
-}
-
-function sign(userSignInId) {
+}function sign(userSignInId) {
     return new Promise(resolve => {
         $.get(taskUrl(userSignInId), (err, resp, data) => {
             try {
@@ -102,9 +88,7 @@ function sign(userSignInId) {
             }
         })
     })
-}
-
-function mission() {
+}function mission() {
     return new Promise(resolve => {
         $.get(taskUrl('v1/user/mission'), async (err, resp, data) => {
             try {
@@ -135,9 +119,7 @@ function mission() {
             }
         })
     })
-}
-
-function doMission(missionId) {
+}function doMission(missionId) {
     return new Promise(resolve => {
         $.post(taskPostUrl('v1/game/mission', {"missionId": missionId}), async (err, resp, data) => {
             try {
@@ -161,9 +143,7 @@ function doMission(missionId) {
             }
         })
     })
-}
-
-function receiveMission(missionId) {
+}function receiveMission(missionId) {
     return new Promise(resolve => {
         $.post(taskPostUrl('v1/user/mission/receive', {"missionId": missionId}), async (err, resp, data) => {
             try {
@@ -186,9 +166,7 @@ function receiveMission(missionId) {
             }
         })
     })
-}
-
-function getPoint() {
+}function getPoint() {
     return new Promise(resolve => {
         $.get(taskUrl('v1/user/point'), async (err, resp, data) => {
             try {
@@ -217,9 +195,7 @@ function getPoint() {
             }
         })
     })
-}
-
-function taskUrl(userSignInId) {
+}function taskUrl(userSignInId) {
     return {
         url: `${API_HOST}/today/signIn/v1?userSignInId=${userSignInId}&shareId=`,
         headers: {
@@ -241,9 +217,7 @@ function taskUrl(userSignInId) {
             "X-Requested-With": "com.bianlifeng.customer.android"
         }
     }
-}
-
-function taskPostUrl(params, body={}) {
+}function taskPostUrl(params, body={}) {
     return {
         url: `${API_HOST}${params}`,
         body: JSON.stringify(body),
@@ -267,9 +241,7 @@ function taskPostUrl(params, body={}) {
             "Content-Length": "110"
         }
     }
-}
-
-function TotalBean() {
+}function TotalBean() {
     return new Promise(async resolve => {
         const options = {
             "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
@@ -309,9 +281,7 @@ function TotalBean() {
             }
         })
     })
-}
-
-function safeGet(data) {
+}function safeGet(data) {
     try {
         if (typeof JSON.parse(data) == "object") {
             return true;

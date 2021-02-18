@@ -7,21 +7,13 @@
 2、可能有两位数误差,影响不大
 3、聚宝盆最下方显示上轮前六名的投入狗粮，收入积分，以及纯收益（即：收入积分 - 投入狗粮）
 [MITM]
-hostname = jdjoy.jd.com,draw.jdfcloud.com
-
-==========Surge=============
+hostname = jdjoy.jd.com,draw.jdfcloud.com==========Surge=============
 [Script]
-聚宝盆投狗粮辅助 = type=http-response,pattern=^https:\/\/jdjoy\.jd\.com\/pet\/getPetTreasureBox|^https:\/\/draw\.jdfcloud\.com\/\/pet\/getPetTreasureBox,requires-body=1,max-size=0,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_petTreasureBox.js
-
-===================Quantumult X=====================
+聚宝盆投狗粮辅助 = type=http-response,pattern=^https:\/\/jdjoy\.jd\.com\/pet\/getPetTreasureBox|^https:\/\/draw\.jdfcloud\.com\/\/pet\/getPetTreasureBox,requires-body=1,max-size=0,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_petTreasureBox.js===================Quantumult X=====================
 [rewrite_local]
-^https:\/\/jdjoy\.jd\.com\/pet\/getPetTreasureBox|^https:\/\/draw\.jdfcloud\.com\/\/pet\/getPetTreasureBox url script-response-body https://gitee.com/lxk0301/jd_scripts/raw/master/jd_petTreasureBox.js
-
-=====================Loon=====================
+^https:\/\/jdjoy\.jd\.com\/pet\/getPetTreasureBox|^https:\/\/draw\.jdfcloud\.com\/\/pet\/getPetTreasureBox url script-response-body https://gitee.com/lxk0301/jd_scripts/raw/master/jd_petTreasureBox.js=====================Loon=====================
 [Script]
-http-response ^https:\/\/jdjoy\.jd\.com\/pet\/getPetTreasureBox|^https:\/\/draw\.jdfcloud\.com\/\/pet\/getPetTreasureBox script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_petTreasureBox.js, requires-body=true, timeout=3600, tag=聚宝盆投狗粮辅助
-
-*/
+http-response ^https:\/\/jdjoy\.jd\.com\/pet\/getPetTreasureBox|^https:\/\/draw\.jdfcloud\.com\/\/pet\/getPetTreasureBox script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_petTreasureBox.js, requires-body=true, timeout=3600, tag=聚宝盆投狗粮辅助*/
 let body = $response.body
 body = JSON.parse(body)
 food = body['data']['food']
@@ -35,9 +27,7 @@ for (var i in lastHourWinInfos) {
 }
 for (var i in lastHourWinInfos) {
     body["data"]["lastHourWinInfos"][i]["petCoin"] = `{${lastHourWinInfos[i]["food"]}} [${lastHourWinInfos[i]["petCoin"]}] (${f(lastHourWinInfos[i]["petCoin"] - lastHourWinInfos[i]["food"])}) `
-}
-
-body["data"]["lastHourWinInfos"].unshift({
+}body["data"]["lastHourWinInfos"].unshift({
     'pin': "",
     'nickName': '',
     'investHour':   lastHourWinInfos[0]['investHour'],

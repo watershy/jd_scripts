@@ -14,22 +14,13 @@
 ============Quantumultx===============
 [task_local]
 #京东秒秒币
-10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_ms.js, tag=京东秒秒币, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_ms.jpg, enabled=true
-
-================Loon==============
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_ms.js, tag=京东秒秒币, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_ms.jpg, enabled=true================Loon==============
 [Script]
-cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_ms.js,tag=京东秒秒币
-
-===============Surge=================
-京东秒秒币 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=200,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_ms.js
-
-============小火箭=========
+cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_ms.js,tag=京东秒秒币===============Surge=================
+京东秒秒币 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=200,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_ms.js============小火箭=========
 京东秒秒币 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_ms.js, cronexpr="10 7 * * *", timeout=200, enable=true
  */
 const $ = new Env('京东秒秒币');
-
-
-
 const ck = require('./jdCookie')
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
@@ -48,11 +39,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
         if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
@@ -62,13 +51,13 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
     }
   }
 })()
-  .catch((e) => {
+    .catch((e) => {
       $.notice += `\n${e}`
-              $.noticeName = `${$.name}错误`
-  })
-  .finally(async () => {
-    await ck.methodEnd($)
-  })
+      $.noticeName = `${$.name}错误`
+    })
+    .finally(async () => {
+      await ck.methodEnd($)
+    })
 
 async function jdMs() {
   $.score = 0
@@ -106,7 +95,8 @@ function getActInfo() {
     })
   })
 }
-function getUserInfo(info=true) {
+
+function getUserInfo(info = true) {
   return new Promise(resolve => {
     $.post(taskPostUrl('homePageV2', {}, 'appid=SecKill2020'), (err, resp, data) => {
       try {
@@ -118,7 +108,7 @@ function getUserInfo(info=true) {
             data = JSON.parse(data)
             if (data.code === 2041) {
               $.score = data.result.assignment.assignmentPoints || 0
-              if(info) console.log(`当前秒秒币${$.score}`)
+              if (info) console.log(`当前秒秒币${$.score}`)
             }
           }
         }
@@ -131,6 +121,7 @@ function getUserInfo(info=true) {
     })
   })
 }
+
 function getTaskList() {
   let body = {"encryptProjectId": $.encryptProjectId, "sourceCode": "wh5"}
   return new Promise(resolve => {
@@ -145,7 +136,7 @@ function getTaskList() {
             $.risk = false
             if (data.code === '0') {
               for (let vo of data.assignmentList) {
-                if($.risk) break
+                if ($.risk) break
                 if (vo['completionCnt'] < vo['assignmentTimesLimit']) {
                   if (vo['assignmentType'] === 1) {
                     for (let i = vo['completionCnt']; i < vo['assignmentTimesLimit']; ++i) {
@@ -215,7 +206,7 @@ function doTask(body) {
           if (safeGet(data)) {
             data = JSON.parse(data)
             console.log(data.msg)
-            if(data.msg==='风险等级未通过') $.risk =1
+            if (data.msg === '风险等级未通过') $.risk = 1
           }
         }
       } catch (e) {
@@ -227,7 +218,6 @@ function doTask(body) {
     })
   })
 }
-
 
 function taskPostUrl(function_id, body = {}, extra = '', function_id2) {
   let url = `${JD_API_HOST}`;
@@ -295,7 +285,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -307,7 +297,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

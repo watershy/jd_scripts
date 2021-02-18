@@ -14,27 +14,15 @@
 ============Quantumultx===============
 [task_local]
 #京东超级盒子
-20 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_super_box.js, tag=京东超级盒子, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+20 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_super_box.js, tag=京东超级盒子, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "20 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_super_box.js,tag=京东超级盒子
-
-===============Surge=================
-京东超级盒子 = type=cron,cronexp="20 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_super_box.js
-
-============小火箭=========
+cron "20 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_super_box.js,tag=京东超级盒子===============Surge=================
+京东超级盒子 = type=cron,cronexp="20 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_super_box.js============小火箭=========
 京东超级盒子 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_super_box.js, cronexpr="20 7 * * *", timeout=3600, enable=true
 */
-const $ = new Env('京东超级盒子');
-
-
-
-//IOS等用户直接用NobyDa的jd cookie
+const $ = new Env('京东超级盒子');//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-const randomCount = $.isNode() ? 20 : 5;
-
-const inviteCodes = [
+const randomCount = $.isNode() ? 20 : 5;const inviteCodes = [
   `O3eI2LwEpHNofuF6LxjNqw@Hvm2Tg0jWloh4bnPOa9wuA@RY7V2DbS5uInv_GGD7JuoQij_0m9TAUe-t_mpE-BHB4@dZGLTyomKT0ZmOYaa4FSu0Ch0ywXFSW7gXwe_z6nUFc@UHW6hnmrpOABeMMKc5kpng`,
   `O3eI2LwEpHNofuF6LxjNqw@Hvm2Tg0jWloh4bnPOa9wuA@RY7V2DbS5uInv_GGD7JuoQij_0m9TAUe-t_mpE-BHB4@dZGLTyomKT0ZmOYaa4FSu0Ch0ywXFSW7gXwe_z6nUFc@UHW6hnmrpOABeMMKc5kpng`,
 ];
@@ -56,13 +44,9 @@ const JD_API_HOST = 'https://api.m.jd.com/';
       $.beans = 0
       $.nickName = '';
       message = '';
-      await TotalBean();
-      $.newShareCodes = await ck.getShareCode($.name,$.UserName);
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-      if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
+      await ck.TotalBean(cookie,$);
+            if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -77,17 +61,13 @@ const JD_API_HOST = 'https://api.m.jd.com/';
   })
   .finally(async () => {
     await ck.methodEnd($)
-  })
-
-function showMsg() {
+  })function showMsg() {
   message += `本次运行获得${$.earn}红包`
   return new Promise(resolve => {
     $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
     resolve()
   })
 }
-
-
 async function helpFriends() {
   for (let code of $.newShareCodes) {
     if (!code) continue
@@ -95,17 +75,13 @@ async function helpFriends() {
     const helpRes = await doSupport(code);
     await $.wait(1000)
   }
-}
-
-async function superBox() {
+}async function superBox() {
   $.earn = 0.0
   await drawInfo()
   await getTask()
   await drawInfo(false)
   await helpFriends()
 }
-
-
 function getTask() {
   return new Promise(resolve => {
     $.get(taskUrl('apTaskList',{"linkId":"xrfyA3nByKnAd7qxzmURNQ","encryptPin":""}), async (err, resp, data) => {
@@ -201,9 +177,7 @@ function doTask(taskId,taskType,itemId) {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
-            data = JSON.parse(data);
-
-            if (data.success) {
+            data = JSON.parse(data);            if (data.success) {
               console.log(`任务完成成功`)
             } else {
               $.canDone = false
@@ -235,7 +209,7 @@ function drawInfo(share=true) {
               if(share) {
                 console.log(`您的好友助力码为${data.data.encryptPin}`)
                 $.shareCode = data.data.encryptPin
-                await ck.addShareCode($)
+                newShareCodes = await ck.getShareCode($)
               }
               else {
                 console.log(`剩余抽奖次数${data.data.lotteryNumber}`)
@@ -295,9 +269,7 @@ function draw() {
       }
     })
   })
-}
-
-function doSupport(shareId) {
+}function doSupport(shareId) {
   let body = {"taskId":"61","linkId":"xrfyA3nByKnAd7qxzmURNQ","encryptPin":shareId}
   return new Promise(resolve => {
     $.get(taskUrl('superboxSupBoxHomePage',body), async (err, resp, data) => {
@@ -326,9 +298,7 @@ function doSupport(shareId) {
 }
 function getTs() {
   return new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000
-}
-
-function taskPostUrl(function_id, body = {}) {
+}function taskPostUrl(function_id, body = {}) {
   const t = getTs()
   return {
     url: `${JD_API_HOST}`,
@@ -347,9 +317,7 @@ function taskPostUrl(function_id, body = {}) {
       "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.141"
     }
   }
-}
-
-function taskUrl(function_id, body = {}) {
+}function taskUrl(function_id, body = {}) {
   const t = getTs()
   return {
     url: `${JD_API_HOST}?functionId=${function_id}&body=${escape(JSON.stringify(body))}&_t=${t}&appid=activities_platform`,
@@ -365,9 +333,7 @@ function taskUrl(function_id, body = {}) {
       "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.141"
     }
   }
-}
-
-function TotalBean() {
+}function TotalBean() {
   return new Promise(async resolve => {
     const options = {
       "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
@@ -407,9 +373,7 @@ function TotalBean() {
       }
     })
   })
-}
-
-function safeGet(data) {
+}function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
@@ -420,9 +384,7 @@ function safeGet(data) {
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
-}
-
-function jsonParse(str) {
+}function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
@@ -433,13 +395,9 @@ function jsonParse(str) {
       return [];
     }
   }
-}
-
-function requireConfig() {
+}function requireConfig() {
   return new Promise(resolve => {
-    console.log(`开始获取${$.name}配置文件\n`);
-
-    let shareCodes = []
+    console.log(`开始获取${$.name}配置文件\n`);    let shareCodes = []
     console.log(`共${cookiesArr.length}个京东账号\n`);
     if ($.isNode() && process.env.JDSUPERBOX_SHARECODES) {
       if (process.env.JDSUPERBOX_SHARECODES.indexOf('\n') > -1) {
@@ -459,9 +417,7 @@ function requireConfig() {
     console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}PK助力码\n`);
     resolve()
   })
-}
-
-//格式化助力码
+}//格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
     // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)

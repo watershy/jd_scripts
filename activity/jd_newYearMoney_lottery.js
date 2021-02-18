@@ -8,25 +8,13 @@
 ============Quantumultx===============
 [task_local]
 #京东压岁钱抢百元卡
-0 0 9,12,16,20 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney_lottery.js, tag=京东压岁钱抢百元卡, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+0 0 9,12,16,20 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney_lottery.js, tag=京东压岁钱抢百元卡, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "0 0 9,12,16,20 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney_lottery.js, tag=京东压岁钱抢百元卡
-
-===============Surge=================
-京东压岁钱抢百元卡 = type=cron,cronexp="0 0 9,12,16,20 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney_lottery.js
-
-============小火箭=========
+cron "0 0 9,12,16,20 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney_lottery.js, tag=京东压岁钱抢百元卡===============Surge=================
+京东压岁钱抢百元卡 = type=cron,cronexp="0 0 9,12,16,20 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney_lottery.js============小火箭=========
 京东压岁钱抢百元卡 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney_lottery.js, cronexpr="0 0 9,12,16,20 * * *", timeout=3600, enable=true
- */
-
-const $ = new Env('京东压岁钱抢百元卡');
-
-let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
-const randomCount = $.isNode() ? 20 : 5;
-
-//IOS等用户直接用NobyDa的jd cookie
+ */const $ = new Env('京东压岁钱抢百元卡');let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
+const randomCount = $.isNode() ? 20 : 5;//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const ck = require('./jdCookie')
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
@@ -44,12 +32,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -64,18 +49,14 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
   })
   .finally(async () => {
     await ck.methodEnd($)
-  })
-
-async function jdNian() {
+  })async function jdNian() {
   try {
     await lotteryHundredCard()
   } catch (e) {
         $.noticeName = `${$.name}错误`
     $.logErr(e)
   }
-}
-
-function showMsg() {
+}function showMsg() {
   return new Promise(resolve => {
     if (!jdNotify) {
       $.msg($.name, '', `${message}`);
@@ -84,9 +65,7 @@ function showMsg() {
     }
     resolve()
   })
-}
-
-function lotteryHundredCard() {
+}function lotteryHundredCard() {
   return new Promise((resolve) => {
     $.post(taskPostUrl('newyearmoney_lotteryHundredCard'), async (err, resp, data) => {
       try {
@@ -161,9 +140,7 @@ function receiveHundredCard(cardNo) {
       }
     })
   })
-}
-
-function taskPostUrl(function_id, body = {}, function_id2) {
+}function taskPostUrl(function_id, body = {}, function_id2) {
   let url = `${JD_API_HOST}`;
   return {
     url,
@@ -177,8 +154,6 @@ function taskPostUrl(function_id, body = {}, function_id2) {
     }
   }
 }
-
-
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -219,9 +194,7 @@ function TotalBean() {
       }
     })
   })
-}
-
-function safeGet(data) {
+}function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
@@ -232,9 +205,7 @@ function safeGet(data) {
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
-}
-
-function jsonParse(str) {
+}function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);

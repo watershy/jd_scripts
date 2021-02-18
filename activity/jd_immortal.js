@@ -13,23 +13,13 @@ boxjs IMMORTAL_LATLON
 ============Quantumultx===============
 [task_local]
 #京东神仙书院
-20 8,12,22 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_immortal.js, tag=京东神仙书院, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+20 8,12,22 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_immortal.js, tag=京东神仙书院, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "20 8,12,22 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_immortal.js, tag=京东神仙书院
-
-===============Surge=================
-京东神仙书院 = type=cron,cronexp="20 8,12,22 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_immortal.js
-
-============小火箭=========
+cron "20 8,12,22 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_immortal.js, tag=京东神仙书院===============Surge=================
+京东神仙书院 = type=cron,cronexp="20 8,12,22 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_immortal.js============小火箭=========
 京东神仙书院 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_immortal.js, cronexpr="20 8,12,22 * * *", timeout=3600, enable=true
  */
-const $ = new Env('京东神仙书院');
-
-
-
-const ck = require('./jdCookie.js')
+const $ = new Env('京东神仙书院');const ck = require('./jdCookie.js')
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 let scoreToBeans = 0; //兑换多少数量的京豆（20或者1000），0表示不兑换，默认兑换20京豆，如需兑换把0改成20或者1000，或者'商品名称'(商品名称放到单引号内)即可
@@ -73,12 +63,9 @@ const inviteCodes = [
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -110,9 +97,7 @@ async function jdNian() {
         $.noticeName = `${$.name}错误`
     $.logErr(e)
   }
-}
-
-function showMsg() {
+}function showMsg() {
   return new Promise(resolve => {
     message += ``
     if (!jdNotify) {
@@ -122,17 +107,13 @@ function showMsg() {
     }
     resolve()
   })
-}
-
-async function helpFriends() {
+}async function helpFriends() {
   for (let code of $.newShareCodes) {
     if (!code) continue
     await doTask(code)
     await $.wait(2000)
   }
-}
-
-function doTask(itemToken) {
+}function doTask(itemToken) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('mcxhd_brandcity_doTask', {itemToken: itemToken}, 'mcxhd_brandcity_doTask'), async (err, resp, data) => {
       try {
@@ -161,9 +142,7 @@ function doTask(itemToken) {
       }
     })
   })
-}
-
-function doTask2(taskToken) {
+}function doTask2(taskToken) {
   let body = {
     "dataSource": "newshortAward",
     "method": "getTaskAward",
@@ -193,9 +172,7 @@ function doTask2(taskToken) {
       }
     })
   })
-}
-
-function getHomeData(info = false) {
+}function getHomeData(info = false) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('mcxhd_brandcity_homePage'), async (err, resp, data) => {
       try {
@@ -229,9 +206,7 @@ function getHomeData(info = false) {
       }
     })
   })
-}
-
-function getExchangeInfo() {
+}function getExchangeInfo() {
   return new Promise((resolve) => {
     $.post(taskPostUrl('mcxhd_brandcity_exchangePage'), async (err, resp, data) => {
       try {
@@ -261,9 +236,7 @@ function getExchangeInfo() {
       }
     })
   })
-}
-
-function exchange() {
+}function exchange() {
   return new Promise((resolve) => {
     $.post(taskPostUrl('mcxhd_brandcity_exchange'), async (err, resp, data) => {
       try {
@@ -294,11 +267,7 @@ function exchange() {
       }
     })
   })
-}
-
-function getTaskList(body = {}) {
-
-  return new Promise(resolve => {
+}function getTaskList(body = {}) {  return new Promise(resolve => {
     $.post(taskPostUrl("mcxhd_brandcity_taskList", body, "mcxhd_brandcity_taskList"), async (err, resp, data) => {
       try {
         if (err) {
@@ -349,27 +318,19 @@ function getTaskList(body = {}) {
       }
     })
   })
-}
-
-//格式化助力码
+}//格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
     // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
-    $.newShareCodes = [];
-
-    console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
+    $.newShareCodes = [];    console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
     const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
     $.newShareCodes = inviteCodes[tempIndex].split('@');
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
-}
-
-function requireConfig() {
+}function requireConfig() {
   return new Promise(async resolve => {
-    console.log(`开始获取${$.name}配置文件\n`);
-
-    let shareCodes = []
+    console.log(`开始获取${$.name}配置文件\n`);    let shareCodes = []
     console.log(`共${cookiesArr.length}个京东账号\n`);
     if ($.isNode() && process.env.JDSXSY_SHARECODES) {
       if (process.env.JDSXSY_SHARECODES.indexOf('\n') > -1) {
@@ -393,9 +354,7 @@ function requireConfig() {
     console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码\n`);
     resolve()
   })
-}
-
-// 自动获取经纬度
+}// 自动获取经纬度
 function getLatLng() {
   return new Promise(resolve => {
     try {
@@ -427,9 +386,7 @@ function getLatLng() {
       resolve({});
     }
   });
-}
-
-function taskPostUrl(function_id, body = {}, function_id2) {
+}function taskPostUrl(function_id, body = {}, function_id2) {
   let url = `${JD_API_HOST}`;
   if (function_id2) {
     url += `?functionId=${function_id2}`;
@@ -446,9 +403,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
       "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('../USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
     }
   }
-}
-
-function taskPostUrl2(function_id, body = {}, function_id2) {
+}function taskPostUrl2(function_id, body = {}, function_id2) {
   let url = `${JD_API_HOST}`;
   if (function_id2) {
     url += `?functionId=${function_id2}`;
@@ -464,9 +419,7 @@ function taskPostUrl2(function_id, body = {}, function_id2) {
       "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('../USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
     }
   }
-}
-
-function TotalBean() {
+}function TotalBean() {
   return new Promise(async resolve => {
     const options = {
       "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
@@ -506,9 +459,7 @@ function TotalBean() {
       }
     })
   })
-}
-
-function safeGet(data) {
+}function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
@@ -519,9 +470,7 @@ function safeGet(data) {
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
-}
-
-function jsonParse(str) {
+}function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);

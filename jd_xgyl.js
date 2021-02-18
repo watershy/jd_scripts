@@ -3,31 +3,21 @@
 每天抽奖25豆
 活动入口：https://jingcai-h5.jd.com/#/dialTemplate?activityCode=1354740864131276800
 活动时间：2021年1月28日～2021年2月28日
-更新地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js
-
-已支持IOS双京东账号, Node.js支持N个京东账号
+更新地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js已支持IOS双京东账号, Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #小鸽有礼2
-30 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js, tag=小鸽有礼2, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_xgyl.png, enabled=true
-
-================Loon==============
+30 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js, tag=小鸽有礼2, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_xgyl.png, enabled=true================Loon==============
 [Script]
-cron "30 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js, tag=小鸽有礼2
-
-===============Surge=================
-小鸽有礼2 = type=cron,cronexp="30 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js
-
-============小火箭=========
+cron "30 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js, tag=小鸽有礼2===============Surge=================
+小鸽有礼2 = type=cron,cronexp="30 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js============小火箭=========
 小鸽有礼2 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_xgyl.js, cronexpr="30 7 * * *", timeout=3600, enable=true
  */
 const $ = new Env('小鸽有礼2');
-
 const ck = require('./jdCookie')
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-
 !(async () => {
   cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
@@ -42,11 +32,9 @@ let cookiesArr = [], cookie = '', message;
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
         if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
@@ -56,13 +44,13 @@ let cookiesArr = [], cookie = '', message;
     }
   }
 })()
-  .catch((e) => {
+    .catch((e) => {
       $.notice += `\n${e}`
-              $.noticeName = `${$.name}错误`
-  })
-  .finally(async () => {
-    await ck.methodEnd($)
-  })
+      $.noticeName = `${$.name}错误`
+    })
+    .finally(async () => {
+      await ck.methodEnd($)
+    })
 
 function showMsg() {
   message += `本次运行获得${$.beans}京豆`
@@ -314,7 +302,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -326,7 +314,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

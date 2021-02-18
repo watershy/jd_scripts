@@ -3,27 +3,15 @@
 更新时间：2021-01-19
 活动入口：京东APP我的-更多工具-东东萌宠
 已支持IOS双京东账号,Node.js支持N个京东账号
-脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-
-互助码shareCode请先手动运行脚本查看打印可看到
-一天只能帮助5个人。多出的助力码无效
-
-=================================Quantumultx=========================
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js互助码shareCode请先手动运行脚本查看打印可看到
+一天只能帮助5个人。多出的助力码无效=================================Quantumultx=========================
 [task_local]
 #东东萌宠
-15 6-18/6 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js, tag=东东萌宠, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdmc.png, enabled=true
-
-=================================Loon===================================
+15 6-18/6 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js, tag=东东萌宠, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdmc.png, enabled=true=================================Loon===================================
 [Script]
-cron "15 6-18/6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js,tag=东东萌宠
-
-===================================Surge================================
-东东萌宠 = type=cron,cronexp="15 6-18/6 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js
-
-====================================小火箭=============================
-东东萌宠 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js, cronexpr="15 6-18/6 * * *", timeout=3600, enable=true
-
-*/
+cron "15 6-18/6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js,tag=东东萌宠===================================Surge================================
+东东萌宠 = type=cron,cronexp="15 6-18/6 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js====================================小火箭=============================
+东东萌宠 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pet.js, cronexpr="15 6-18/6 * * *", timeout=3600, enable=true*/
 const $ = new Env('东东萌宠');
 let cookiesArr = [], cookie = '', jdPetShareArr = [], isBox = false, notify, newShareCodes;
 //助力好友分享码(最多5个,否则后面的助力失败),原因:京东农场每人每天只有四次助力机会
@@ -49,16 +37,11 @@ const ck = require('./jdCookie')
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
-      newShareCodes = await ck.getShareCode($.name,$.UserName);
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});        if ($.isNode()) {
           $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
-        }
+                  }
         continue
       }
       message = '';
@@ -119,14 +102,14 @@ async function jdPet() {
         return
       }
       console.log(`\n【京东账号${$.index}（${$.nickName || $.UserName}）的${$.name}好友互助码】${$.petInfo.shareCode}\n`);
+      $.shareCode = $.petInfo.shareCode
+      newShareCodes = await ck.getShareCode($)
       await taskInit();
       if ($.taskInit.resultCode === '9999' || !$.taskInit.result) {
         console.log('初始化任务异常, 请稍后再试');
         return
       }
-      $.taskInfo = $.taskInit.result;
-
-      await petSport();//遛弯
+      $.taskInfo = $.taskInit.result;      await petSport();//遛弯
       await slaveHelp();//助力好友
       await masterHelpInit();//获取助力的信息
       await doTask();//做日常任务
@@ -181,8 +164,6 @@ async function feedPetsAgain() {
     console.log(`初始化萌宠失败:  ${JSON.stringify($.petInfo)}`);
   }
 }
-
-
 async function doTask() {
   const { signInit, threeMealInit, firstFeedInit, feedReachInit, inviteFriendsInit, browseShopsInit, taskList } = $.taskInfo;
   for (let item of taskList) {
@@ -337,9 +318,7 @@ async function signInitFun() {
     console.log(`【每日签到】${response.message}\n`);
     // message += `【每日签到】${response.message}\n`;
   }
-}
-
-// 三餐签到, 每天三段签到时间
+}// 三餐签到, 每天三段签到时间
 async function threeMealInitFun() {
   console.log('准备三餐签到');
   const response = await request("getThreeMealReward");
@@ -351,9 +330,7 @@ async function threeMealInitFun() {
     console.log(`【定时领狗粮】${response.message}\n`);
     // message += `【定时领狗粮】${response.message}\n`;
   }
-}
-
-// 浏览指定店铺 任务
+}// 浏览指定店铺 任务
 async function browseSingleShopInit(item) {
   console.log(`开始做 ${item.title} 任务， ${item.desc}`);
   const body = {"index": item['index'], "version":1, "type":1};
@@ -368,9 +345,7 @@ async function browseSingleShopInit(item) {
       // message += `【浏览指定店铺】获取${response2.result.reward}g\n`;
     }
   }
-}
-
-// 浏览店铺任务, 任务可能为多个? 目前只有一个
+}// 浏览店铺任务, 任务可能为多个? 目前只有一个
 async function browseShopsInitFun() {
   console.log('开始浏览店铺任务');
   let times = 0;
@@ -388,9 +363,7 @@ async function browseShopsInitFun() {
 // 首次投食 任务
 function firstFeedInitFun() {
   console.log('首次投食任务合并到10次喂食任务中\n');
-}
-
-// 邀请新用户
+}// 邀请新用户
 async function inviteFriendsInitFun() {
   console.log('邀请新用户功能未实现');
   if ($.taskInfo.inviteFriendsInit.status == 1 && $.taskInfo.inviteFriendsInit.inviteFriendsNum > 0) {
@@ -401,9 +374,7 @@ async function inviteFriendsInitFun() {
       message += `【邀请新用户】获取狗粮${$.taskInfo.inviteFriendsInit.reward}g\n`;
     }
   }
-}
-
-/**
+}/**
  * 投食10次 任务
  */
 async function feedReachInitFun() {

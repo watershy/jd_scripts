@@ -1,33 +1,17 @@
 /*
-crazyJoy任务
-
-每天运行一次即可
-
-活动入口：京东APP我的-更多工具-疯狂的JOY
+crazyJoy任务每天运行一次即可活动入口：京东APP我的-更多工具-疯狂的JOY
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #crazyJoy任务
-10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js, tag=crazyJoy任务, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_crazy_joy.png, enabled=true
-
-================Loon==============
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js, tag=crazyJoy任务, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_crazy_joy.png, enabled=true================Loon==============
 [Script]
-cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js,tag=crazyJoy任务
-
-===============Surge=================
-crazyJoy任务 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js
-
-============小火箭=========
-crazyJoy任务 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js, cronexpr="10 7 * * *", timeout=3600, enable=true
-
- */
-
-
+cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js,tag=crazyJoy任务===============Surge=================
+crazyJoy任务 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js============小火箭=========
+crazyJoy任务 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy.js, cronexpr="10 7 * * *", timeout=3600, enable=true */
 const $ = new Env('crazyJoy任务');
 const JD_API_HOST = 'https://api.m.jd.com/';
-
-
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 let helpSelf = false // 循环助力，默认关闭
 let applyJdBean = 2000; //疯狂的JOY京豆兑换，目前最小值为2000京豆，默认为 0 不开启京豆兑换
@@ -78,18 +62,18 @@ const randomCount = $.isNode() ? 10 : 5;
 
   function i(n, r) {
     n[r >> 5] |= 128 << r % 32,
-      n[14 + (r + 64 >>> 9 << 4)] = r;
+        n[14 + (r + 64 >>> 9 << 4)] = r;
     var e, i, a, d, h, l = 1732584193, g = -271733879, v = -1732584194, m = 271733878;
     for (e = 0; e < n.length; e += 16)
       i = l,
-        a = g,
-        d = v,
-        h = m,
-        g = f(g = f(g = f(g = f(g = c(g = c(g = c(g = c(g = u(g = u(g = u(g = u(g = o(g = o(g = o(g = o(g, v = o(v, m = o(m, l = o(l, g, v, m, n[e], 7, -680876936), g, v, n[e + 1], 12, -389564586), l, g, n[e + 2], 17, 606105819), m, l, n[e + 3], 22, -1044525330), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 4], 7, -176418897), g, v, n[e + 5], 12, 1200080426), l, g, n[e + 6], 17, -1473231341), m, l, n[e + 7], 22, -45705983), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 8], 7, 1770035416), g, v, n[e + 9], 12, -1958414417), l, g, n[e + 10], 17, -42063), m, l, n[e + 11], 22, -1990404162), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 12], 7, 1804603682), g, v, n[e + 13], 12, -40341101), l, g, n[e + 14], 17, -1502002290), m, l, n[e + 15], 22, 1236535329), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 1], 5, -165796510), g, v, n[e + 6], 9, -1069501632), l, g, n[e + 11], 14, 643717713), m, l, n[e], 20, -373897302), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 5], 5, -701558691), g, v, n[e + 10], 9, 38016083), l, g, n[e + 15], 14, -660478335), m, l, n[e + 4], 20, -405537848), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 9], 5, 568446438), g, v, n[e + 14], 9, -1019803690), l, g, n[e + 3], 14, -187363961), m, l, n[e + 8], 20, 1163531501), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 13], 5, -1444681467), g, v, n[e + 2], 9, -51403784), l, g, n[e + 7], 14, 1735328473), m, l, n[e + 12], 20, -1926607734), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 5], 4, -378558), g, v, n[e + 8], 11, -2022574463), l, g, n[e + 11], 16, 1839030562), m, l, n[e + 14], 23, -35309556), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 1], 4, -1530992060), g, v, n[e + 4], 11, 1272893353), l, g, n[e + 7], 16, -155497632), m, l, n[e + 10], 23, -1094730640), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 13], 4, 681279174), g, v, n[e], 11, -358537222), l, g, n[e + 3], 16, -722521979), m, l, n[e + 6], 23, 76029189), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 9], 4, -640364487), g, v, n[e + 12], 11, -421815835), l, g, n[e + 15], 16, 530742520), m, l, n[e + 2], 23, -995338651), v = f(v, m = f(m, l = f(l, g, v, m, n[e], 6, -198630844), g, v, n[e + 7], 10, 1126891415), l, g, n[e + 14], 15, -1416354905), m, l, n[e + 5], 21, -57434055), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 12], 6, 1700485571), g, v, n[e + 3], 10, -1894986606), l, g, n[e + 10], 15, -1051523), m, l, n[e + 1], 21, -2054922799), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 8], 6, 1873313359), g, v, n[e + 15], 10, -30611744), l, g, n[e + 6], 15, -1560198380), m, l, n[e + 13], 21, 1309151649), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 4], 6, -145523070), g, v, n[e + 11], 10, -1120210379), l, g, n[e + 2], 15, 718787259), m, l, n[e + 9], 21, -343485551),
-        l = t(l, i),
-        g = t(g, a),
-        v = t(v, d),
-        m = t(m, h);
+          a = g,
+          d = v,
+          h = m,
+          g = f(g = f(g = f(g = f(g = c(g = c(g = c(g = c(g = u(g = u(g = u(g = u(g = o(g = o(g = o(g = o(g, v = o(v, m = o(m, l = o(l, g, v, m, n[e], 7, -680876936), g, v, n[e + 1], 12, -389564586), l, g, n[e + 2], 17, 606105819), m, l, n[e + 3], 22, -1044525330), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 4], 7, -176418897), g, v, n[e + 5], 12, 1200080426), l, g, n[e + 6], 17, -1473231341), m, l, n[e + 7], 22, -45705983), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 8], 7, 1770035416), g, v, n[e + 9], 12, -1958414417), l, g, n[e + 10], 17, -42063), m, l, n[e + 11], 22, -1990404162), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 12], 7, 1804603682), g, v, n[e + 13], 12, -40341101), l, g, n[e + 14], 17, -1502002290), m, l, n[e + 15], 22, 1236535329), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 1], 5, -165796510), g, v, n[e + 6], 9, -1069501632), l, g, n[e + 11], 14, 643717713), m, l, n[e], 20, -373897302), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 5], 5, -701558691), g, v, n[e + 10], 9, 38016083), l, g, n[e + 15], 14, -660478335), m, l, n[e + 4], 20, -405537848), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 9], 5, 568446438), g, v, n[e + 14], 9, -1019803690), l, g, n[e + 3], 14, -187363961), m, l, n[e + 8], 20, 1163531501), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 13], 5, -1444681467), g, v, n[e + 2], 9, -51403784), l, g, n[e + 7], 14, 1735328473), m, l, n[e + 12], 20, -1926607734), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 5], 4, -378558), g, v, n[e + 8], 11, -2022574463), l, g, n[e + 11], 16, 1839030562), m, l, n[e + 14], 23, -35309556), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 1], 4, -1530992060), g, v, n[e + 4], 11, 1272893353), l, g, n[e + 7], 16, -155497632), m, l, n[e + 10], 23, -1094730640), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 13], 4, 681279174), g, v, n[e], 11, -358537222), l, g, n[e + 3], 16, -722521979), m, l, n[e + 6], 23, 76029189), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 9], 4, -640364487), g, v, n[e + 12], 11, -421815835), l, g, n[e + 15], 16, 530742520), m, l, n[e + 2], 23, -995338651), v = f(v, m = f(m, l = f(l, g, v, m, n[e], 6, -198630844), g, v, n[e + 7], 10, 1126891415), l, g, n[e + 14], 15, -1416354905), m, l, n[e + 5], 21, -57434055), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 12], 6, 1700485571), g, v, n[e + 3], 10, -1894986606), l, g, n[e + 10], 15, -1051523), m, l, n[e + 1], 21, -2054922799), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 8], 6, 1873313359), g, v, n[e + 15], 10, -30611744), l, g, n[e + 6], 15, -1560198380), m, l, n[e + 13], 21, 1309151649), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 4], 6, -145523070), g, v, n[e + 11], 10, -1120210379), l, g, n[e + 2], 15, 718787259), m, l, n[e + 9], 21, -343485551),
+          l = t(l, i),
+          g = t(g, a),
+          v = t(v, d),
+          m = t(m, h);
     return [l, g, v, m]
   }
 
@@ -103,7 +87,7 @@ const randomCount = $.isNode() ? 10 : 5;
   function d(n) {
     var t, r = [];
     for (r[(n.length >> 2) - 1] = void 0,
-           t = 0; t < r.length; t += 1)
+             t = 0; t < r.length; t += 1)
       r[t] = 0;
     var e = 8 * n.length;
     for (t = 0; t < e; t += 8)
@@ -119,18 +103,18 @@ const randomCount = $.isNode() ? 10 : 5;
     var r, e, o = d(n), u = [], c = [];
     for (u[15] = c[15] = void 0,
          o.length > 16 && (o = i(o, 8 * n.length)),
-           r = 0; r < 16; r += 1)
+             r = 0; r < 16; r += 1)
       u[r] = 909522486 ^ o[r],
-        c[r] = 1549556828 ^ o[r];
+          c[r] = 1549556828 ^ o[r];
     return e = i(u.concat(d(t)), 512 + 8 * t.length),
-      a(i(c.concat(e), 640))
+        a(i(c.concat(e), 640))
   }
 
   function g(n) {
     var t, r, e = "";
     for (r = 0; r < n.length; r += 1)
       t = n.charCodeAt(r),
-        e += "0123456789abcdef".charAt(t >>> 4 & 15) + "0123456789abcdef".charAt(15 & t);
+          e += "0123456789abcdef".charAt(t >>> 4 & 15) + "0123456789abcdef".charAt(15 & t);
     return e
   }
 
@@ -161,7 +145,7 @@ const randomCount = $.isNode() ? 10 : 5;
   $.md5 = A
 }(this);
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie');
+  cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -169,7 +153,7 @@ const randomCount = $.isNode() ? 10 : 5;
   await requireConfig();
   $.nextCode = ""
   for (let i = 0; i < cookiesArr.length; i++) {
-    if (i%2===0) {
+    if (i % 2 === 0) {
       $.nextCode = ["EdLPh8A6X5G1iWXu-uPYfA==", "nCQQXQHKGjPCb7jkd8q2U-aCTjZMxL3s"];
       $.nextCode = $.nextCode[randomNumber(0, $.nextCode.length)];
     }
@@ -181,11 +165,9 @@ const randomCount = $.isNode() ? 10 : 5;
       $.nickName = '';
       message = '';
       $.GROWTH_REWARD_BEAN = 0;//解锁等级奖励的京豆
-      await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
         if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
@@ -195,7 +177,6 @@ const randomCount = $.isNode() ? 10 : 5;
       await jdCrazyJoy()
     }
   }
-
   if (helpSelf) {
     console.log(`开始循环助力`)
     // 助力
@@ -206,11 +187,9 @@ const randomCount = $.isNode() ? 10 : 5;
         $.index = i + 1;
         $.isLogin = true;
         $.nickName = '';
-        await TotalBean();
-        console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+        await ck.TotalBean(cookie, $);
         if (!$.isLogin) {
           $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
           if ($.isNode()) {
             await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
           }
@@ -227,11 +206,9 @@ const randomCount = $.isNode() ? 10 : 5;
         $.index = i + 1;
         $.isLogin = true;
         $.nickName = '';
-        await TotalBean();
-        console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+        await ck.TotalBean(cookie, $);
         if (!$.isLogin) {
           $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
           if ($.isNode()) {
             await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
           }
@@ -242,17 +219,16 @@ const randomCount = $.isNode() ? 10 : 5;
     }
   }
 })()
-  .catch((e) => {
-
-  })
-  .finally(async () => {
-    await ck.methodEnd($)
-  })
+    .catch((e) => {
+    })
+    .finally(async () => {
+      await ck.methodEnd($)
+    })
 
 async function jdCrazyJoy() {
   $.coin = 0
   $.bean = 0
-  await getUserInfo('1IPdKXoQJvUiHGrAGXW7w6t9zd5YaBeE')
+  await getUserInfo('CWEcpFqaYu8H9tTnQJyO-Q==')
   await doSign()
   await helpFriends()
   await getTaskInfo()
@@ -267,13 +243,14 @@ async function jdCrazyJoy() {
   }
   await getCoin()
   await getUserBean()
-  if ( applyJdBean!==0 && applyJdBean<=$.bean){
+  if (applyJdBean !== 0 && applyJdBean <= $.bean) {
     await $.wait(1000)
     console.log(`检测您打开了自动兑换开关，去兑换京豆`)
     await doApplyJdBean(applyJdBean)
   }
   await getSpecialJoy();
 }
+
 async function doTasks() {
   await getTaskInfo()
   for (let j = 0; j < $.taskList.length; ++j) {
@@ -289,9 +266,10 @@ async function doTasks() {
       await awardTask(task.taskId)
   }
 }
+
 function doApplyJdBean(bean = 1000) {
   // 兑换京豆
-  let body = {"paramData":{"bean":bean}}
+  let body = {"paramData": {"bean": bean}}
   return new Promise(async resolve => {
     $.get(taskUrl('crazyJoy_user_applyJdBeanPaid', JSON.stringify(body)), async (err, resp, data) => {
       try {
@@ -305,7 +283,7 @@ function doApplyJdBean(bean = 1000) {
               console.log(`兑换${bean}京豆成功`)
               message += `兑换京豆：${bean}京豆成功\n`;
             } else {
-              console.log(`兑换${bean}京豆失败，错误信息：${data.resultTips||data.message}`)
+              console.log(`兑换${bean}京豆失败，错误信息：${data.resultTips || data.message}`)
             }
           }
         }
@@ -318,6 +296,7 @@ function doApplyJdBean(bean = 1000) {
     })
   })
 }
+
 function getUserInfo(code) {
   let body = {"paramData": {"inviter": code}}
   return new Promise(async resolve => {
@@ -331,8 +310,7 @@ function getUserInfo(code) {
             data = JSON.parse(data);
             if (data.success && data.data && data.data.userInviteCode) {
               console.log(`您的助力码为: ${data.data.userInviteCode}`)
-            }
-            else
+            } else
               console.log(`用户信息获取失败`)
           }
         }
@@ -509,7 +487,7 @@ function helpFriend(code) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data['resultCode'] ==='0') {
+            if (data['resultCode'] === '0') {
               console.log(`助力结果:${JSON.stringify(data)}`);
             } else if (data['resultCode'] === '2000402') {
               console.log(data.resultTips)
@@ -578,10 +556,11 @@ function getCoin() {
     })
   })
 }
+
 //领取解锁等级奖励（京豆）
 function getGrowthReward() {
   return new Promise(async resolve => {
-    const body = { "paramData":{"eventType":"GROWTH_REWARD"} };
+    const body = {"paramData": {"eventType": "GROWTH_REWARD"}};
     $.get(taskUrl('crazyJoy_event_getGrowthAndSceneState', JSON.stringify(body)), async (err, resp, data) => {
       try {
         if (err) {
@@ -613,10 +592,11 @@ function getGrowthReward() {
     })
   })
 }
+
 //获取特殊JOY情况
 function getSpecialJoy() {
   return new Promise(async resolve => {
-    const body = { "paramData":{"typeId": 4} };
+    const body = {"paramData": {"typeId": 4}};
     $.get(taskUrl('crazyJoy_user_getSpecialJoy', JSON.stringify(body)), async (err, resp, data) => {
       try {
         if (err) {
@@ -664,6 +644,7 @@ function getSpecialJoy() {
     })
   })
 }
+
 function obtainAward(eventRecordId) {
   return new Promise(async resolve => {
     const body = {"eventType": "GROWTH_REWARD", eventRecordId};
@@ -689,6 +670,7 @@ function obtainAward(eventRecordId) {
     })
   })
 }
+
 function showMsg() {
   return new Promise(async resolve => {
     message += `\n当前信息：${$.bean}京豆，${$.coin}金币`
@@ -696,6 +678,7 @@ function showMsg() {
     resolve()
   })
 }
+
 function taskUrl(functionId, body = '') {
   let t = Date.now().toString().substr(0, 10)
   let e = body || ""
@@ -716,10 +699,14 @@ function taskUrl(functionId, body = '') {
     }
   }
 }
+
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `https://code.chiang.fun/api/v1/jd/jdcrazyjoy/read/${randomCount}/`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({
+      url: `https://code.chiang.fun/api/v1/jd/jdcrazyjoy/read/${randomCount}/`,
+      'timeout': 10000
+    }, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -741,6 +728,7 @@ function readShareCode() {
     resolve()
   })
 }
+
 //格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
@@ -765,7 +753,6 @@ function shareCodesFormat() {
 function requireConfig() {
   return new Promise(resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
-
     let shareCodes = [];
     if ($.isNode()) {
       if (process.env.JDJOY_SHARECODES) {
@@ -802,7 +789,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -856,13 +843,14 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];
     }
   }
 }
+
 /**
  * 生成随机数字
  * @param {number} min 最小值（包含）

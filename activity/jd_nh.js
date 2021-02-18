@@ -13,22 +13,14 @@
 ============Quantumultx===============
 [task_local]
 #京东年货节
-1 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nh.js, tag=京东年货节, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+1 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nh.js, tag=京东年货节, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "1 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nh.js,tag=京东年货节
-
-===============Surge=================
-京东年货节 = type=cron,cronexp="1 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nh.js
-
-============小火箭=========
+cron "1 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nh.js,tag=京东年货节===============Surge=================
+京东年货节 = type=cron,cronexp="1 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nh.js============小火箭=========
 京东年货节 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nh.js, cronexpr="1 7 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东年货节');
-const ck = require('./jdCookie.js')
-
-//const WebSocket = $.isNode() ? require('websocket').w3cwebsocket: SockJS;
+const ck = require('./jdCookie.js')//const WebSocket = $.isNode() ? require('websocket').w3cwebsocket: SockJS;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message,helpInfo;
 const shareUuid = '9fd016b31afc4522ba87feb581bc6844'
@@ -48,12 +40,9 @@ const ACT_ID = 'dzvm210168869301'
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         } else {
           $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
@@ -64,9 +53,7 @@ const ACT_ID = 'dzvm210168869301'
     }
   }
 })()
-  .catch((e) => {
-
-  })
+  .catch((e) => {  })
   .finally(async () => {
     await ck.methodEnd($)
   })
@@ -152,9 +139,7 @@ function getIsvToken2() {
       }
     })
   })
-}
-
-// 获得游戏的Cookie
+}// 获得游戏的Cookie
 function getActCk() {
   return new Promise(resolve => {
     $.get(taskUrl("dingzhi/vm/template/activity/940531", `activityId=${ACT_ID}`), (err, resp, data) => {
@@ -182,9 +167,7 @@ function getActCk() {
       }
     })
   })
-}
-
-// 获得游戏信息
+}// 获得游戏信息
 function getActInfo() {
   return new Promise(resolve => {
     $.post(taskPostUrl('dz/common/getSimpleActInfoVo', `activityId=${ACT_ID}`), async (err, resp, data) => {
@@ -278,9 +261,7 @@ function getActContent(info=false, shareUuid = '') {
             data = JSON.parse(data);
             if (data.data) {
               $.userInfo = data.data
-              $.actorUuid = $.userInfo.actorUuid
-
-              if (!info) {
+              $.actorUuid = $.userInfo.actorUuid              if (!info) {
                 console.log(`您的好友助力码为${$.actorUuid}`)
                 console.log(`当前金币${$.userInfo.score}`)
                 for(let i of ['sign','mainActive','visitSku','allFollowShop','allAddSku','memberCard']){
@@ -345,9 +326,7 @@ function getTaskInfo(taskType, value) {
         resolve(data);
       }
     })
-  })
-
-}
+  })}
 // 完成任务
 function doTask(taskType, value) {
   let body = `activityId=${ACT_ID}&pin=${encodeURIComponent($.pin)}&actorUuid=${$.actorUuid}&taskType=${taskType}&taskValue=${value}`
@@ -375,9 +354,7 @@ function doTask(taskType, value) {
         resolve(data);
       }
     })
-  })
-
-}
+  })}
 function showMsg() {
   return new Promise(resolve => {
     message += `本次运行获得金币${$.score}枚`;
@@ -412,9 +389,7 @@ function draw() {
         resolve(data);
       }
     })
-  })
-
-}
+  })}
 function taskUrl(function_id, body) {
   return {
     url: `https://lzdz-isv.isvjcloud.com/${function_id}?${body}`,
@@ -430,9 +405,7 @@ function taskUrl(function_id, body) {
       'Cookie': `${cookie} IsvToken=${$.isvToken};`
     }
   }
-}
-
-function taskPostUrl(function_id, body) {
+}function taskPostUrl(function_id, body) {
   return {
     url: `https://lzdz-isv.isvjcloud.com/${function_id}`,
     body: body,

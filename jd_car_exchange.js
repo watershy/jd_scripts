@@ -1,32 +1,18 @@
 /*
 京东汽车兑换，500赛点兑换500京豆
-长期活动
-
-活动入口：京东APP首页-京东汽车-屏幕右中部，车主福利
-活动网页地址：https://h5.m.jd.com/babelDiy/Zeus/44bjzCpzH9GpspWeBzYSqBA7jEtP/index.html#/journey
-
-更新地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car_exchange
+长期活动活动入口：京东APP首页-京东汽车-屏幕右中部，车主福利
+活动网页地址：https://h5.m.jd.com/babelDiy/Zeus/44bjzCpzH9GpspWeBzYSqBA7jEtP/index.html#/journey更新地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car_exchange
 已支持IOS, Node.js支持N个京东账号
-脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
-
-============Quantumultx===============
+脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js============Quantumultx===============
 [task_local]
 #京东汽车兑换
-0 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car_exchange.js, tag=京东汽车兑换, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
-
-================Loon==============
+0 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car_exchange.js, tag=京东汽车兑换, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true================Loon==============
 [Script]
-cron "0 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car_exchange.js, tag=京东汽车兑换
-
-===============Surge=================
-京东汽车兑换 = type=cron,cronexp="0 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car_exchange.js
-
-============小火箭=========
+cron "0 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car_exchange.js, tag=京东汽车兑换===============Surge=================
+京东汽车兑换 = type=cron,cronexp="0 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car_exchange.js============小火箭=========
 京东汽车兑换 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car_exchange.js, cronexpr="0 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东汽车兑换');
-
-
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 //IOS等用户直接用NobyDa的jd cookie
@@ -53,12 +39,11 @@ const ck = require('./jdCookie.js')
       }
     }
 })()
-  .catch((e) => {
-
-  })
-  .finally(async () => {
-    await ck.methodEnd($)
-  })
+    .catch((e) => {
+    })
+    .finally(async () => {
+      await ck.methodEnd($)
+    })
 
 async function jdCar() {
   await exchange()
@@ -112,7 +97,6 @@ function taskUrl(function_id, body = {}) {
   }
 }
 
-
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -161,18 +145,19 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
 }
+
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

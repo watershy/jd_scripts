@@ -8,24 +8,13 @@
 ============Quantumultx===============
 [task_local]
 #京东汽车
-10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
-
-================Loon==============
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true================Loon==============
 [Script]
-cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车
-
-===============Surge=================
-京东汽车 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js
-
-============小火箭=========
+cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车===============Surge=================
+京东汽车 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js============小火箭=========
 京东汽车 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, cronexpr="10 7 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东汽车');
-
-
-
-let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
-const randomCount = $.isNode() ? 20 : 5;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const JD_API_HOST = 'https://car-member.jd.com/api/';
@@ -44,14 +33,11 @@ const ck = require('./jdCookie.js')
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
+      await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
         if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
+          $.noticeName = `cookie失效`
         } else {
           $.setdata('', `CookieJD${i ? i + 1 : ""}`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
         }
@@ -61,12 +47,11 @@ const ck = require('./jdCookie.js')
     }
   }
 })()
-  .catch((e) => {
-
-  })
-  .finally(async () => {
-    await ck.methodEnd($)
-  })
+    .catch((e) => {
+    })
+    .finally(async () => {
+      await ck.methodEnd($)
+    })
 
 async function jdCar() {
   await check()
@@ -233,7 +218,7 @@ function getPoint() {
               if (data.data.remainPoint >= data.data.oncePoint) {
                 console.log(`当前赛点：${data.data.remainPoint}/${data.data.oncePoint}，可以兑换京豆，请打开APP兑换`)
                 message += `当前赛点：${data.data.remainPoint}/${data.data.oncePoint}，可以兑换京豆，请打开APP兑换\n`
-              }else{
+              } else {
                 console.log(`当前赛点：${data.data.remainPoint}/${data.data.oncePoint}无法兑换京豆`)
                 message += `当前赛点：${data.data.remainPoint}/${data.data.oncePoint}，无法兑换京豆\n`
               }
@@ -334,18 +319,19 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
 }
+
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

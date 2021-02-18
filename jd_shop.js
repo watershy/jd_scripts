@@ -15,21 +15,11 @@ cron "10 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
 [Script]
 进店领豆 = type=cron,cronexp="10 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_shop.js
 */
-const $ = new Env('进店领豆');
-
-
-
-//IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '';
-
-let message = '', subTitle = '';
-
-const JD_API_HOST = 'https://api.m.jd.com/client.action';
+const $ = new Env('进店领豆');//IOS等用户直接用NobyDa的jd cookie
+let cookiesArr = [], cookie = '';let message = '', subTitle = '';const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const ck = require('./jdCookie')
 !(async () => {
-  cookiesArr = await ck.getCookie();
-
-  if (!cookiesArr[0]) {
+  cookiesArr = await ck.getCookie();  if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
@@ -40,17 +30,8 @@ const ck = require('./jdCookie')
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
-        }
         continue
       }
       message = '';

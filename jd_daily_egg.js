@@ -13,24 +13,18 @@ TODO
 ============Quantumultx===============
 [task_local]
 #天天提鹅
-10 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_daily_egg.js, tag=天天提鹅, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdte.png, enabled=true
-
-================Loon==============
+10 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_daily_egg.js, tag=天天提鹅, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdte.png, enabled=true================Loon==============
 [Script]
-cron "10 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_daily_egg.js,tag=天天提鹅
-
-===============Surge=================
-天天提鹅 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_daily_egg.js
-
-============小火箭=========
+cron "10 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_daily_egg.js,tag=天天提鹅===============Surge=================
+天天提鹅 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_daily_egg.js============小火箭=========
 天天提鹅 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_daily_egg.js, cronexpr="10 * * * *", timeout=3600, enable=true
  */
 const $ = new Env('天天提鹅');
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://ms.jr.jd.com/gw/generic/uc/h5/m';
-
 const ck = require('./jdCookie.js')
 !(async () => {
+  $.sql = 'select * from jd_cookie where id = 1'
   cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
@@ -43,17 +37,9 @@ const ck = require('./jdCookie.js')
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
+      await ck.TotalBean(cookie, $);
       console.log(`\n***********开始【京东账号${$.index}】${$.UserName}********\n`);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
-        }
         continue
       }
       await jdDailyEgg();
@@ -63,16 +49,18 @@ const ck = require('./jdCookie.js')
     .catch((e) => {
       $.notice += `\n${e}`
       $.notice += `\n${e}`
-              $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
     })
+
 async function jdDailyEgg() {
   await toDailyHome()
   await toWithdraw()
   await toGoldExchange();
 }
+
 function toGoldExchange() {
   return new Promise(async resolve => {
     const body = {
@@ -110,6 +98,7 @@ function toGoldExchange() {
     })
   })
 }
+
 function toWithdraw() {
   return new Promise(async resolve => {
     const body = {
@@ -147,6 +136,7 @@ function toWithdraw() {
     })
   })
 }
+
 function toDailyHome() {
   return new Promise(async resolve => {
     const body = {
@@ -176,6 +166,7 @@ function toDailyHome() {
     })
   })
 }
+
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -217,30 +208,32 @@ function TotalBean() {
     })
   })
 }
+
 function taskUrl(function_id, body) {
   return {
     url: `${JD_API_HOST}/${function_id}`,
     body: `reqData=${encodeURIComponent(JSON.stringify(body))}`,
     headers: {
-      'Accept' : `application/json`,
-      'Origin' : `https://uua.jr.jd.com`,
-      'Accept-Encoding' : `gzip, deflate, br`,
-      'Cookie' : cookie,
-      'Content-Type' : `application/x-www-form-urlencoded;charset=UTF-8`,
-      'Host' : `ms.jr.jd.com`,
-      'Connection' : `keep-alive`,
-      'User-Agent' : $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
-      'Referer' : `https://uua.jr.jd.com/uc-fe-wxgrowing/moneytree/index`,
-      'Accept-Language' : `zh-cn`
+      'Accept': `application/json`,
+      'Origin': `https://uua.jr.jd.com`,
+      'Accept-Encoding': `gzip, deflate, br`,
+      'Cookie': cookie,
+      'Content-Type': `application/x-www-form-urlencoded;charset=UTF-8`,
+      'Host': `ms.jr.jd.com`,
+      'Connection': `keep-alive`,
+      'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+      'Referer': `https://uua.jr.jd.com/uc-fe-wxgrowing/moneytree/index`,
+      'Accept-Language': `zh-cn`
     }
   }
 }
+
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

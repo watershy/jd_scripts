@@ -10,24 +10,12 @@
 =================QuantumultX==============
 [task_local]
 #天天加速
-8 0-23/3 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_speed.js, tag=京东天天加速, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdjs.png, enabled=true
-
-============Loon================
+8 0-23/3 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_speed.js, tag=京东天天加速, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdjs.png, enabled=true============Loon================
 [Script]
-cron "8 0-23/3 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_speed.js,tag=京东天天加速
-
-===========Surge============
-天天加速 = type=cron,cronexp="8 0-23/3 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_speed.js
-
-==============小火箭=============
+cron "8 0-23/3 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_speed.js,tag=京东天天加速===========Surge============
+天天加速 = type=cron,cronexp="8 0-23/3 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_speed.js==============小火箭=============
 天天加速 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_speed.js, cronexpr="11 0-23/3 * * *", timeout=3600, enable=true
-*/
-
-const $ = new Env('✈️天天加速');
-
-
-
-//IOS等用户直接用NobyDa的jd cookie
+*/const $ = new Env('✈️天天加速');//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 $.notice = ''
 let jdNotify = true;//是否开启静默运行。默认true开启
@@ -35,9 +23,7 @@ let message = '', subTitle = '';
 const JD_API_HOST = 'https://api.m.jd.com/'
 const ck = require('./jdCookie')
 !(async () => {
-  cookiesArr = await ck.getCookie();
-
-  if (!cookiesArr[0]) {
+  cookiesArr = await ck.getCookie();  if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
@@ -48,17 +34,8 @@ const ck = require('./jdCookie')
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
-        }
         continue
       }
       message = '';
@@ -167,9 +144,7 @@ function jDSpeedUp(sourceId) {
       }
     })
   })
-}
-
-// 检查太空特殊事件
+}// 检查太空特殊事件
 function spaceEventList() {
   return new Promise((resolve) => {
     let spaceEvents = [];
@@ -223,9 +198,7 @@ function spaceEventList() {
       }
     })
   })
-}
-
-//处理太空特殊事件
+}//处理太空特殊事件
 function spaceEventHandleEvent(spaceEventList) {
   return new Promise((resolve) => {
     if (spaceEventList && spaceEventList.length > 0) {
@@ -279,9 +252,7 @@ function spaceEventHandleEvent(spaceEventList) {
       resolve()
     }
   })
-}
-
-//检查燃料
+}//检查燃料
 function energyPropList() {
   return new Promise((resolve) => {
     let TaskID = "";
@@ -329,9 +300,7 @@ function energyPropList() {
       }
     })
   })
-}
-
-//领取可用的燃料
+}//领取可用的燃料
 function receiveEnergyProp(CID) {
   return new Promise((resolve) => {
     var NumTask = 0;
@@ -382,9 +351,7 @@ function receiveEnergyProp(CID) {
       resolve(NumTask)
     }
   })
-}
-
-//检查剩余燃料
+}//检查剩余燃料
 function energyPropUsaleList(EID) {
   return new Promise((resolve) => {
     let TaskCID = '';
@@ -439,9 +406,7 @@ function energyPropUsaleList(EID) {
     //   resolve(TaskCID)
     // }
   })
-}
-
-//使用能源
+}//使用能源
 function useEnergy(PropID) {
   return new Promise((resolve) => {
     var PropNumTask = 0;

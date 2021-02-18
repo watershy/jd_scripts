@@ -13,16 +13,10 @@
 ============Quantumultx===============
 [task_local]
 #集鞭炮赢京豆
-10 8,21 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_firecrackers.js, tag=集鞭炮赢京豆, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+10 8,21 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_firecrackers.js, tag=集鞭炮赢京豆, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "10 8,21 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_firecrackers.js,tag=集鞭炮赢京豆
-
-===============Surge=================
-集鞭炮赢京豆 = type=cron,cronexp="10 8,21 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_firecrackers.js
-
-============小火箭=========
+cron "10 8,21 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_firecrackers.js,tag=集鞭炮赢京豆===============Surge=================
+集鞭炮赢京豆 = type=cron,cronexp="10 8,21 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_firecrackers.js============小火箭=========
 集鞭炮赢京豆 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_firecrackers.js, cronexpr="10 8,21 * * *", timeout=3600, enable=true
  */
 const $ = new Env('集鞭炮赢京豆');
@@ -30,9 +24,7 @@ let notifyBean = $.isNode() ? process.env.FIRECRACKERS_NOTITY_BEAN || 0 : 0; // 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', message;
-
-if ($.isNode()) {
+let cookiesArr = [], cookie = '', message;if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
   })
@@ -46,9 +38,7 @@ if ($.isNode()) {
   cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
   cookiesArr.reverse();
   cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
-
-!(async () => {
+}!(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -62,8 +52,7 @@ if ($.isNode()) {
       $.nickName = '';
       $.beans = 0
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         if ($.isNode()) {
@@ -80,17 +69,13 @@ if ($.isNode()) {
   })
   .finally(() => {
     $.done();
-  })
-
-async function jdFamily() {
+  })async function jdFamily() {
   $.earn = 0
   await getInfo()
   await getUserInfo()
   await getUserInfo(true)
   await showMsg();
-}
-
-function showMsg() {
+}function showMsg() {
   return new Promise(async resolve => {
     subTitle = `【京东账号${$.index}】${$.nickName}`;
     message += `【鞭炮🧨】本次获得 ${$.earn}，共计${$.total}\n`
@@ -112,9 +97,7 @@ function showMsg() {
     $.log(`${$.name}\n\n账号${$.index} - ${$.nickName}\n${subTitle}\n${message}`);
     resolve()
   })
-}
-
-function getInfo() {
+}function getInfo() {
   return new Promise(resolve => {
     $.get({
       url: 'https://linggame.jd.com/babelDiy/Zeus/heA49fhvyw9UakaaS3UUJRL7v3o/index.html',
@@ -133,9 +116,7 @@ function getInfo() {
       }
     })
   })
-}
-
-function getUserInfo(info = false) {
+}function getUserInfo(info = false) {
   return new Promise(resolve => {
     $.get(taskUrl('family_query'), async (err, resp, data) => {
       try {
@@ -176,9 +157,7 @@ function getUserInfo(info = false) {
       }
     })
   })
-}
-
-function doTask(taskId) {
+}function doTask(taskId) {
   let body = `taskid=${taskId}`
   return new Promise(resolve => {
     $.get(taskUrl('family_task', body), async (err, resp, data) => {
@@ -207,9 +186,7 @@ function doTask(taskId) {
       }
     })
   })
-}
-
-function taskUrl(function_id, body = '') {
+}function taskUrl(function_id, body = '') {
   body = `activeid=${$.info.activeId}&token=${$.info.actToken}&sceneval=2&shareid=&_=${new Date().getTime()}&callback=query&${body}`
   return {
     url: `https://wq.jd.com/activep3/family/${function_id}?${body}`,
@@ -224,9 +201,7 @@ function taskUrl(function_id, body = '') {
       'Cookie': cookie
     }
   }
-}
-
-function taskPostUrl(function_id, body) {
+}function taskPostUrl(function_id, body) {
   return {
     url: `https://lzdz-isv.isvjcloud.com/${function_id}`,
     body: body,
@@ -241,9 +216,7 @@ function taskPostUrl(function_id, body) {
       'Cookie': `${cookie} isvToken=${$.isvToken};`
     }
   }
-}
-
-function TotalBean() {
+}function TotalBean() {
   return new Promise(async resolve => {
     const options = {
       "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
@@ -283,9 +256,7 @@ function TotalBean() {
       }
     })
   })
-}
-
-function safeGet(data) {
+}function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
@@ -296,9 +267,7 @@ function safeGet(data) {
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
-}
-
-function jsonParse(str) {
+}function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);

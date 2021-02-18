@@ -16,28 +16,18 @@
 ===============Quantumultx===============
 [task_local]
 #京东金融养猪猪
-12 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pigPet.js, tag=京东金融养猪猪, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyz.png, enabled=true
-
-================Loon==============
+12 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pigPet.js, tag=京东金融养猪猪, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyz.png, enabled=true================Loon==============
 [Script]
-cron "12 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pigPet.js, tag=京东金融养猪猪
-
-===============Surge=================
-京东金融养猪猪 = type=cron,cronexp="12 * * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pigPet.js
-
-============小火箭=========
+cron "12 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pigPet.js, tag=京东金融养猪猪===============Surge=================
+京东金融养猪猪 = type=cron,cronexp="12 * * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pigPet.js============小火箭=========
 京东金融养猪猪 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_pigPet.js, cronexpr="12 * * * *", timeout=3600, enable=true
- */
-
-const $ = new Env('金融养猪');
+ */const $ = new Env('金融养猪');
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://ms.jr.jd.com/gw/generic/uc/h5/m';
-const MISSION_BASE_API = `https://ms.jr.jd.com/gw/generic/mission/h5/m`;
-
-const ck = require('./jdCookie')
+const MISSION_BASE_API = `https://ms.jr.jd.com/gw/generic/mission/h5/m`;const ck = require('./jdCookie')
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie where id = \'1\'');
-
+  $.sql = 'select * from jd_cookie where id = 1'
+  cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -49,16 +39,8 @@ const ck = require('./jdCookie')
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-        if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
-        }
         continue
       }
       await jdPigPet();
@@ -67,7 +49,7 @@ const ck = require('./jdCookie')
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-              $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -278,9 +260,7 @@ function pigPetOpenBox() {
             if (data.resultCode === 0) {
               if (data.resultData.resultCode === 0) {
                 if (data.resultData.resultData && data.resultData.resultData.award) {
-                  console.log(`开宝箱获得${data.resultData.resultData.award.content}，数量：${data.resultData.resultData.award.count}`);
-
-                } else {
+                  console.log(`开宝箱获得${data.resultData.resultData.award.content}，数量：${data.resultData.resultData.award.count}`);                } else {
                   console.log(`开宝箱暂无奖励`)
                 }
                 await $.wait(2000);

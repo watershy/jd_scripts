@@ -7,17 +7,9 @@
 /*
 京东手机狂欢城活动，每日可获得30+以上京豆（其中20京豆是往期奖励，需第一天参加活动后，第二天才能拿到）
 活动时间10.21日-11.12日结束，活动23天，保底最少可以拿到690京豆
-活动地址: https://rdcseason.m.jd.com/#/index
-
-其中有20京豆是往期奖励，需第一天参加活动后，第二天才能拿到！！！！
-
-
+活动地址: https://rdcseason.m.jd.com/#/index其中有20京豆是往期奖励，需第一天参加活动后，第二天才能拿到！！！！
 每天0/6/12/18点逛新品/店铺/会场可获得京豆，京豆先到先得
-往期奖励一般每天都能拿20京豆
-
-注：脚本运行会给我提供的助力码助力，介意者可删掉脚本第48行helpCode里面的东西。留空即可（const helpCode = []）;
-
-支持京东双账号
+往期奖励一般每天都能拿20京豆注：脚本运行会给我提供的助力码助力，介意者可删掉脚本第48行helpCode里面的东西。留空即可（const helpCode = []）;支持京东双账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ===================quantumultx================
 [task_local]
@@ -29,13 +21,9 @@ cron "0 0-18/6 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/maste
 ====================Surge================
 京东手机狂欢城 = type=cron,cronexp=0 0-18/6 * * *,wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_818.js
  */
-const $ = new Env('京东手机狂欢城');
-
-let jdNotify = false;//是否开启推送互助码
+const $ = new Env('京东手机狂欢城');let jdNotify = false;//是否开启推送互助码
 //Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('../jdCookie.js') : '';
-
-//IOS等用户直接用NobyDa的jd cookie
+const jdCookieNode = $.isNode() ? require('../jdCookie.js') : '';//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -51,9 +39,7 @@ if ($.isNode()) {
   cookiesArr.reverse();
   cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
   cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
-
-const JD_API_HOST = 'https://rdcseason.m.jd.com/api/';
+}const JD_API_HOST = 'https://rdcseason.m.jd.com/api/';
 const activeEndTime = '2021/2/4 00:59:59+08:00';
 const addUrl = 'http://jd.turinglabs.net/helpcode/create/';
 const printUrl = `http://jd.turinglabs.net/api/v2/jd/5g/read/30/`;
@@ -72,12 +58,10 @@ let helpCode = []
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
+      await ck.TotalBean(cookie,$);
       console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
-      if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
+if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -287,9 +271,7 @@ function shopInfo() {
         resolve()
       }
     })
-  })
-
-}
+  })}
 function browseGoods(id) {
   const options = {
     "url": `${JD_API_HOST}task/browseGoods?t=${Date.now()}&skuId=${id}`,
@@ -323,9 +305,7 @@ function browseGoods(id) {
       }
     })
   })
-}
-
-function getGoodsPrize(id) {
+}function getGoodsPrize(id) {
   const options = {
     "url": `${JD_API_HOST}task/getGoodsPrize?t=${Date.now()}&skuId=${id}`,
     "headers": {
@@ -425,9 +405,7 @@ function getShopPrize(id) {
       }
     })
   })
-}
-
-function browseMeeting(id) {
+}function browseMeeting(id) {
   const options2 = {
     "url": `${JD_API_HOST}task/browseMeeting`,
     "body": `meetingId=${id}`,
@@ -599,8 +577,7 @@ async function doHelp() {
   if (zone === 0) {
     nowTime += 28800000;//UTC-0时区加上8个小时
   }
-  // await updateShareCodes();
-  // if (!$.updatePkActivityIdRes) await updateShareCodesCDN();
+  //   // if (!$.updatePkActivityIdRes) await updateShareCodesCDN();
   if ($.updatePkActivityIdRes && $.updatePkActivityIdRes['shareCodes']) tempCode = $.updatePkActivityIdRes['shareCodes'];
   console.log(`是否大于当天九点🕘:${nowTime > new Date(nowTime).setHours(9, 0, 0, 0)}`)
   //当天大于9:00才从API里面取收集的助力码
@@ -776,9 +753,7 @@ function getListJbean() {
       }
     })
   })
-}
-
-function getListIntegral() {
+}function getListIntegral() {
   return new Promise(resolve => {
     const options = {
       "url": `${JD_API_HOST}task/listIntegral?pageNum=1`,
@@ -812,9 +787,7 @@ function getListIntegral() {
       }
     })
   })
-}
-
-//查询今日累计积分与排名
+}//查询今日累计积分与排名
 function getListRank() {
   return new Promise(resolve => {
     const options = {

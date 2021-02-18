@@ -9,26 +9,14 @@
 ============Quantumultx===============
 [task_local]
 #京东压岁钱
-20 8,12 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js, tag=京东压岁钱, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+20 8,12 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js, tag=京东压岁钱, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "20 8,12 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js, tag=京东压岁钱
-
-===============Surge=================
-京东压岁钱 = type=cron,cronexp="20 8,12 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js
-
-============小火箭=========
+cron "20 8,12 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js, tag=京东压岁钱===============Surge=================
+京东压岁钱 = type=cron,cronexp="20 8,12 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js============小火箭=========
 京东压岁钱 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js, cronexpr="20 8,12 * * *", timeout=3600, enable=true
- */
-
-const $ = new Env('京东压岁钱');
-
-const ck = require('./jdCookie')
+ */const $ = new Env('京东压岁钱');const ck = require('./jdCookie')
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
-const randomCount = $.isNode() ? 20 : 5;
-
-//IOS等用户直接用NobyDa的jd cookie
+const randomCount = $.isNode() ? 20 : 5;//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message, sendAccount = [], receiveAccount = [], receiveCardList = [];
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const inviteCodes = [
@@ -64,12 +52,9 @@ const inviteCodes = [
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -89,12 +74,9 @@ const inviteCodes = [
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -109,9 +91,7 @@ const inviteCodes = [
   })
   .finally(async () => {
     await ck.methodEnd($)
-  })
-
-async function jdNian() {
+  })async function jdNian() {
   try {
     $.risk = false
     $.red = 0
@@ -125,15 +105,11 @@ async function jdNian() {
         $.noticeName = `${$.name}错误`
     $.logErr(e)
   }
-}
-
-async function receiveCards() {
+}async function receiveCards() {
   for (let token of receiveCardList) {
     await receiveCard(token)
   }
-}
-
-function showMsg() {
+}function showMsg() {
   return new Promise(resolve => {
     if (!$.risk) message += `本次运行获得${Math.round($.red * 100) / 100}红包，共计红包${$.total}`
     if (!jdNotify) {
@@ -143,9 +119,7 @@ function showMsg() {
     }
     resolve()
   })
-}
-
-async function helpFriends() {
+}async function helpFriends() {
   $.canHelp = true
   for (let code of $.newShareCodes) {
     if (!code) continue
@@ -153,9 +127,7 @@ async function helpFriends() {
     if (!$.canHelp) return
     await $.wait(4000)
   }
-}
-
-function getHomeData(info = false) {
+}function getHomeData(info = false) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('newyearmoney_home'), async (err, resp, data) => {
       try {
@@ -205,9 +177,7 @@ function getHomeData(info = false) {
       }
     })
   })
-}
-
-function lotteryHundredCard() {
+}function lotteryHundredCard() {
   return new Promise((resolve) => {
     $.post(taskPostUrl('newyearmoney_lotteryHundredCard'), async (err, resp, data) => {
       try {
@@ -230,9 +200,7 @@ function lotteryHundredCard() {
       }
     })
   })
-}
-
-function showHundredCardInfo(cardNo) {
+}function showHundredCardInfo(cardNo) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('newyearmoney_showHundredCardInfo', {cardNo: cardNo}), async (err, resp, data) => {
       try {
@@ -256,9 +224,7 @@ function showHundredCardInfo(cardNo) {
       }
     })
   })
-}
-
-function receiveHundredCard(cardNo) {
+}function receiveHundredCard(cardNo) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('newyearmoney_receiveHundredCard', {cardNo: cardNo}), async (err, resp, data) => {
       try {
@@ -282,9 +248,7 @@ function receiveHundredCard(cardNo) {
       }
     })
   })
-}
-
-function consumeCard(cardNo) {
+}function consumeCard(cardNo) {
   return new Promise((resolve) => {
     setTimeout(() => {
       $.post(taskPostUrl('newyearmoney_consumeCard',{"cardNo":cardNo}), async (err, resp, data) => {
@@ -312,9 +276,7 @@ function consumeCard(cardNo) {
       })
     }, 1000)
   })
-}
-
-function helpFriend(inviteId) {
+}function helpFriend(inviteId) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('newyearmoney_assist', {inviteId: inviteId}), async (err, resp, data) => {
       try {
@@ -340,9 +302,7 @@ function helpFriend(inviteId) {
       }
     })
   })
-}
-
-function readShareCode() {
+}function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
     $.get({
@@ -394,9 +354,7 @@ function sendCard(cardNo) {
       }
     })
   })
-}
-
-function receiveCard(token) {
+}function receiveCard(token) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('newyearmoney_receiveCard', {"token": token}), async (err, resp, data) => {
       try {
@@ -419,9 +377,7 @@ function receiveCard(token) {
       }
     })
   })
-}
-
-//格式化助力码
+}//格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
     // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
@@ -440,9 +396,7 @@ function shareCodesFormat() {
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
-}
-
-function requireConfig() {
+}function requireConfig() {
   return new Promise(async resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
     //Node.js用户请在jdCookie.js处填写京东ck;
@@ -454,20 +408,14 @@ function requireConfig() {
       } else {
         shareCodes = process.env.JDNY_SHARECODES.split('&');
       }
-    }
-
-    if ($.isNode() && process.env.JDNY_SENDACCOUNT) {
+    }    if ($.isNode() && process.env.JDNY_SENDACCOUNT) {
       if (process.env.JDNY_SENDACCOUNT.indexOf('\n') > -1) {
         sendAccount = process.env.JDNY_SENDACCOUNT.split('\n');
       } else {
         sendAccount = process.env.JDNY_SENDACCOUNT.split('&');
       }
-    }
-
-    if (sendAccount.length)
-      console.log(`将要送出卡片的是账号第${sendAccount.join(',')}号账号`)
-
-    if ($.isNode() && process.env.JDNY_RECEIVEACCOUNT) {
+    }    if (sendAccount.length)
+      console.log(`将要送出卡片的是账号第${sendAccount.join(',')}号账号`)    if ($.isNode() && process.env.JDNY_RECEIVEACCOUNT) {
       if (process.env.JDNY_RECEIVEACCOUNT.indexOf('\n') > -1) {
         receiveAccount = process.env.JDNY_RECEIVEACCOUNT.split('\n');
       } else {
@@ -475,9 +423,7 @@ function requireConfig() {
       }
     }
     if (receiveAccount.length)
-      console.log(`将要领取卡片的是账号第${receiveAccount.join(',')}号账号`)
-
-    $.shareCodesArr = [];
+      console.log(`将要领取卡片的是账号第${receiveAccount.join(',')}号账号`)    $.shareCodesArr = [];
     if ($.isNode()) {
       Object.keys(shareCodes).forEach((item) => {
         if (shareCodes[item]) {
@@ -489,8 +435,6 @@ function requireConfig() {
     resolve()
   })
 }
-
-
 function taskPostUrl(function_id, body = {}, function_id2) {
   let url = `${JD_API_HOST}`;
   return {
@@ -505,8 +449,6 @@ function taskPostUrl(function_id, body = {}, function_id2) {
     }
   }
 }
-
-
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -547,9 +489,7 @@ function TotalBean() {
       }
     })
   })
-}
-
-function safeGet(data) {
+}function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
@@ -560,9 +500,7 @@ function safeGet(data) {
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
-}
-
-function jsonParse(str) {
+}function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);

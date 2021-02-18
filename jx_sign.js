@@ -5,21 +5,13 @@
 ============Quantumultx===============
 [task_local]
 #京喜签到
-5 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, tag=京喜签到, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+5 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, tag=京喜签到, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "5 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js,tag=京喜签到
-
-===============Surge=================
-京喜签到 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js
-
-============小火箭=========
+cron "5 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js,tag=京喜签到===============Surge=================
+京喜签到 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js============小火箭=========
 京喜签到 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, cronexpr="5 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京喜签到');
-
-
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
@@ -41,12 +33,9 @@ const JD_API_HOST = 'https://m.jingxi.com/';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -55,9 +44,7 @@ const JD_API_HOST = 'https://m.jingxi.com/';
     }
   }
 })()
-    .catch((e) => {
-
-    })
+    .catch((e) => {    })
     .finally(async () => {
       await ck.methodEnd($)
     })
@@ -223,9 +210,7 @@ function showMsg() {
     }
     resolve()
   })
-}
-
-function taskUrl(functionId, body = '') {
+}function taskUrl(functionId, body = '') {
   return {
     url: `${JD_API_HOST}${functionId}?sceneval=2&g_login_type=1&g_ty=ls&${body}`,
     headers: {
@@ -239,9 +224,7 @@ function taskUrl(functionId, body = '') {
       'Accept-Encoding': 'gzip, deflate, br',
     }
   }
-}
-
-function TotalBean() {
+}function TotalBean() {
   return new Promise(async resolve => {
     const options = {
       "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,

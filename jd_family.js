@@ -9,14 +9,11 @@
 活动入口：玩一玩-家庭号
 8000幸福值可换100京豆，一天任务做完大概300幸福值，周期较长
 已支持IOS双京东账号,Node.js支持N个京东账号
-脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-
-易黑号，建议禁用
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js易黑号，建议禁用
 cron如下
 1 * * * *
  */
 const $ = new Env('京东家庭号');
-
 let cookiesArr = [], cookie = '', message;
 const ck = require('./jdCookie.js')
 !(async () => {
@@ -34,8 +31,7 @@ const ck = require('./jdCookie.js')
       $.nickName = '';
       $.beans = 0
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         if ($.isNode()) {
@@ -47,12 +43,11 @@ const ck = require('./jdCookie.js')
     }
   }
 })()
-  .catch((e) => {
-
-  })
-  .finally(async () => {
-    await ck.methodEnd($)
-  })
+    .catch((e) => {
+    })
+    .finally(async () => {
+      await ck.methodEnd($)
+    })
 
 async function jdFamily() {
   await getInfo()
@@ -239,7 +234,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -251,7 +246,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

@@ -13,33 +13,21 @@
 ===============Quantumultx===============
 [task_local]
 #点点券
-10 0,20 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js, tag=点点券, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+10 0,20 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js, tag=点点券, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "10 0,20 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js,tag=点点券
-
-===============Surge=================
-点点券 = type=cron,cronexp="10 0,20 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js
-
-============小火箭=========
+cron "10 0,20 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js,tag=点点券===============Surge=================
+点点券 = type=cron,cronexp="10 0,20 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js============小火箭=========
 点点券 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_necklace.js, cronexpr="10 0,20 * * *", timeout=3600, enable=true
  */
 const $ = new Env('点点券');
-
-
 const ck = require('./jdCookie.js')
 const openUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/41Lkp7DumXYCFmPYtU3LTcnTTXTX/index.html%22%20%7D`
 let message = '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
-
-
 const JD_API_HOST = 'https://api.m.jd.com/api';
 !(async () => {
-  cookiesArr = await ck.getCookie();
-
-  if (!cookiesArr[0]) {
+  cookiesArr = await ck.getCookie();  if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
@@ -51,17 +39,8 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
-        }
         continue
       }
       await jd_necklace();

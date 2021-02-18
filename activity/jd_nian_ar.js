@@ -8,21 +8,13 @@
 ============Quantumultx===============
 [task_local]
 #京东炸年兽AR
-0 9 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_ar.js, tag=京东炸年兽AR, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_nian.png, enabled=true
-
-================Loon==============
+0 9 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_ar.js, tag=京东炸年兽AR, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_nian.png, enabled=true================Loon==============
 [Script]
-cron "0 9 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_ar.js,tag=京东炸年兽AR
-
-===============Surge=================
-京东炸年兽AR = type=cron,cronexp="0 9 * * *",wake-system=1,timeout=36000,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_ar.js
-
-============小火箭=========
+cron "0 9 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_ar.js,tag=京东炸年兽AR===============Surge=================
+京东炸年兽AR = type=cron,cronexp="0 9 * * *",wake-system=1,timeout=36000,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_ar.js============小火箭=========
 京东炸年兽AR = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_ar.js, cronexpr="0 9 * * *", timeout=3600, enable=true
  */
-const $ = new Env('京东炸年兽AR');
-
-//Node.js用户请在jdCookie.js处填写京东ck;
+const $ = new Env('京东炸年兽AR');//Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
@@ -62,12 +54,9 @@ const inviteCodes = [
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -113,9 +102,7 @@ function showMsg() {
     }
     resolve()
   })
-}
-
-function getHomeData(info=false) {
+}function getHomeData(info=false) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('nian_getHomeData'), async (err, resp, data) => {
       try {
@@ -133,9 +120,7 @@ function getHomeData(info=false) {
               $.secretp = null
               return
             }
-            console.log(`当前爆竹${$.userInfo.raiseInfo.remainScore}🧨，下一关需要${$.userInfo.raiseInfo.nextLevelScore - $.userInfo.raiseInfo.curLevelStartScore}🧨`)
-
-            if(info) {
+            console.log(`当前爆竹${$.userInfo.raiseInfo.remainScore}🧨，下一关需要${$.userInfo.raiseInfo.nextLevelScore - $.userInfo.raiseInfo.curLevelStartScore}🧨`)            if(info) {
               message += `当前爆竹${$.userInfo.raiseInfo.remainScore}🧨\n`
             }
           }
@@ -153,9 +138,7 @@ function getHomeData(info=false) {
       }
     })
   })
-}
-
-function pkInfo() {
+}function pkInfo() {
   return new Promise(resolve => {
     $.post(taskPostUrl("nian_pk_getHomeData", {}, "nian_pk_getHomeData"), async (err, resp, data) => {
       try {

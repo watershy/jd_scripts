@@ -8,25 +8,15 @@
 ============Quantumultx===============
 [task_local]
 #5G狂欢城
-0 0,6,12,18 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_5g.js, tag=5G狂欢城, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
-
-================Loon==============
+0 0,6,12,18 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_5g.js, tag=5G狂欢城, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
 [Script]
-cron "0 0,6,12,18 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_5g.js, tag=5G狂欢城
-
-===============Surge=================
-5G狂欢城 = type=cron,cronexp="0 0,6,12,18 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_5g.js
-
-============小火箭=========
+cron "0 0,6,12,18 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_5g.js, tag=5G狂欢城===============Surge=================
+5G狂欢城 = type=cron,cronexp="0 0,6,12,18 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_5g.js============小火箭=========
 5G狂欢城 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_5g.js, cronexpr="0 0,6,12,18 * * *", timeout=3600, enable=true
  */
 const $ = new Env('5G狂欢城');
-
-
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
-const randomCount = $.isNode() ? 20 : 5;
-
-//IOS等用户直接用NobyDa的jd cookie
+const randomCount = $.isNode() ? 20 : 5;//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const ck = require('./jdCookie')
 const JD_API_HOST = 'https://rdcseason.m.jd.com/api/';
@@ -39,9 +29,7 @@ const inviteCodes = [
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
-  }
-
-  for (let i = 0; i < cookiesArr.length; i++) {
+  }  for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
@@ -49,13 +37,10 @@ const inviteCodes = [
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-      $.flag = $.UserName === 'jd_pBXzZlqInyyk';
-      if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
+      await ck.TotalBean(cookie,$);
+            $.flag = $.UserName === 'jd_pBXzZlqInyyk';
+if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -70,9 +55,7 @@ const inviteCodes = [
   })
   .finally(async () => {
     await ck.methodEnd($)
-  })
-
-async function jdFive() {
+  })async function jdFive() {
   try {
     if ($.flag) {
       $.beans = 0
@@ -107,18 +90,14 @@ async function jdFive() {
         $.noticeName = `${$.name}错误`
     $.logErr(e)
   }
-}
-
-async function helpFriends() {
+}async function helpFriends() {
   if (!$.flag) {
     const shareCode = await ck.getShareCode($.name,'jd_pBXzZlqInyyk');
     console.log(`需要助力的 ${shareCode[0]}`)
     await doHelp(shareCode[0])
     await $.wait(2000)
   }
-}
-
-function doHelp(id) {
+}function doHelp(id) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('task/toHelp', `shareId=${id}`), async (err, resp, data) => {
       try {
@@ -577,9 +556,7 @@ function readShareCode() {
     await $.wait(2000);
     resolve()
   })
-}
-
-function taskUrl(function_id,body) {
+}function taskUrl(function_id,body) {
   let url = `${JD_API_HOST}${function_id}?t=${new Date().getTime()}&${body}`;
   return {
     url,
@@ -591,9 +568,7 @@ function taskUrl(function_id,body) {
       "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Mobile/15E148 Safari/604.1"
     }
   }
-}
-
-function taskPostUrl(function_id, body = "") {
+}function taskPostUrl(function_id, body = "") {
   let url = `${JD_API_HOST}${function_id}`;
   return {
     url,
@@ -606,9 +581,7 @@ function taskPostUrl(function_id, body = "") {
       "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Mobile/15E148 Safari/604.1"
     }
   }
-}
-
-function taskPostUrl2(function_id, body = {}, function_id2) {
+}function taskPostUrl2(function_id, body = {}, function_id2) {
   let url = `${JD_API_HOST}`;
   if (function_id2) {
     url += `?functionId=${function_id2}`;
@@ -624,9 +597,7 @@ function taskPostUrl2(function_id, body = {}, function_id2) {
       "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Mobile/15E148 Safari/604.1"
     }
   }
-}
-
-function TotalBean() {
+}function TotalBean() {
   return new Promise(async resolve => {
     const options = {
       "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
@@ -666,9 +637,7 @@ function TotalBean() {
       }
     })
   })
-}
-
-function safeGet(data) {
+}function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
@@ -679,9 +648,7 @@ function safeGet(data) {
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
-}
-
-function jsonParse(str) {
+}function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);

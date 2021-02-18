@@ -1,10 +1,6 @@
-# serverless.yml
-
-#组件信息
+# serverless.yml#组件信息
 component: scf # (必选) 组件名称，在该实例中为scf
-name: jdscript # (必选) 组件实例名称。
-
-#组件参数配置
+name: jdscript # (必选) 组件实例名称。#组件参数配置
 inputs:
   name: scf-${name} # 云函数名称，默认为 ${name}-${stage}-${app}
   enableRoleAuth: true # 默认会尝试创建 SCF_QcsRole 角色，如果不需要配置成 false 即可

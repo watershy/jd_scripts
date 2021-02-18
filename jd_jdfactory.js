@@ -17,30 +17,20 @@
 ============Quantumultx===============
 [task_local]
 #东东工厂
-10 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdfactory.js, tag=东东工厂, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_factory.png, enabled=true
-
-================Loon==============
+10 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdfactory.js, tag=东东工厂, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_factory.png, enabled=true================Loon==============
 [Script]
-cron "10 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdfactory.js,tag=东东工厂
-
-===============Surge=================
-东东工厂 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdfactory.js
-
-============小火箭=========
+cron "10 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdfactory.js,tag=东东工厂===============Surge=================
+东东工厂 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdfactory.js============小火箭=========
 东东工厂 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jdfactory.js, cronexpr="10 * * * *", timeout=3600, enable=true
  */
-const $ = new Env('东东工厂');
-
-
-
-//IOS等用户直接用NobyDa的jd cookie
+const $ = new Env('东东工厂');//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 let wantProduct = ``;//心仪商品名称
 $.notice = ''
 const ck = require('./jdCookie.js')
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie');
+  cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -53,12 +43,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      $.newShareCodes = await ck.getShareCode($.name,$.UserName);
-      console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
+      await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
         if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
@@ -72,23 +59,24 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-              $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
     })
+
 async function jdFactory() {
   await jdfactory_getHomeData();
+  await jdfactory_getTaskDetail();
   await helpFriends();
   // $.newUser !==1 && $.haveProduct === 2，老用户但未选购商品
   // $.newUser === 1新用户
   if ($.newUser === 1) return
   await jdfactory_collectElectricity();//收集产生的电量
-  await jdfactory_getTaskDetail();
-  await ck.updateShareCode($)
   await doTask();
   await algorithm();//投入电力逻辑
 }
+
 async function algorithm() {
   // 当心仪的商品存在，并且收集起来的电量满足当前商品所需，就投入
   return new Promise(resolve => {
@@ -106,29 +94,29 @@ async function algorithm() {
               $.newUser = data.data.result.newUser;
               wantProduct = $.isNode() ? (process.env.FACTORAY_WANTPRODUCT_NAME ? process.env.FACTORAY_WANTPRODUCT_NAME : wantProduct) : ($.getdata('FACTORAY_WANTPRODUCT_NAME') ? $.getdata('FACTORAY_WANTPRODUCT_NAME') : wantProduct);
               if (data.data.result.factoryInfo) {
-                let { totalScore, useScore, produceScore, remainScore, couponCount, name } = data.data.result.factoryInfo
+                let {totalScore, useScore, produceScore, remainScore, couponCount, name} = data.data.result.factoryInfo
                 console.log(`\n已选商品：${name}`);
                 console.log(`当前已投入电量/所需电量：${useScore}/${totalScore}`);
                 console.log(`已选商品剩余量：${couponCount}`);
                 console.log(`当前总电量：${remainScore * 1 + useScore * 1}`);
-                console.log(`当前完成度：${((remainScore * 1 + useScore * 1)/(totalScore * 1)).toFixed(2) * 100}%\n`);
+                console.log(`当前完成度：${((remainScore * 1 + useScore * 1) / (totalScore * 1)).toFixed(2) * 100}%\n`);
                 message += `【京东账号】 ${$.nickName}\n`;
                 message += `【已选商品】：${name}\n`;
                 message += `【当前已投入电量/所需电量】：${useScore}/${totalScore}\n`;
                 message += `【已选商品剩余量】：${couponCount}\n`;
                 message += `【当前总电量】：${remainScore * 1 + useScore * 1}\n`;
-                message += `【当前完成度】：${((remainScore * 1 + useScore * 1)/(totalScore * 1)).toFixed(2) * 100}%\n`;
+                message += `【当前完成度】：${((remainScore * 1 + useScore * 1) / (totalScore * 1)).toFixed(2) * 100}%\n`;
                 if (wantProduct) {
                   console.log(`BoxJs或环境变量提供的心仪商品：${wantProduct}\n`);
                   await jdfactory_getProductList(true);
                   let wantProductSkuId = '';
                   for (let item of $.canMakeList) {
-                    if (item.name.indexOf(wantProduct) > - 1) {
+                    if (item.name.indexOf(wantProduct) > -1) {
                       totalScore = item['fullScore'] * 1;
                       couponCount = item.couponCount;
                       name = item.name;
                     }
-                    if (item.name.indexOf(wantProduct) > - 1 && item.couponCount > 0) {
+                    if (item.name.indexOf(wantProduct) > -1 && item.couponCount > 0) {
                       wantProductSkuId = item.skuId;
                     }
                   }
@@ -137,8 +125,8 @@ async function algorithm() {
                     console.log(`\n提供的心仪商品${name}目前数量：${couponCount}，且当前总电量为：${remainScore * 1 + useScore * 1}，【满足】兑换此商品所需总电量：${totalScore + 100000}`);
                     console.log(`请去活动页面更换成心仪商品并手动投入电量兑换\n`);
                     $.msg($.name, '', `京东账号${$.index}${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请点击弹窗直达活动页面\n更换成心仪商品并手动投入电量兑换`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
-                    $.noticeName =  `可兑换`
-                    await ck.methodEnd($,`【京东账号${$.index}】${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请去活动页面更换成心仪商品并手动投入电量兑换`)
+                    $.noticeName = `可兑换`
+                    await ck.methodEnd($, `【京东账号${$.index}】${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请去活动页面更换成心仪商品并手动投入电量兑换`)
                   } else {
                     console.log(`您心仪商品${name}\n当前数量为：${couponCount}\n兑换所需电量为：${totalScore}\n您当前总电量为：${remainScore * 1 + useScore * 1}\n不满足兑换心仪商品的条件\n`)
                   }
@@ -149,8 +137,8 @@ async function algorithm() {
                     console.log(`BoxJs或环境变量暂未提供心仪商品，下面为您目前选的${name} 发送提示通知\n`);
                     // await jdfactory_addEnergy();
                     $.msg($.name, '', `京东账号${$.index}${$.nickName}\n您所选商品${name}目前数量：${couponCount}\n当前总电量为：${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请点击弹窗直达活动页面查看`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
-                    $.noticeName =  `可兑换`
-                    await ck.methodEnd($,`【京东账号${$.index}】${$.nickName}\n【所选商品】${name}\n【目前数量】${couponCount}\n【当前总电量】${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}`)
+                    $.noticeName = `可兑换`
+                    await ck.methodEnd($, `【京东账号${$.index}】${$.nickName}\n【所选商品】${name}\n【目前数量】${couponCount}\n【当前总电量】${remainScore * 1 + useScore * 1}\n【满足】兑换此商品所需总电量：${totalScore}`)
                   } else {
                     console.log(`\n所选商品${name}目前数量：${couponCount}，且当前总电量为：${remainScore * 1 + useScore * 1}，【不满足】兑换此商品所需总电量：${totalScore}`)
                     console.log(`故不一次性投入电力，一直放到蓄电池累计\n`);
@@ -166,12 +154,12 @@ async function algorithm() {
                   await jdfactory_getProductList(true);
                   let wantProductSkuId = '', name, totalScore, couponCount, remainScore;
                   for (let item of $.canMakeList) {
-                    if (item.name.indexOf(wantProduct) > - 1) {
+                    if (item.name.indexOf(wantProduct) > -1) {
                       totalScore = item['fullScore'] * 1;
                       couponCount = item.couponCount;
                       name = item.name;
                     }
-                    if (item.name.indexOf(wantProduct) > - 1 && item.couponCount > 0) {
+                    if (item.name.indexOf(wantProduct) > -1 && item.couponCount > 0) {
                       wantProductSkuId = item.skuId;
                     }
                   }
@@ -184,8 +172,8 @@ async function algorithm() {
                       console.log(`\n提供的心仪商品${name}目前数量：${couponCount}，且当前总电量为：${$.batteryValue * 1}，【满足】兑换此商品所需总电量：${totalScore}`);
                       console.log(`请去活动页面选择心仪商品并手动投入电量兑换\n`);
                       $.msg($.name, '', `京东账号${$.index}${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${$.batteryValue * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请点击弹窗直达活动页面\n选择此心仪商品并手动投入电量兑换`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
-                      $.noticeName =  `可兑换`
-                      await ck.methodEnd($,`【京东账号${$.index}】${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${$.batteryValue * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请去活动页面选择此心仪商品并手动投入电量兑换`)
+                      $.noticeName = `可兑换`
+                      await ck.methodEnd($, `【京东账号${$.index}】${$.nickName}\n您提供的心仪商品${name}目前数量：${couponCount}\n当前总电量为：${$.batteryValue * 1}\n【满足】兑换此商品所需总电量：${totalScore}\n请去活动页面选择此心仪商品并手动投入电量兑换`)
                     } else {
                       console.log(`您心仪商品${name}\n当前数量为：${couponCount}\n兑换所需电量为：${totalScore}\n您当前总电量为：${$.batteryValue * 1}\n不满足兑换心仪商品的条件\n`)
                     }
@@ -199,11 +187,11 @@ async function algorithm() {
                   message += `兑换所需电量：${$.canMakeList[0] && $.canMakeList[0].fullScore}\n`;
                   message += `您当前总电量：${$.batteryValue * 1}\n`;
                   if ($.canMakeList[0] && $.canMakeList[0].couponCount > 0 && $.batteryValue * 1 >= $.canMakeList[0] && $.canMakeList[0].fullScore) {
-                    let nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000);
+                    let nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000);
                     if (new Date(nowTimes).getHours() === 12) {
                       $.msg($.name, '', `京东账号${$.index}${$.nickName}\n${message}【满足】兑换${$.canMakeList[0] && $.canMakeList[0] && [0].name}所需总电量：${$.canMakeList[0] && $.canMakeList[0].fullScore}\n请点击弹窗直达活动页面\n选择此心仪商品并手动投入电量兑换`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
-                      $.noticeName =  `可兑换`
-                      await ck.methodEnd($,`【京东账号${$.index}】${$.nickName}\n${message}【满足】兑换${$.canMakeList[0] && $.canMakeList[0].name}所需总电量：${$.canMakeList[0].fullScore}\n请速去活动页面查看`)
+                      $.noticeName = `可兑换`
+                      await ck.methodEnd($, `【京东账号${$.index}】${$.nickName}\n${message}【满足】兑换${$.canMakeList[0] && $.canMakeList[0].name}所需总电量：${$.canMakeList[0].fullScore}\n请速去活动页面查看`)
                     }
                   } else {
                     console.log(`\n目前电量${$.batteryValue * 1},不满足兑换 ${$.canMakeList[0] && $.canMakeList[0].name}所需的 ${$.canMakeList[0] && $.canMakeList[0].fullScore}电量\n`)
@@ -224,6 +212,7 @@ async function algorithm() {
     })
   })
 }
+
 async function helpFriends() {
   for (let code of $.newShareCodes) {
     if (!code) continue
@@ -234,6 +223,7 @@ async function helpFriends() {
     }
   }
 }
+
 async function doTask() {
   if ($.taskVos && $.taskVos.length > 0) {
     for (let item of $.taskVos) {
@@ -285,7 +275,7 @@ async function doTask() {
           } else if (item.threeMealInfoVos[0].status === 0) {
             console.log(`${item.taskName} 任务已错过时间`)
           }
-        } else if (item.status === 2){
+        } else if (item.status === 2) {
           console.log(`${item.taskName}已完成`);
         }
       }
@@ -332,13 +322,11 @@ async function doTask() {
       }
     }
   }
-}
-
-//领取做完任务的奖励
+}//领取做完任务的奖励
 function jdfactory_collectScore(taskToken) {
   return new Promise(async resolve => {
     await $.wait(1000);
-    $.post(taskPostUrl("jdfactory_collectScore", { taskToken }, "jdfactory_collectScore"), async (err, resp, data) => {
+    $.post(taskPostUrl("jdfactory_collectScore", {taskToken}, "jdfactory_collectScore"), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -363,6 +351,7 @@ function jdfactory_collectScore(taskToken) {
     })
   })
 }
+
 //给商品投入电量
 function jdfactory_addEnergy() {
   return new Promise(resolve => {
@@ -389,9 +378,7 @@ function jdfactory_addEnergy() {
       }
     })
   })
-}
-
-//收集电量
+}//收集电量
 function jdfactory_collectElectricity() {
   return new Promise(resolve => {
     $.post(taskPostUrl("jdfactory_collectElectricity"), async (err, resp, data) => {
@@ -417,10 +404,11 @@ function jdfactory_collectElectricity() {
     })
   })
 }
+
 //获取任务列表
 function jdfactory_getTaskDetail() {
   return new Promise(resolve => {
-    $.post(taskPostUrl("jdfactory_getTaskDetail", {}, "jdfactory_getTaskDetail"),async (err, resp, data) => {
+    $.post(taskPostUrl("jdfactory_getTaskDetail", {}, "jdfactory_getTaskDetail"), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -437,6 +425,7 @@ function jdfactory_getTaskDetail() {
                 }
               })
             }
+            $.newShareCodes = await ck.getShareCode($)
           }
         }
       } catch (e) {
@@ -448,10 +437,11 @@ function jdfactory_getTaskDetail() {
     })
   })
 }
+
 //选择一件商品，只能在 $.newUser !== 1 && $.haveProduct === 2 并且 sellOut === 0的时候可用
 function jdfactory_makeProduct(skuId) {
   return new Promise(resolve => {
-    $.post(taskPostUrl('jdfactory_makeProduct', { skuId }), async (err, resp, data) => {
+    $.post(taskPostUrl('jdfactory_makeProduct', {skuId}), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -475,12 +465,13 @@ function jdfactory_makeProduct(skuId) {
     })
   })
 }
+
 function queryVkComponent() {
   return new Promise(resolve => {
     const options = {
       "url": `https://api.m.jd.com/client.action?functionId=queryVkComponent`,
       "body": `adid=0E38E9F1-4B4C-40A4-A479-DD15E58A5623&area=19_1601_50258_51885&body={"componentId":"4f953e59a3af4b63b4d7c24f172db3c3","taskParam":"{\\"actId\\":\\"8tHNdJLcqwqhkLNA8hqwNRaNu5f\\"}","cpUid":"8tHNdJLcqwqhkLNA8hqwNRaNu5f","taskSDKVersion":"1.0.3","businessId":"babel"}&build=167436&client=apple&clientVersion=9.2.5&d_brand=apple&d_model=iPhone11,8&eid=eidIf12a8121eas2urxgGc+zS5+UYGu1Nbed7bq8YY+gPd0Q0t+iviZdQsxnK/HTA7AxZzZBrtu1ulwEviYSV3QUuw2XHHC+PFHdNYx1A/3Zt8xYR+d3&isBackground=N&joycious=228&lang=zh_CN&networkType=wifi&networklibtype=JDNetworkBaseAF&openudid=88732f840b77821b345bf07fd71f609e6ff12f43&osVersion=14.2&partner=TF&rfs=0000&scope=11&screen=828*1792&sign=792d92f78cc893f43c32a4f0b2203a41&st=1606533009673&sv=122&uts=0f31TVRjBSsqndu4/jgUPz6uymy50MQJFKw5SxNDrZGH4Sllq/CDN8uyMr2EAv+1xp60Q9gVAW42IfViu/SFHwjfGAvRI6iMot04FU965+8UfAPZTG6MDwxmIWN7YaTL1ACcfUTG3gtkru+D4w9yowDUIzSuB+u+eoLwM7uynPMJMmGspVGyFIgDXC/tmNibL2k6wYgS249Pa2w5xFnYHQ==&uuid=hjudwgohxzVu96krv/T6Hg==&wifiBssid=1b5809fb84adffec2a397007cc235c03`,
-      "headers":  {
+      "headers": {
         "Cookie": cookie,
         "Accept": `*/*`,
         "Connection": `keep-alive`,
@@ -512,6 +503,7 @@ function queryVkComponent() {
     })
   })
 }
+
 //查询当前商品列表
 function jdfactory_getProductList(flag = false) {
   return new Promise(resolve => {
@@ -530,7 +522,7 @@ function jdfactory_getProductList(flag = false) {
                 $.canMakeList.sort(sortCouponCount);
                 console.log(`商品名称       可选状态    剩余量`)
                 for (let item of $.canMakeList) {
-                  console.log(`${item.name.slice(-4)}         ${item.sellOut === 1 ? '已抢光':'可 选'}      ${item.couponCount}`);
+                  console.log(`${item.name.slice(-4)}         ${item.sellOut === 1 ? '已抢光' : '可 选'}      ${item.couponCount}`);
                 }
                 if (!flag) {
                   for (let item of $.canMakeList) {
@@ -555,9 +547,11 @@ function jdfactory_getProductList(flag = false) {
     })
   })
 }
+
 function sortCouponCount(a, b) {
   return b['couponCount'] - a['couponCount']
 }
+
 function jdfactory_getHomeData() {
   return new Promise(resolve => {
     $.post(taskPostUrl('jdfactory_getHomeData'), async (err, resp, data) => {
@@ -608,6 +602,7 @@ function jdfactory_getHomeData() {
     })
   })
 }
+
 function taskPostUrl(function_id, body = {}, function_id2) {
   let url = `${JD_API_HOST}`;
   if (function_id2) {
@@ -631,6 +626,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
     timeout: 20000,
   }
 }
+
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -673,29 +669,32 @@ function TotalBean() {
     })
   })
 }
+
 function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
 }
+
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
     }
   }
 }
+
 // prettier-ignore
 function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==typeof t?{url:t}:t;let s=this.get;return"POST"===e&&(s=this.post),new Promise((e,i)=>{s.call(this,t,(t,s,r)=>{t?i(t):e(s)})})}get(t){return this.send.call(this.env,t)}post(t){return this.send.call(this.env,t,"POST")}}return new class{constructor(t,e){this.name=t,this.http=new s(this),this.data=null,this.dataFile="box.dat",this.logs=[],this.isMute=!1,this.isNeedRewrite=!1,this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,e),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient&&"undefined"==typeof $loon}isLoon(){return"undefined"!=typeof $loon}toObj(t,e=null){try{return JSON.parse(t)}catch{return e}}toStr(t,e=null){try{return JSON.stringify(t)}catch{return e}}getjson(t,e){let s=e;const i=this.getdata(t);if(i)try{s=JSON.parse(this.getdata(t))}catch{}return s}setjson(t,e){try{return this.setdata(JSON.stringify(t),e)}catch{return!1}}getScript(t){return new Promise(e=>{this.get({url:t},(t,s,i)=>e(i))})}runScript(t,e){return new Promise(s=>{let i=this.getdata("@chavy_boxjs_userCfgs.httpapi");i=i?i.replace(/\n/g,"").trim():i;let r=this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout");r=r?1*r:20,r=e&&e.timeout?e.timeout:r;const[o,h]=i.split("@"),a={url:`http://${h}/v1/scripting/evaluate`,body:{script_text:t,mock_type:"cron",timeout:r},headers:{"X-Key":o,Accept:"*/*"}};this.post(a,(t,e,i)=>s(i))}).catch(t=>this.logErr(t))}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e);if(!s&&!i)return{};{const i=s?t:e;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e),r=JSON.stringify(this.data);s?this.fs.writeFileSync(t,r):i?this.fs.writeFileSync(e,r):this.fs.writeFileSync(t,r)}}lodash_get(t,e,s){const i=e.replace(/\[(\d+)\]/g,".$1").split(".");let r=t;for(const t of i)if(r=Object(r)[t],void 0===r)return s;return r}lodash_set(t,e,s){return Object(t)!==t?t:(Array.isArray(e)||(e=e.toString().match(/[^.[\]]+/g)||[]),e.slice(0,-1).reduce((t,s,i)=>Object(t[s])===t[s]?t[s]:t[s]=Math.abs(e[i+1])>>0==+e[i+1]?[]:{},t)[e[e.length-1]]=s,t)}getdata(t){let e=this.getval(t);if(/^@/.test(t)){const[,s,i]=/^@(.*?)\.(.*?)$/.exec(t),r=s?this.getval(s):"";if(r)try{const t=JSON.parse(r);e=t?this.lodash_get(t,i,""):e}catch(t){e=""}}return e}setdata(t,e){let s=!1;if(/^@/.test(e)){const[,i,r]=/^@(.*?)\.(.*?)$/.exec(e),o=this.getval(i),h=i?"null"===o?null:o||"{}":"{}";try{const e=JSON.parse(h);this.lodash_set(e,r,t),s=this.setval(JSON.stringify(e),i)}catch(e){const o={};this.lodash_set(o,r,t),s=this.setval(JSON.stringify(o),i)}}else s=this.setval(t,e);return s}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,e){return this.isSurge()||this.isLoon()?$persistentStore.write(t,e):this.isQuanX()?$prefs.setValueForKey(t,e):this.isNode()?(this.data=this.loaddata(),this.data[e]=t,this.writedata(),!0):this.data&&this.data[e]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,e=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?(this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.get(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)})):this.isQuanX()?(this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t))):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,e)=>{try{if(t.headers["set-cookie"]){const s=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(s,null),e.cookieJar=this.ckjar}}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)}))}post(t,e=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),t.headers&&delete t.headers["Content-Length"],this.isSurge()||this.isLoon())this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.post(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)});else if(this.isQuanX())t.method="POST",this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t));else if(this.isNode()){this.initGotEnv(t);const{url:s,...i}=t;this.got.post(s,i).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)})}}time(t){let e={"M+":(new Date).getMonth()+1,"d+":(new Date).getDate(),"H+":(new Date).getHours(),"m+":(new Date).getMinutes(),"s+":(new Date).getSeconds(),"q+":Math.floor(((new Date).getMonth()+3)/3),S:(new Date).getMilliseconds()};/(y+)/.test(t)&&(t=t.replace(RegExp.$1,((new Date).getFullYear()+"").substr(4-RegExp.$1.length)));for(let s in e)new RegExp("("+s+")").test(t)&&(t=t.replace(RegExp.$1,1==RegExp.$1.length?e[s]:("00"+e[s]).substr((""+e[s]).length)));return t}msg(e=t,s="",i="",r){const o=t=>{if(!t)return t;if("string"==typeof t)return this.isLoon()?t:this.isQuanX()?{"open-url":t}:this.isSurge()?{url:t}:void 0;if("object"==typeof t){if(this.isLoon()){let e=t.openUrl||t.url||t["open-url"],s=t.mediaUrl||t["media-url"];return{openUrl:e,mediaUrl:s}}if(this.isQuanX()){let e=t["open-url"]||t.url||t.openUrl,s=t["media-url"]||t.mediaUrl;return{"open-url":e,"media-url":s}}if(this.isSurge()){let e=t.url||t.openUrl||t["open-url"];return{url:e}}}};this.isMute||(this.isSurge()||this.isLoon()?$notification.post(e,s,i,o(r)):this.isQuanX()&&$notify(e,s,i,o(r)));let h=["","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="];h.push(e),s&&h.push(s),i&&h.push(i),console.log(h.join("\n")),this.logs=this.logs.concat(h)}log(...t){t.length>0&&(this.logs=[...this.logs,...t]),console.log(t.join(this.logSeparator))}logErr(t,e){const s=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();s?this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t)}wait(t){return new Promise(e=>setTimeout(e,t))}done(t={}){const e=(new Date).getTime(),s=(e-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${s} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,e)}

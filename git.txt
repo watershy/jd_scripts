@@ -1,7 +1,1 @@
-git remote -v
-
-git remote add upstream 远程连接
-
-git remote -v
-
-git fetch upstream
+git remote -vgit remote add upstream 远程连接git remote -vgit fetch upstream

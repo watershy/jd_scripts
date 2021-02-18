@@ -23,11 +23,8 @@ cron "11 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
 ==============小火箭=============
 东东超市 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_superMarket.js, cronexpr="11 * * * *", timeout=3600, enable=true
  */
-const $ = new Env('东东超市');
-
-//IOS等用户直接用NobyDa的jd cookie
+const $ = new Env('东东超市');//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', jdSuperMarketShareArr = [], notify, newShareCodes;
-
 let jdNotify = true;//用来是否关闭弹窗通知，true表示关闭，false表示开启。
 let superMarketUpgrade = true;//自动升级,顺序:解锁升级商品、升级货架,true表示自动升级,false表示关闭自动升级
 let businessCircleJump = true;//小于对方300热力值自动更换商圈队伍,true表示运行,false表示禁止
@@ -39,15 +36,13 @@ const ck = require('./jdCookie')
 //此此内容是IOS用户下载脚本到本地使用，填写互助码的地方，同一京东账号的好友互助码请使用@符号隔开。
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好友的shareCode
-                   //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
+  //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
   '-4msulYas0O2JsRhE-2TA5XZmBQ@eU9Yar_mb_9z92_WmXNG0w@eU9YaejjYv4g8T2EwnsVhQ',
   //账号二的好友shareCode,不同好友的shareCode中间用@符号隔开
   'aURoM7PtY_Q@eU9Ya-y2N_5z9DvXwyIV0A@eU9YaOnjYK4j-GvWmXIWhA',
 ]
-
 !(async () => {
   cookiesArr = await ck.getCookie();
-
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
   }
@@ -61,11 +56,10 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
       $.blueCionTimes = 0;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
+      await ck.TotalBean(cookie, $);
       console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
         if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
@@ -81,7 +75,7 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-              $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       await ck.methodEnd($)
@@ -106,9 +100,7 @@ async function jdSuperMarket() {
   await smtgHome();
   await receiveUserUpgradeBlue();
   await Home();
-}
-
-//抽奖功能(招财进宝)
+}//抽奖功能(招财进宝)
 async function drawLottery() {
   console.log(`\n注意⚠:京小超抽奖已改版,花费500蓝币抽奖一次,现在脚本默认已关闭抽奖功能\n`);
   drawLotteryFlag = $.getdata('jdSuperMarketLottery') ? $.getdata('jdSuperMarketLottery') : drawLotteryFlag;
@@ -214,18 +206,14 @@ async function receiveGoldCoin() {
   } else {
     console.log(`${$.goldCoinData.data.bizMsg}`);
   }
-}
-
-//领限时商品的蓝币
+}//领限时商品的蓝币
 async function receiveLimitProductBlueCoin() {
   const res = await smtgReceiveCoin({"type": 1});
   console.log(`\n限时商品领蓝币结果：[${res.data.bizMsg}]\n`);
   if (res.data.bizCode === 0) {
     message += `【限时商品】获得${res.data.result.receivedBlue}个蓝币\n`;
   }
-}
-
-//领蓝币
+}//领蓝币
 function receiveBlueCoin(timeout = 0) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -255,7 +243,7 @@ function receiveBlueCoin(timeout = 0) {
             await receiveBlueCoin(3000);
           }
         } catch (e) {
-        $.noticeName = `${$.name}错误`
+          $.noticeName = `${$.name}错误`
           $.notice += `\n${e}`;
         } finally {
           resolve()
@@ -292,9 +280,7 @@ async function BeanSign() {
   if (beanSignRes && beanSignRes.data['bizCode'] === 0) {
     console.log(`每天从指定入口进入游戏,可获得额外奖励:${JSON.stringify(beanSignRes)}`)
   }
-}
-
-//每日签到
+}//每日签到
 function smtgSign(body) {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_sign', body), async (err, resp, data) => {
@@ -313,9 +299,7 @@ function smtgSign(body) {
       }
     })
   })
-}
-
-// 商圈活动
+}// 商圈活动
 async function businessCircleActivity() {
   // console.log(`\n商圈PK奖励,次日商圈大战开始的时候自动领领取\n`)
   const smtg_getTeamPkDetailInfoRes = await smtg_getTeamPkDetailInfo();
@@ -345,7 +329,6 @@ async function businessCircleActivity() {
           Teams = $.updatePkActivityIdRes['Teams'] || Teams;
           Teams = [...Teams, ...$.getTeams.filter(item => item['pkActivityId'] === `${pkActivityId}`)];
           const randomNum = randomNumber(0, Teams.length);
-
           const res = await smtg_joinPkTeam(Teams[randomNum].teamId, Teams[randomNum].inviteCode, pkActivityId);
           if (res && res.data.bizCode === 0) {
             console.log(`加入战队成功`)
@@ -486,9 +469,7 @@ async function businessCircleActivity() {
       console.log(`访问商圈详情失败：${JSON.stringify(businessCirclePKDetailRes)}`);
     }
   }
-}
-
-//我的货架
+}//我的货架
 async function myProductList() {
   const shelfListRes = await smtg_shelfList();
   if (shelfListRes.data.bizCode === 0) {
@@ -543,9 +524,7 @@ async function myProductList() {
       }
     }
   }
-}
-
-//根据类型解锁一个商品,货架可上架商品时调用
+}//根据类型解锁一个商品,货架可上架商品时调用
 async function unlockProductByCategory(category) {
   const smtgProductListRes = await smtg_productList();
   if (smtgProductListRes.data.bizCode === 0) {
@@ -563,9 +542,7 @@ async function unlockProductByCategory(category) {
       console.log("该类型商品暂时无法解锁");
     }
   }
-}
-
-//升级货架和商品
+}//升级货架和商品
 async function upgrade() {
   superMarketUpgrade = $.getdata('jdSuperMarketUpgrade') ? $.getdata('jdSuperMarketUpgrade') : superMarketUpgrade;
   if ($.isNode() && process.env.SUPERMARKET_UPGRADE) {
@@ -722,9 +699,7 @@ async function limitTimeProduct() {
       console.log(`限时商品已经上架或暂无限时商品`);
     }
   }
-}
-
-//领取店铺升级的蓝币奖励
+}//领取店铺升级的蓝币奖励
 async function receiveUserUpgradeBlue() {
   $.receiveUserUpgradeBlue = 0;
   if ($.userUpgradeBlueVos && $.userUpgradeBlueVos.length > 0) {
@@ -752,13 +727,7 @@ async function Home() {
     subTitle = shopName;
     message += `【总蓝币】${totalBlue}个\n`;
   }
-}
-
-//=============================================脚本使用到的京东API=====================================
-
-//===新版本
-
-//查询有哪些货架
+}//=============================================脚本使用到的京东API=====================================//===新版本//查询有哪些货架
 function smtg_shopIndex() {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_shopIndex', {"channel": 1}), async (err, resp, data) => {
@@ -814,9 +783,7 @@ function smtg_shopIndex() {
       }
     })
   })
-}
-
-//解锁店铺
+}//解锁店铺
 function smtg_shelfUnlock(body) {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_shelfUnlock', body), (err, resp, data) => {
@@ -857,9 +824,7 @@ function smtg_shelfUpgrade(body) {
       }
     })
   })
-}
-
-//售卖限时商品API
+}//售卖限时商品API
 function smtg_sellMerchandise(body) {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_sellMerchandise', body), (err, resp, data) => {
@@ -879,9 +844,7 @@ function smtg_sellMerchandise(body) {
       }
     })
   })
-}
-
-//新版东东超市
+}//新版东东超市
 function updatePkActivityId(url = 'https://raw.githubusercontent.com/LXK9301/updateTeam/master/jd_updateTeam.json') {
   return new Promise(resolve => {
     $.get({url}, async (err, resp, data) => {
@@ -1042,9 +1005,7 @@ function smtgHome() {
       }
     })
   })
-}
-
-//查询商圈任务列表
+}//查询商圈任务列表
 function smtgQueryPkTask() {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_queryPkTask'), async (err, resp, data) => {
@@ -1088,9 +1049,7 @@ function smtgQueryPkTask() {
       }
     })
   })
-}
-
-//PK邀请好友
+}//PK邀请好友
 function smtgDoAssistPkTask(code) {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_doAssistPkTask', {"inviteCode": code}), (err, resp, data) => {
@@ -1129,9 +1088,7 @@ function smtgReceiveCoin(body) {
       }
     })
   })
-}
-
-//领取PK任务做完后的奖励
+}//领取PK任务做完后的奖励
 function smtgObtainPkTaskPrize(taskId) {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_obtainPkTaskPrize', {"taskId": taskId}), (err, resp, data) => {
@@ -1250,9 +1207,7 @@ function smtg_getBusinessCircleList() {
       }
     })
   })
-}
-
-//加入商圈API
+}//加入商圈API
 function smtg_joinBusinessCircle(circleId) {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_joinBusinessCircle', {circleId}), (err, resp, data) => {
@@ -1311,9 +1266,7 @@ function smtg_receivedPkTeamPrize() {
       }
     })
   })
-}
-
-//领取商圈PK奖励
+}//领取商圈PK奖励
 function smtg_getPkPrize() {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_getPkPrize'), (err, resp, data) => {
@@ -1352,9 +1305,7 @@ function smtg_quitBusinessCircle() {
       }
     })
   })
-}
-
-//我的货架
+}//我的货架
 function smtg_shelfList() {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_shelfList'), (err, resp, data) => {
@@ -1373,9 +1324,7 @@ function smtg_shelfList() {
       }
     })
   })
-}
-
-//检查某个货架可以上架的商品列表
+}//检查某个货架可以上架的商品列表
 function smtg_shelfProductList(shelfId) {
   return new Promise((resolve) => {
     console.log(`开始检查货架[${shelfId}] 可上架产品`)
@@ -1396,9 +1345,7 @@ function smtg_shelfProductList(shelfId) {
       }
     })
   })
-}
-
-//升级商品
+}//升级商品
 function smtg_upgradeProduct(productId) {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_upgradeProduct', {productId}), (err, resp, data) => {
@@ -1419,9 +1366,7 @@ function smtg_upgradeProduct(productId) {
       }
     })
   })
-}
-
-//解锁商品
+}//解锁商品
 function smtg_unlockProduct(productId) {
   return new Promise((resolve) => {
     console.log(`开始解锁商品`)
@@ -1442,9 +1387,7 @@ function smtg_unlockProduct(productId) {
       }
     })
   })
-}
-
-//升级货架
+}//升级货架
 function smtg_upgradeShelf(shelfId) {
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_upgradeShelf', {shelfId}), (err, resp, data) => {
@@ -1465,9 +1408,7 @@ function smtg_upgradeShelf(shelfId) {
       }
     })
   })
-}
-
-//解锁货架
+}//解锁货架
 function smtg_unlockShelf(shelfId) {
   return new Promise((resolve) => {
     console.log(`开始解锁货架`)
@@ -1578,9 +1519,7 @@ function sortSyData(a, b) {
 
 function sortTotalPriceGold(a, b) {
   return a['previewTotalPriceGold'] - b['previewTotalPriceGold']
-}
-
-//格式化助力码
+}//格式化助力码
 function shareCodesFormat() {
   return new Promise(resolve => {
     console.log(`第${$.index}个京东账号的助力码:::${jdSuperMarketShareArr[$.index - 1]}`)
@@ -1665,7 +1604,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

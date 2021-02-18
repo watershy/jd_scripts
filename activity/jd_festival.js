@@ -8,29 +8,17 @@
 ============Quantumultx===============
 [task_local]
 #京东手机年终奖
-15 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js, tag=京东手机年终奖, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_festival2.jpg, enabled=true
-
-================Loon==============
+15 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js, tag=京东手机年终奖, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_festival2.jpg, enabled=true================Loon==============
 [Script]
-cron "15 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js, tag=京东手机年终奖
-
-===============Surge=================
-京东手机年终奖 = type=cron,cronexp="15 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js
-
-============小火箭=========
+cron "15 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js, tag=京东手机年终奖===============Surge=================
+京东手机年终奖 = type=cron,cronexp="15 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js============小火箭=========
 京东手机年终奖 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js, cronexpr="15 0 * * *", timeout=3600, enable=true
  */
-const $ = new Env('京东手机年终奖');
-
-const ck = require('./jdCookie')
+const $ = new Env('京东手机年终奖');const ck = require('./jdCookie')
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-const randomCount = $.isNode() ? 20 : 5;
-
-const inviteCodes = [
-  ];
-
-const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
+const randomCount = $.isNode() ? 20 : 5;const inviteCodes = [
+  ];const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
 !(async () => {
   cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
@@ -46,13 +34,9 @@ const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
       $.beans = 0
       $.nickName = '';
       message = '';
-      await TotalBean();
-      $.newShareCodes = await ck.getShareCode($.name,$.UserName);
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-      if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
+      await ck.TotalBean(cookie,$);
+            if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -67,18 +51,14 @@ const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
   })
   .finally(async () => {
     await ck.methodEnd($)
-  })
-
-async function helpFriends() {
+  })async function helpFriends() {
   for (let code of $.newShareCodes) {
     if (!code) continue
     console.log(`去助力好友${code}`)
     const helpRes = await doSupport(code);
     await $.wait(1000)
   }
-}
-
-async function festival() {
+}async function festival() {
   $.times = 0
   $.risk = false
   await getIndexInfo()
@@ -90,9 +70,7 @@ async function festival() {
   for (let i = 0; i < 2; ++i)
     await getExtTask()
   await helpFriends()
-}
-
-function getIndexInfo() {
+}function getIndexInfo() {
   return new Promise(resolve => {
     $.get(taskUrl('index/indexInfo'), async (err, resp, data) => {
       try {
@@ -124,9 +102,7 @@ function getIndexInfo() {
       }
     })
   })
-}
-
-function getSignInfo() {
+}function getSignInfo() {
   return new Promise(resolve => {
     $.get(taskUrl('signin/listSignIn'), async (err, resp, data) => {
       try {
@@ -155,9 +131,7 @@ function getSignInfo() {
       }
     })
   })
-}
-
-function signIn() {
+}function signIn() {
   return new Promise(resolve => {
     $.get(taskUrl('signin/signInPrize'), (err, resp, data) => {
       try {
@@ -183,9 +157,7 @@ function signIn() {
       }
     })
   })
-}
-
-function getTask(share = false) {
+}function getTask(share = false) {
   return new Promise(resolve => {
     $.get(taskUrl('task/queryGeneralTasks'), async (err, resp, data) => {
       try {
@@ -200,7 +172,7 @@ function getTask(share = false) {
               if (share) {
                 console.log(`您的好友助力码为：${shareTask.shareId}，当前助力进度：${shareTask.needSupportNum - shareTask.remainSupportNum}/${shareTask.needSupportNum}`)
                 $.shareCode = shareTask.shareId
-                await ck.addShareCode($)
+                newShareCodes = await ck.getShareCode($)
               } else
                 for (let vo of generalTasks) {
                   console.log(`任务${vo.id}完成进度：${vo.finish}/${vo.total}`)
@@ -228,9 +200,7 @@ function getTask(share = false) {
       }
     })
   })
-}
-
-function getExtTask() {
+}function getExtTask() {
   return new Promise(resolve => {
     $.get(taskUrl('extTask/extTaskInfo'), async (err, resp, data) => {
       try {
@@ -269,9 +239,7 @@ function getExtTask() {
       }
     })
   })
-}
-
-function doTask(type) {
+}function doTask(type) {
   return new Promise(resolve => {
     $.get(taskUrl('task/doTask', {type: type}), async (err, resp, data) => {
       try {
@@ -296,9 +264,7 @@ function doTask(type) {
       }
     })
   })
-}
-
-function doReceive(type) {
+}function doReceive(type) {
   return new Promise(resolve => {
     $.get(taskUrl('task/doReceive', {type: type}), async (err, resp, data) => {
       try {
@@ -323,9 +289,7 @@ function doReceive(type) {
       }
     })
   })
-}
-
-function browseTask(id, type) {
+}function browseTask(id, type) {
   return new Promise(resolve => {
     $.get(taskUrl('extTask/browse', {id: id, type: type}), async (err, resp, data) => {
       try {
@@ -350,9 +314,7 @@ function browseTask(id, type) {
       }
     })
   })
-}
-
-function getPrize(id, type) {
+}function getPrize(id, type) {
   return new Promise(resolve => {
     $.get(taskUrl('extTask/getPrize', {id: id, type: type}), async (err, resp, data) => {
       try {
@@ -378,9 +340,7 @@ function getPrize(id, type) {
       }
     })
   })
-}
-
-function getMoney() {
+}function getMoney() {
   return new Promise(resolve => {
     $.get(taskUrl('index/getMoney',), async (err, resp, data) => {
       try {
@@ -408,9 +368,7 @@ function getMoney() {
       }
     })
   })
-}
-
-function addMoney(sum) {
+}function addMoney(sum) {
   return new Promise(resolve => {
     $.post(taskPostUrl('index/addGoldNums', {goldNum: sum}), async (err, resp, data) => {
       try {
@@ -435,9 +393,7 @@ function addMoney(sum) {
       }
     })
   })
-}
-
-function doSupport(shareId) {
+}function doSupport(shareId) {
   return new Promise(resolve => {
     $.get(taskUrl('task/doSupport', {shareId: shareId}), async (err, resp, data) => {
       try {
@@ -465,9 +421,7 @@ function doSupport(shareId) {
 }
 function getTs() {
   return new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000
-}
-
-function taskPostUrl(function_id, body = {}) {
+}function taskPostUrl(function_id, body = {}) {
   const t = getTs()
   let n = {
     ...body
@@ -499,9 +453,7 @@ function taskPostUrl(function_id, body = {}) {
     )
     }
   }
-}
-
-function taskUrl(function_id, body = {}) {
+}function taskUrl(function_id, body = {}) {
   const t = getTs()
   let n = {
     t: t,
@@ -532,9 +484,7 @@ function taskUrl(function_id, body = {}) {
       "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.141"
     }
   }
-}
-
-function TotalBean() {
+}function TotalBean() {
   return new Promise(async resolve => {
     const options = {
       "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
@@ -574,9 +524,7 @@ function TotalBean() {
       }
     })
   })
-}
-
-function safeGet(data) {
+}function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
@@ -587,9 +535,7 @@ function safeGet(data) {
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
-}
-
-function jsonParse(str) {
+}function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
@@ -623,9 +569,7 @@ function sign(t, e, n) {
 }
 function requireConfig() {
   return new Promise(resolve => {
-    console.log(`开始获取${$.name}配置文件\n`);
-
-    let shareCodes = []
+    console.log(`开始获取${$.name}配置文件\n`);    let shareCodes = []
     console.log(`共${cookiesArr.length}个京东账号\n`);
     if ($.isNode() && process.env.JSMOBILEFESTIVAL_SHARECODES) {
       if (process.env.JSMOBILEFESTIVAL_SHARECODES.indexOf('\n') > -1) {

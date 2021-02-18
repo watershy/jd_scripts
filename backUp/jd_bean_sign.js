@@ -20,9 +20,7 @@ let resultPath = "./result.txt";
 let JD_DailyBonusPath = "./JD_DailyBonus.js";
 let outPutUrl = './';
 let NodeSet = 'CookieSet.json';
-let cookiesArr = [], cookie = '';
-
-if ($.isNode()) {
+let cookiesArr = [], cookie = '';if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
   })
@@ -52,7 +50,7 @@ if ($.isNode()) {
         $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
         $.index = i + 1;
         $.nickName = '';
-        await TotalBean();
+        await ck.TotalBean(cookie,$);
         console.log(`*****************开始京东账号${$.index} ${$.nickName || $.UserName}京豆签到*******************\n`);
         console.log(`⚠️⚠️⚠️⚠️目前Bark APP推送通知消息对推送内容长度有限制，如推送通知中包含此推送方式脚本会默认转换成简洁内容推送 ⚠️⚠️⚠️⚠️\n`)
         await changeFile(content);
@@ -69,9 +67,7 @@ if ($.isNode()) {
       cookiesArr.map(async ck => {
         await evalSign(ck)
       })
-    )
-
-    // for (let i = 0; i < cookiesArr.length; i++) {
+    )    // for (let i = 0; i < cookiesArr.length; i++) {
     //   cookie = cookiesArr[i];
     //   if (cookie) {
     //     console.log(`*****************开始京东账号${i + 1}京豆签到*******************\n`);
@@ -184,9 +180,7 @@ async function downFile () {
   } catch (e) {
     console.log("文件下载异常:" + e);
   }
-}
-
-async function changeFile (content) {
+}async function changeFile (content) {
   console.log(`开始替换变量`)
   let newContent = content.replace(/var Key = ''/, `var Key = '${cookie}'`);
   newContent = newContent.replace(/const NodeSet = 'CookieSet.json'/, `const NodeSet = '${NodeSet}'`)

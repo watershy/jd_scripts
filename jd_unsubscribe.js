@@ -18,11 +18,7 @@ cron "55 23 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/j
 ===========小火箭========
 取关京东店铺商品 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_unsubscribe.js, cronexpr="55 23 * * *", timeout=3600, enable=true
  */
-const $ = new Env('取关京东店铺和商品');
-
-
-
-//IOS等用户直接用NobyDa的jd cookie
+const $ = new Env('取关京东店铺和商品');//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const ck = require('./jdCookie')
 const jdNotify = $.getdata('jdUnsubscribeNotify');//是否关闭通知，false打开通知推送，true关闭通知推送
@@ -32,9 +28,7 @@ let stopGoods = $.getdata('jdUnsubscribeStopGoods') || '';//遇到此商品不�
 let stopShop = $.getdata('jdUnsubscribeStopShop') || '';//遇到此店铺不再进行取关，此处内容请尽量从头开始输入店铺名称
 const JD_API_HOST = 'https://wq.jd.com/fav';
 !(async () => {
-  cookiesArr = await ck.getCookie();
-
-  if (!cookiesArr[0]) {
+  cookiesArr = await ck.getCookie();  if (!cookiesArr[0]) {
     $.msg('【京东账号一】取关京东店铺商品失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -44,17 +38,8 @@ const JD_API_HOST = 'https://wq.jd.com/fav';
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
-        }
         continue
       }
       await requireConfig();
@@ -94,11 +79,7 @@ function unsubscribeGoods() {
       $.unsubscribeGoodsCount = count;
       if ((goodPageSize * 1) !== 0) {
         if (followGoods.totalNum > 0) {
-          for (let item of followGoods.data) {
-
-            console.log(`是否匹配：：${item.commTitle.indexOf(stopGoods.replace(/\ufffc|\s*/g, ''))}`)
-
-            if (stopGoods && item.commTitle.indexOf(stopGoods.replace(/\ufffc|\s*/g, '')) > -1) {
+          for (let item of followGoods.data) {            console.log(`是否匹配：：${item.commTitle.indexOf(stopGoods.replace(/\ufffc|\s*/g, ''))}`)            if (stopGoods && item.commTitle.indexOf(stopGoods.replace(/\ufffc|\s*/g, '')) > -1) {
               console.log(`匹配到了您设定的商品--${stopGoods}，不在进行取消关注商品`)
               break;
             }
@@ -180,9 +161,7 @@ function unsubscribeGoodsFun(commId) {
       }
     });
   })
-}
-
-function unsubscribeShops() {
+}function unsubscribeShops() {
   return new Promise(async (resolve) => {
     let followShops = await getFollowShops();
     if (followShops.iRet === '0') {

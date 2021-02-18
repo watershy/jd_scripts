@@ -9,21 +9,13 @@
 ============Quantumultx===============
 [task_local]
 #京东炸年兽小程序🧨
-50 8 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_wechat.js, tag=京东炸年兽小程序🧨, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_nian.png, enabled=true
-
-================Loon==============
+50 8 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_wechat.js, tag=京东炸年兽小程序🧨, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_nian.png, enabled=true================Loon==============
 [Script]
-cron "50 8 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_wechat.js,tag=京东炸年兽小程序🧨
-
-===============Surge=================
-京东炸年兽小程序🧨 = type=cron,cronexp="50 8 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_wechat.js
-
-============小火箭=========
+cron "50 8 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_wechat.js,tag=京东炸年兽小程序🧨===============Surge=================
+京东炸年兽小程序🧨 = type=cron,cronexp="50 8 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_wechat.js============小火箭=========
 京东炸年兽小程序🧨 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nian_wechat.js, cronexpr="50 8 * * *", timeout=3600, enable=true
  */
-const $ = new Env('京东炸年兽小程序🧨');
-
-//Node.js用户请在jdCookie.js处填写京东ck;
+const $ = new Env('京东炸年兽小程序🧨');//Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
@@ -56,8 +48,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         if ($.isNode()) {
@@ -116,9 +107,7 @@ function showMsg() {
     }
     resolve()
   })
-}
-
-async function doTask() {
+}async function doTask() {
   for (let item of $.taskVos) {
     if (item.taskType === 9) {
       if (item.status === 1) {
@@ -135,9 +124,7 @@ async function doTask() {
       }
     }
   }
-}
-
-function getHomeData(info=false) {
+}function getHomeData(info=false) {
   return new Promise((resolve) => {
     $.get(taskUrl('nian_getHomeData',{"inviteId":"","channel":1}), async (err, resp, data) => {
       try {
@@ -155,9 +142,7 @@ function getHomeData(info=false) {
               $.secretp = null
               return
             }
-            console.log(`当前爆竹${$.userInfo.raiseInfo.remainScore}🧨，升级需要${$.userInfo.raiseInfo.nextLevelScore-$.userInfo.raiseInfo.curLevelStartScore}🧨`)
-
-            if(info) {
+            console.log(`当前爆竹${$.userInfo.raiseInfo.remainScore}🧨，升级需要${$.userInfo.raiseInfo.nextLevelScore-$.userInfo.raiseInfo.curLevelStartScore}🧨`)            if(info) {
               message += `当前爆竹${$.userInfo.raiseInfo.remainScore}🧨\n`
             }
           }
@@ -175,9 +160,7 @@ function getHomeData(info=false) {
       }
     })
   })
-}
-
-function collectScore(taskId,itemId,actionType=null,inviteId=null,shopSign=null) {
+}function collectScore(taskId,itemId,actionType=null,inviteId=null,shopSign=null) {
   let temp = {
     "taskId": taskId,
     "rnd": getRnd(),
@@ -231,9 +214,7 @@ function collectScore(taskId,itemId,actionType=null,inviteId=null,shopSign=null)
       }
     })
   })
-}
-
-function getTaskList() {
+}function getTaskList() {
   return new Promise(resolve => {
     $.get(taskUrl("nian_getTaskDetail", {"appSign":"2","channel":1}), async (err, resp, data) => {
       try {
@@ -256,9 +237,7 @@ function getTaskList() {
       }
     })
   })
-}
-
-function taskUrl(function_id, body = {}) {
+}function taskUrl(function_id, body = {}) {
   let url = `${JD_API_HOST}`;
   body = `?dev=nian_getHomeData&sceneval=&callback=${function_id}&functionId=${function_id}&client=wh5&clientVersion=1.0.0&uuid=-1&body=${escape(JSON.stringify(body))}&loginType=2&loginWQBiz=businesst1&g_ty=ls&g_tk=642524613`
   return {
@@ -271,9 +250,7 @@ function taskUrl(function_id, body = {}) {
       "User-Agent": $.isNode() ? (process.env.JD_WECHAT_USER_AGENT ? process.env.JD_WECHAT_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUAWECHAT') ? $.getdata('JDUAWECHAT') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
     }
   }
-}
-
-function TotalBean() {
+}function TotalBean() {
   return new Promise(async resolve => {
     const options = {
       "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,

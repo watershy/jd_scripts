@@ -3,15 +3,10 @@ crazy joy
 挂机领金币/宝箱专用
 活动入口：京东APP我的-更多工具-疯狂的JOY
 ⚠️建议云端使用。手机端不建议使用(会一直跑下去，永不停止)
-10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy_coin.js
-
- */
-
-
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_crazy_joy_coin.js */
 const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
 $.buyJoyLevel = 1;
-
 let cookiesArr = [], cookie = '', message = '';
 const ck = require('./jdCookie.js')
 !function (n) {
@@ -48,18 +43,18 @@ const ck = require('./jdCookie.js')
 
   function i(n, r) {
     n[r >> 5] |= 128 << r % 32,
-      n[14 + (r + 64 >>> 9 << 4)] = r;
+        n[14 + (r + 64 >>> 9 << 4)] = r;
     var e, i, a, d, h, l = 1732584193, g = -271733879, v = -1732584194, m = 271733878;
     for (e = 0; e < n.length; e += 16)
       i = l,
-        a = g,
-        d = v,
-        h = m,
-        g = f(g = f(g = f(g = f(g = c(g = c(g = c(g = c(g = u(g = u(g = u(g = u(g = o(g = o(g = o(g = o(g, v = o(v, m = o(m, l = o(l, g, v, m, n[e], 7, -680876936), g, v, n[e + 1], 12, -389564586), l, g, n[e + 2], 17, 606105819), m, l, n[e + 3], 22, -1044525330), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 4], 7, -176418897), g, v, n[e + 5], 12, 1200080426), l, g, n[e + 6], 17, -1473231341), m, l, n[e + 7], 22, -45705983), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 8], 7, 1770035416), g, v, n[e + 9], 12, -1958414417), l, g, n[e + 10], 17, -42063), m, l, n[e + 11], 22, -1990404162), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 12], 7, 1804603682), g, v, n[e + 13], 12, -40341101), l, g, n[e + 14], 17, -1502002290), m, l, n[e + 15], 22, 1236535329), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 1], 5, -165796510), g, v, n[e + 6], 9, -1069501632), l, g, n[e + 11], 14, 643717713), m, l, n[e], 20, -373897302), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 5], 5, -701558691), g, v, n[e + 10], 9, 38016083), l, g, n[e + 15], 14, -660478335), m, l, n[e + 4], 20, -405537848), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 9], 5, 568446438), g, v, n[e + 14], 9, -1019803690), l, g, n[e + 3], 14, -187363961), m, l, n[e + 8], 20, 1163531501), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 13], 5, -1444681467), g, v, n[e + 2], 9, -51403784), l, g, n[e + 7], 14, 1735328473), m, l, n[e + 12], 20, -1926607734), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 5], 4, -378558), g, v, n[e + 8], 11, -2022574463), l, g, n[e + 11], 16, 1839030562), m, l, n[e + 14], 23, -35309556), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 1], 4, -1530992060), g, v, n[e + 4], 11, 1272893353), l, g, n[e + 7], 16, -155497632), m, l, n[e + 10], 23, -1094730640), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 13], 4, 681279174), g, v, n[e], 11, -358537222), l, g, n[e + 3], 16, -722521979), m, l, n[e + 6], 23, 76029189), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 9], 4, -640364487), g, v, n[e + 12], 11, -421815835), l, g, n[e + 15], 16, 530742520), m, l, n[e + 2], 23, -995338651), v = f(v, m = f(m, l = f(l, g, v, m, n[e], 6, -198630844), g, v, n[e + 7], 10, 1126891415), l, g, n[e + 14], 15, -1416354905), m, l, n[e + 5], 21, -57434055), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 12], 6, 1700485571), g, v, n[e + 3], 10, -1894986606), l, g, n[e + 10], 15, -1051523), m, l, n[e + 1], 21, -2054922799), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 8], 6, 1873313359), g, v, n[e + 15], 10, -30611744), l, g, n[e + 6], 15, -1560198380), m, l, n[e + 13], 21, 1309151649), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 4], 6, -145523070), g, v, n[e + 11], 10, -1120210379), l, g, n[e + 2], 15, 718787259), m, l, n[e + 9], 21, -343485551),
-        l = t(l, i),
-        g = t(g, a),
-        v = t(v, d),
-        m = t(m, h);
+          a = g,
+          d = v,
+          h = m,
+          g = f(g = f(g = f(g = f(g = c(g = c(g = c(g = c(g = u(g = u(g = u(g = u(g = o(g = o(g = o(g = o(g, v = o(v, m = o(m, l = o(l, g, v, m, n[e], 7, -680876936), g, v, n[e + 1], 12, -389564586), l, g, n[e + 2], 17, 606105819), m, l, n[e + 3], 22, -1044525330), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 4], 7, -176418897), g, v, n[e + 5], 12, 1200080426), l, g, n[e + 6], 17, -1473231341), m, l, n[e + 7], 22, -45705983), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 8], 7, 1770035416), g, v, n[e + 9], 12, -1958414417), l, g, n[e + 10], 17, -42063), m, l, n[e + 11], 22, -1990404162), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 12], 7, 1804603682), g, v, n[e + 13], 12, -40341101), l, g, n[e + 14], 17, -1502002290), m, l, n[e + 15], 22, 1236535329), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 1], 5, -165796510), g, v, n[e + 6], 9, -1069501632), l, g, n[e + 11], 14, 643717713), m, l, n[e], 20, -373897302), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 5], 5, -701558691), g, v, n[e + 10], 9, 38016083), l, g, n[e + 15], 14, -660478335), m, l, n[e + 4], 20, -405537848), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 9], 5, 568446438), g, v, n[e + 14], 9, -1019803690), l, g, n[e + 3], 14, -187363961), m, l, n[e + 8], 20, 1163531501), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 13], 5, -1444681467), g, v, n[e + 2], 9, -51403784), l, g, n[e + 7], 14, 1735328473), m, l, n[e + 12], 20, -1926607734), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 5], 4, -378558), g, v, n[e + 8], 11, -2022574463), l, g, n[e + 11], 16, 1839030562), m, l, n[e + 14], 23, -35309556), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 1], 4, -1530992060), g, v, n[e + 4], 11, 1272893353), l, g, n[e + 7], 16, -155497632), m, l, n[e + 10], 23, -1094730640), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 13], 4, 681279174), g, v, n[e], 11, -358537222), l, g, n[e + 3], 16, -722521979), m, l, n[e + 6], 23, 76029189), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 9], 4, -640364487), g, v, n[e + 12], 11, -421815835), l, g, n[e + 15], 16, 530742520), m, l, n[e + 2], 23, -995338651), v = f(v, m = f(m, l = f(l, g, v, m, n[e], 6, -198630844), g, v, n[e + 7], 10, 1126891415), l, g, n[e + 14], 15, -1416354905), m, l, n[e + 5], 21, -57434055), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 12], 6, 1700485571), g, v, n[e + 3], 10, -1894986606), l, g, n[e + 10], 15, -1051523), m, l, n[e + 1], 21, -2054922799), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 8], 6, 1873313359), g, v, n[e + 15], 10, -30611744), l, g, n[e + 6], 15, -1560198380), m, l, n[e + 13], 21, 1309151649), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 4], 6, -145523070), g, v, n[e + 11], 10, -1120210379), l, g, n[e + 2], 15, 718787259), m, l, n[e + 9], 21, -343485551),
+          l = t(l, i),
+          g = t(g, a),
+          v = t(v, d),
+          m = t(m, h);
     return [l, g, v, m]
   }
 
@@ -73,7 +68,7 @@ const ck = require('./jdCookie.js')
   function d(n) {
     var t, r = [];
     for (r[(n.length >> 2) - 1] = void 0,
-           t = 0; t < r.length; t += 1)
+             t = 0; t < r.length; t += 1)
       r[t] = 0;
     var e = 8 * n.length;
     for (t = 0; t < e; t += 8)
@@ -89,18 +84,18 @@ const ck = require('./jdCookie.js')
     var r, e, o = d(n), u = [], c = [];
     for (u[15] = c[15] = void 0,
          o.length > 16 && (o = i(o, 8 * n.length)),
-           r = 0; r < 16; r += 1)
+             r = 0; r < 16; r += 1)
       u[r] = 909522486 ^ o[r],
-        c[r] = 1549556828 ^ o[r];
+          c[r] = 1549556828 ^ o[r];
     return e = i(u.concat(d(t)), 512 + 8 * t.length),
-      a(i(c.concat(e), 640))
+        a(i(c.concat(e), 640))
   }
 
   function g(n) {
     var t, r, e = "";
     for (r = 0; r < n.length; r += 1)
       t = n.charCodeAt(r),
-        e += "0123456789abcdef".charAt(t >>> 4 & 15) + "0123456789abcdef".charAt(15 & t);
+          e += "0123456789abcdef".charAt(t >>> 4 & 15) + "0123456789abcdef".charAt(15 & t);
     return e
   }
 
@@ -131,24 +126,22 @@ const ck = require('./jdCookie.js')
   $.md5 = A
 }(this);
 !(async () => {
-  cookiesArr = await ck.getCookie('select * from jd_cookie where id = 1');
+  $.sql = 'select * from jd_cookie where id = 1'
+  cookiesArr = await ck.getCookie();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
   let count = 0
-
   if (cookiesArr.length && $.isNode()) {
     console.log(`\n挂机开始，自动8s收一次金币`);
-    //兼容iOS
-    setInterval(async () => {
-      const promiseArr = cookiesArr.map(ck => getCoinForInterval(ck));
-      await Promise.all(promiseArr);
-    }, 8000);
   }
-
+  $.flag = false
   while (true) {
     count++
+    if ($.flag) {
+      break
+    }
     console.log(`============开始第${count}次挂机=============`)
     for (let i = 0; i < cookiesArr.length; i++) {
       if (cookiesArr[i]) {
@@ -157,10 +150,9 @@ const ck = require('./jdCookie.js')
         $.index = i + 1;
         $.isLogin = true;
         $.nickName = '';
-        await TotalBean();
-        console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+        await ck.TotalBean(cookie, $);
         if (!$.isLogin) {
-         $.log(`\n京东账号${$.index} ${$.UserName}\ncookie已过期,请重新登录获取\n`)
+          $.log(`\n京东账号${$.index} ${$.UserName}\ncookie已过期,请重新登录获取\n`)
           continue
         }
         await jdCrazyJoy()
@@ -169,17 +161,15 @@ const ck = require('./jdCookie.js')
     $.log(`\n\n`)
   }
 })()
-  .catch((e) => {
-
-  })
-  .finally(async () => {
-    await ck.methodEnd($)
-  })
+    .catch((e) => {
+    })
+    .finally(async () => {
+      await ck.methodEnd($)
+    })
 
 async function jdCrazyJoy() {
   $.coin = 0
   $.bean = 0
-
   $.canBuy = true
   await getJoyList()
   await $.wait(1000)
@@ -189,12 +179,9 @@ async function jdCrazyJoy() {
     $.log(`${$.joyIds[4]} ${$.joyIds[5]} ${$.joyIds[6]} ${$.joyIds[7]}`)
     $.log(`${$.joyIds[8]} ${$.joyIds[9]} ${$.joyIds[10]} ${$.joyIds[11]}\n`)
   }
-
   await getJoyShop()
-  await $.wait(1000)
-
-  // 如果格子全部被占有且没有可以合并的JOY，只能回收低级的JOY (且最低等级的JOY小于30级)
-  if(checkHasFullOccupied() && !checkCanMerge() && finMinJoyLevel() < 30) {
+  await $.wait(1000)  // 如果格子全部被占有且没有可以合并的JOY，只能回收低级的JOY (且最低等级的JOY小于30级)
+  if (checkHasFullOccupied() && !checkCanMerge() && finMinJoyLevel() < 30) {
     const minJoyId = Math.min(...$.joyIds);
     const boxId = $.joyIds.indexOf(minJoyId);
     console.log(`格子全部被占有且没有可以合并的JOY，回收${boxId + 1}号位等级为${minJoyId}的JOY`)
@@ -205,15 +192,14 @@ async function jdCrazyJoy() {
     await getJoyList();
     await $.wait(1000)
   }
-
   await hourBenefit()
   await $.wait(1000)
   await getCoin()
   await $.wait(1000)
-
   for (let i = 0; i < $.joyIds.length; ++i) {
     if (!$.canBuy) {
       $.log(`金币不足，跳过购买`)
+      $.flag = true
       break
     }
     if ($.joyIds[i] === 0) {
@@ -224,7 +210,6 @@ async function jdCrazyJoy() {
       await getCoin();
     }
   }
-
   let obj = {};
   $.joyIds.map((vo, idx) => {
     if (vo !== 0) {
@@ -271,24 +256,23 @@ async function jdCrazyJoy() {
   await $.wait(5000)
   console.log(`当前信息：${$.bean} 京豆，${$.coin} 金币`)
 }
+
 //查询格子里面是否还有空格
 function checkHasFullOccupied() {
   return !$.joyIds.includes(0);
-}
-
-// 查询是否有34级JOY
+}// 查询是否有34级JOY
 function checkHas34Level() {
   return $.joyIds.includes(34);
-}
-
-//查找格子里面有几个空格
+}//查找格子里面有几个空格
 function findZeroNum() {
   return $.joyIds.filter(i => i === 0).length
 }
+
 //查找当前 购买 joyLists 中最低等级的那一个
 function finMinJoyLevel() {
   return Math.min(...$.joyIds.filter(s => s))
 }
+
 /**
  * 来源：https://elecv2.ml/#算法研究之合并类小游戏的最优购买问题
  * 获取下一个合适的购买等级。（算法二优化版）
@@ -501,9 +485,7 @@ function buyJoy(joyId) {
       }
     })
   })
-}
-
-// 出售（回收）joy
+}// 出售（回收）joy
 function sellJoy(joyId, boxId) {
   const body = {"action": "SELL", "joyId": joyId, "boxId": boxId}
   return new Promise((resolve) => {
@@ -608,7 +590,7 @@ function getCoin() {
               $.coin = `获取当前金币数量失败`
             }
             if (data.data && data.data.luckyBoxRecordId) {
-              await openBox('LUCKY_BOX_DROP',data.data.luckyBoxRecordId)
+              await openBox('LUCKY_BOX_DROP', data.data.luckyBoxRecordId)
               await $.wait(1000)
             }
             if (data.data) {
@@ -624,9 +606,7 @@ function getCoin() {
       }
     })
   })
-}
-
-// 需传入cookie，不能使用全局的cookie
+}// 需传入cookie，不能使用全局的cookie
 function getCoinForInterval(taskCookie) {
   return new Promise(async resolve => {
     $.get(taskUrl('crazyJoy_joy_produce', '', taskCookie), async (err, resp, data) => {
@@ -657,7 +637,7 @@ function getCoinForInterval(taskCookie) {
 }
 
 function openBox(eventType = 'LUCKY_BOX_DROP', boxId) {
-  let body = { eventType, "eventRecordId": boxId}
+  let body = {eventType, "eventRecordId": boxId}
   return new Promise(async resolve => {
     $.get(taskUrl('crazyJoy_event_getVideoAdvert', JSON.stringify(body)), async (err, resp, data) => {
       try {
@@ -687,7 +667,7 @@ function openBox(eventType = 'LUCKY_BOX_DROP', boxId) {
 }
 
 function rewardBox(eventType, boxId) {
-  let body = { eventType, "eventRecordId": boxId}
+  let body = {eventType, "eventRecordId": boxId}
   return new Promise(async resolve => {
     $.get(taskUrl('crazyJoy_event_obtainAward', JSON.stringify(body)), async (err, resp, data) => {
       try {
@@ -715,7 +695,7 @@ function rewardBox(eventType, boxId) {
 }
 
 function getGrowState() {
-  let body = {"paramData":{"eventType":"GROWTH_REWARD"}}
+  let body = {"paramData": {"eventType": "GROWTH_REWARD"}}
   return new Promise(async resolve => {
     $.get(taskUrl('crazyJoy_event_getGrowthAndSceneState', JSON.stringify(body)), async (err, resp, data) => {
       try {
@@ -726,8 +706,8 @@ function getGrowState() {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data['success'] && data.data) {
-              for(let vo of data.data){
-                if(vo['status']){
+              for (let vo of data.data) {
+                if (vo['status']) {
                   console.log(`${vo['joyId']}升级奖励可以领取`)
                 }
               }
@@ -745,6 +725,7 @@ function getGrowState() {
     })
   })
 }
+
 function taskUrl(functionId, body = '', taskCookie = cookie) {
   let t = Date.now().toString().substr(0, 10)
   let e = body || ""
@@ -772,7 +753,7 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -826,7 +807,7 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

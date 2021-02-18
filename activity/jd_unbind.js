@@ -15,11 +15,7 @@ cron "55 23 * * 6" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/j
 =======小火箭=====
 注销京东会员卡 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_unbind.js, cronexpr="10 23 * * 6", timeout=3600, enable=true
  */
-const $ = new Env('注销京东会员卡');
-
-
-
-//IOS等用户直接用NobyDa的jd cookie
+const $ = new Env('注销京东会员卡');//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const ck = require('./jdCookie')
 const jdNotify = $.getdata('jdUnbindCardNotify');//是否关闭通知，false打开通知推送，true关闭通知推送
@@ -27,9 +23,7 @@ let cardPageSize = 200;// 运行一次取消多少个会员卡。数字0表示�
 let stopCards = `京东PLUS会员`;//遇到此会员卡跳过注销,多个使用&分开
 const JD_API_HOST = 'https://api.m.jd.com/';
 !(async () => {
-  cookiesArr = await ck.getCookie();
-
-  if (!cookiesArr[0]) {
+  cookiesArr = await ck.getCookie();  if (!cookiesArr[0]) {
     $.msg('【京东账号一】注销京东会员卡失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
   }
   await requireConfig()
@@ -42,17 +36,8 @@ const JD_API_HOST = 'https://api.m.jd.com/';
       $.nickName = '';
       $.unsubscribeCount = 0
       $.cardList = []
-      await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
-          $.noticeName =  `cookie失效`
-          await ck.methodEnd($,`京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`)
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
-        }
         continue
       }
       await jdUnbind();

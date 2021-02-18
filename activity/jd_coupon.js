@@ -8,21 +8,13 @@
 ============Quantumultx===============
 [task_local]
 #源头好物红包
-0 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_coupon.js, tag=源头好物红包, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_coupon.jpg, enabled=true
-
-================Loon==============
+0 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_coupon.js, tag=源头好物红包, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_coupon.jpg, enabled=true================Loon==============
 [Script]
-cron "0 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_coupon.js, tag=源头好物红包
-
-===============Surge=================
-源头好物红包 = type=cron,cronexp="0 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_coupon.js
-
-============小火箭=========
+cron "0 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_coupon.js, tag=源头好物红包===============Surge=================
+源头好物红包 = type=cron,cronexp="0 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_coupon.js============小火箭=========
 源头好物红包 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_coupon.js, cronexpr="0 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('源头好物红包');
-
-
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const ck = require('./jdCookie')
@@ -42,12 +34,9 @@ const JD_API_HOST = 'https://api.m.jd.com/';
       $.beans = 0
       $.nickName = '';
       message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
-
-        if ($.isNode()) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});        if ($.isNode()) {
           await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
@@ -62,22 +51,16 @@ const JD_API_HOST = 'https://api.m.jd.com/';
   })
   .finally(async () => {
     await ck.methodEnd($)
-  })
-
-function showMsg() {
+  })function showMsg() {
   return new Promise(resolve => {
     $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
     resolve()
   })
-}
-
-async function festival() {
+}async function festival() {
   $.times = 0
   $.risk = false
   await getInfo()
-}
-
-function getInfo() {
+}function getInfo() {
   let body = {"activityId":"3hhgqjj5rLjZFbi8UtaD2uex21ky","dynamicParam":[],"geo":{"lng":"0.000000","lat":"0.000000"},"babelChannel":"ttt19","mcChannel":0,"openId":""}
   return new Promise(resolve => {
     $.post(taskPostUrl('queryPanamaPage',body), async (err, resp, data) => {
@@ -121,9 +104,7 @@ function receive(actId) {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.msg ==="success") {
-              message += `红包领取成功，获得${data.lotteryResult.hongBaoList[0].hongbaoSendInfo.disCount}${data.lotteryResult.hongBaoList[0].prizeName}`
-
-              console.log(`红包领取成功，获得${data.lotteryResult.hongBaoList[0].hongbaoSendInfo.disCount}${data.lotteryResult.hongBaoList[0].prizeName}`)
+              message += `红包领取成功，获得${data.lotteryResult.hongBaoList[0].hongbaoSendInfo.disCount}${data.lotteryResult.hongBaoList[0].prizeName}`              console.log(`红包领取成功，获得${data.lotteryResult.hongBaoList[0].hongbaoSendInfo.disCount}${data.lotteryResult.hongBaoList[0].prizeName}`)
             } else {
               message += `红包领取失败，${data.msg}`
               console.log(`红包领取失败，${data.msg}`)
@@ -138,13 +119,9 @@ function receive(actId) {
       }
     })
   })
-}
-
-function getTs() {
+}function getTs() {
   return new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000
-}
-
-function taskPostUrl(function_id, body = {}) {
+}function taskPostUrl(function_id, body = {}) {
   const t = getTs()
   return {
     url: `${JD_API_HOST}/client.action`,
@@ -163,9 +140,7 @@ function taskPostUrl(function_id, body = {}) {
       "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.141"
     }
   }
-}
-
-function taskUrl(function_id, body = {}) {
+}function taskUrl(function_id, body = {}) {
   const t = getTs()
   return {
     url: `${JD_API_HOST}?functionId=${function_id}&body=${escape(JSON.stringify(body))}&_t=${t}&appid=activities_platform`,
@@ -181,9 +156,7 @@ function taskUrl(function_id, body = {}) {
       "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.141"
     }
   }
-}
-
-function TotalBean() {
+}function TotalBean() {
   return new Promise(async resolve => {
     const options = {
       "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
@@ -223,9 +196,7 @@ function TotalBean() {
       }
     })
   })
-}
-
-function safeGet(data) {
+}function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
@@ -236,9 +207,7 @@ function safeGet(data) {
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
-}
-
-function jsonParse(str) {
+}function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);

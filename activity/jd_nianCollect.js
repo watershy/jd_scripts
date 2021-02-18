@@ -8,21 +8,13 @@
 ============Quantumultx===============
 [task_local]
 #京东炸年兽🧨
-50 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nianCollect.js, tag=京东收🧨, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_nianCollect.png, enabled=true
-
-================Loon==============
+50 * * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nianCollect.js, tag=京东收🧨, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_nianCollect.png, enabled=true================Loon==============
 [Script]
-cron "50 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nianCollect.js,tag=京东收🧨
-
-===============Surge=================
-京东收🧨 = type=cron,cronexp="50 * * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nianCollect.js
-
-============小火箭=========
+cron "50 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nianCollect.js,tag=京东收🧨===============Surge=================
+京东收🧨 = type=cron,cronexp="50 * * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nianCollect.js============小火箭=========
 京东收🧨 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_nianCollect.js, cronexpr="50 * * * *", timeout=3600, enable=true
  */
-const $ = new Env('京东炸年兽领爆竹🧨');
-
-//IOS等用户直接用NobyDa的jd cookie
+const $ = new Env('京东炸年兽领爆竹🧨');//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const ck = require('./jdCookie')
 let UserName = '';
@@ -41,22 +33,19 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
-      if (!$.isLogin) {
+      await ck.TotalBean(cookie,$);
+if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         continue
       }
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-      await collectProduceScore()
+            await collectProduceScore()
     }
   }
 })()
     .catch((e) => $.logErr(e))
     .finally(async () => {
       await ck.methodEnd($)
-    })
-
-async function collectProduceScore() {
+    })async function collectProduceScore() {
   await getHomeData();
   if ($.secretp) {
     const temp = {
@@ -139,9 +128,7 @@ function encode(data, aa, extraData) {
     "secretp": aa,
   }
   return { "ss": (JSON.stringify(temp)) };
-}
-
-function taskPostUrl(functionId, body = {}) {
+}function taskPostUrl(functionId, body = {}) {
   return {
     url: `${JD_API_HOST}?functionId=${functionId}`,
     body: `functionId=${functionId}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0`,
@@ -224,9 +211,7 @@ function randomWord(randomFlag, min, max){
     str += arr[pos];
   }
   return str;
-}
-
-function minusByByte(t, n) {
+}function minusByByte(t, n) {
   var e = t.length
       , r = n.length
       , o = Math.max(e, r)
@@ -239,9 +224,7 @@ function minusByByte(t, n) {
     s += Math.abs(i[u] - a[u]),
         u++;
   return s
-}
-
-function toAscii (t) {
+}function toAscii (t) {
   var n = "";
   for (var e in t) {
     var r = t[e]
@@ -256,34 +239,24 @@ function toAscii (t) {
 }
 function add0 (t, n) {
   return (Array(n).join("0") + t).slice(-n)
-}
-
-function getLastAscii(t) {
+}function getLastAscii(t) {
   var n = t.charCodeAt(0).toString();
   return n[n.length - 1]
-}
-
-function wordsToBytes(t) {
+}function wordsToBytes(t) {
   for (var n = [], e = 0; e < 32 * t.length; e += 8)
     n.push(t[e >>> 5] >>> 24 - e % 32 & 255);
   return n
-}
-
-function bytesToHex(t) {
+}function bytesToHex(t) {
   for (var n = [], e = 0; e < t.length; e++)
     n.push((t[e] >>> 4).toString(16)),
         n.push((15 & t[e]).toString(16));
   return n.join("")
-}
-
-function stringToBytes(t) {
+}function stringToBytes(t) {
   t = unescape(encodeURIComponent(t))
   for (var n = [], e = 0; e < t.length; e++)
     n.push(255 & t.charCodeAt(e));
   return n
-}
-
-function bytesToWords(t) {
+}function bytesToWords(t) {
   for (var n = [], e = 0, r = 0; e < t.length; e++,
       r += 8)
     n[r >>> 5] |= t[e] << 24 - r % 32;
