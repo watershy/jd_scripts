@@ -31,26 +31,30 @@ $.notice = ''
             notifyTable.push(st2)
             notifyTable.push(new Date().toLocaleString())
             notifyTable.push(0)
-            let sql = 'select 1 from jd_notify_table where file_name = ? and active_name = ?'
-            let res = await ck.query(sql, notifyTable)
+            $.sql = 'select 1 from jd_notify_table where file_name = ? and active_name = ?'
+            $.values = notifyTable
+            let res = await ck.query($)
             if (res.length === 0) {
                 $.notice += `\n文件名：${st2} 活动名：${st}`
-                sql = 'insert into jd_notify_table(file_name,active_name,date,notify) value(?,?,?,?)'
-                await ck.query(sql, notifyTable)
+                $.sql = 'insert into jd_notify_table(file_name,active_name,date,notify) value(?,?,?,?)'
+                $.values = notifyTable
+                await ck.query($)
             }
         }
     }
     //查询是否存在过期活动
-    let sql = 'select active_name from jd_notify_table where file_name not in (?) and flag != 1'
-    let res = await ck.query(sql, [fileNameList])
+    $.sql = 'select active_name from jd_notify_table where file_name not in (?) and flag != 1'
+    $.values = [fileNameList]
+    let res = await ck.query($)
     if (res.length !== 0) {
         $.notice += `过期活动：\n`
         for (let i = 0; i <res.length; i++) {
             $.notice += `${res[i].active_name}\n`
         }
         //删除不存在的活动
-        sql = 'delete from jd_notify_table where file_name not in (?) and flag != 1'
-        await ck.query(sql, [fileNameList])
+        $.sql = 'delete from jd_notify_table where file_name not in (?) and flag != 1'
+        $.values = [fileNameList]
+        await ck.query($)
     }
 })() .catch((e) => {
     $.noticeName =  '错误'

@@ -55,7 +55,8 @@ if (!$.isLogin) {
   })
   .finally(async () => {
     await ck.methodEnd($)
-  })async function jdFive() {
+  })
+async function jdFive() {
   try {
     if ($.flag) {
       $.beans = 0
