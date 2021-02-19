@@ -95,6 +95,7 @@ function execShell() {
         }catch (e) {
             $.noticeName =  '错误'
             $.notice = e
+            await fs.unlinkSync('/app/jd/cron');
         } finally {
             resolve();
         }
