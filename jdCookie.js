@@ -2,6 +2,7 @@ const db = require('./utils/db_util')
 const notify = require('./sendNotify');//获取cookie数据
 let getCookie = function ($) {
     return new Promise(async resolve => {
+        $.cookieMap = new Map()
         let cookieArr = []
         let obj = {
             sql: 'select * from jd_cookie where possessor = \'hyk\''
@@ -15,6 +16,7 @@ let getCookie = function ($) {
             let res = await query(obj)
             for (let i = 0; i < res.length; i++) {
                 cookieArr.push('pt_pin=' + res[i]['pt_pin'] + ';pt_key=' + res[i]['pt_key'])
+                $.cookieMap.set(res[i]['pt_pin'],res[i]['name'])
             }
             console.log(`共有账号${cookieArr.length}个`)
         } finally {
@@ -118,15 +120,9 @@ let getShareCode = function ($) {
 let notice = function ($) {
     return new Promise(async resolve => {
         try {
-            $.sql = 'select name from jd_cookie where pt_pin = ?'
-            $.values = [$.UserName]
-            const res = await query($)
-            if (res && res[0]['name']) {
-                $.userName = res[0]['name']
-            }
             $.notice += `----------------------------\n`
-            if ($.userName) {
-                $.notice += `【京东账号${$.index}】${$.userName}\n`;
+            if ($.cookieMap.get($.UserName)) {
+                $.notice += `【京东账号${$.index}】${$.cookieMap.get($.UserName)}\n`;
             } else if ($.nickName) {
                 $.notice += `【京东账号${$.index}】${$.nickName}\n`;
             } else {
@@ -166,7 +162,7 @@ function TotalBean(cookie, $) {
                     data = JSON.parse(data);
                     if (data['retcode'] === 13) {
                         $.noticeName = 'cookie过期'
-                        await methodEnd($,$.UserName)
+                        await methodEnd($,$.cookieMap.get($.UserName)?$.cookieMap.get($.UserName):$.UserName)
                         $.isLogin = false; //cookie过期
                     }
                     $.nickName = data['base'].nickname;
