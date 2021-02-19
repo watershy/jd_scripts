@@ -122,11 +122,11 @@ let notice = function ($) {
         try {
             $.notice += `----------------------------\n`
             if ($.cookieMap.get($.UserName)) {
-                $.notice += `【京东账号${$.index}】${$.cookieMap.get($.UserName)}\n`;
+                $.notice += `【京东账号】${$.cookieMap.get($.UserName)}\n`;
             } else if ($.nickName) {
-                $.notice += `【京东账号${$.index}】${$.nickName}\n`;
+                $.notice += `【京东账号】${$.nickName}\n`;
             } else {
-                $.notice += `【京东账号${$.index}】${$.UserName}\n`;
+                $.notice += `【京东账号】${$.UserName}\n`;
             }
         } catch (e) {
             $.noticeName = `${$.name}错误`
