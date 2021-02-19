@@ -29,7 +29,7 @@ const inviteCodes = ['wUjR_aJ43-uLjZU5cS9KGg=='];
 const ck = require('./jdCookie.js')
 !(async () => {
   $.sql = 'select * from jd_cookie'
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie($);
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
@@ -49,7 +49,6 @@ const ck = require('./jdCookie.js')
       $.friendList = [];
       $.canHelpFlag = true;//能否助力朋友
       $.flag = $.UserName === 'jd_pBXzZlqInyyk';
-      console.log(`助力码：${$.newShareCodes}`)
       await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
         continue
@@ -1326,12 +1325,13 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-        $.noticeName = `${$.name}错误`
+    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
-}function taskurl(functionId, body = '', stk) {
+}
+function taskurl(functionId, body = '', stk) {
   let url = `${JD_API_HOST}/dreamfactory/${functionId}?zone=dream_factory&${body}&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now()}&_ste=1&h5st=${decrypt(Date.now(), stk)}`
   if (stk) {
     url += `&_stk=${stk}`;
