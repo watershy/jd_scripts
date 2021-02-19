@@ -8,31 +8,15 @@ cron 1 7,12,19 * * * jd_beauty.js
 const $ = new Env('美丽研究院');
 
 const notify = $.isNode() ? require('./sendNotify') : '';
-//Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-//const WebSocket = $.isNode() ? require('websocket').w3cwebsocket: SockJS;
-let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 const bean = 500
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message, helpInfo, ADD_CART = false;
-
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-}
+const ck = require('./jdCookie.js')
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 !(async () => {
+  $.sql = 'select * from jd_cookie where id in (1,3)'
+  cookiesArr = await ck.getCookie($)
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -45,6 +29,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
+      $.flag = $.UserName === 'jd_pBXzZlqInyyk';
       message = '';
       await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
@@ -57,7 +42,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         continue
       }
       await jdBeauty()
-      helpInfo = $.helpInfo
+      if ($.flag) {
+        helpInfo = $.helpInfo
+      }
     }
   }
 })()
