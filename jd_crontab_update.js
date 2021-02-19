@@ -75,6 +75,7 @@ function execShell() {
         try {
             //从数据库查询所有数据
             let cron = `\n# 定时更新git文件\n`
+            cron += `0 1 * * * rm -rf /app/jd/logs/date -d "yesterday" +%Y-%m-%d   > /dev/null 2>&1\n`
             cron += `0 18 * * * sh /app/shell/jd_updateGit >> /app/jd/logs/updateGit 2>&1\n\n\n`
             $.sql = 'select n.active_name,c.file_name,c.cron,c.js_path,c.log_path,c.status from jd_cron_table c left join jd_notify_table n on c.file_name = n.file_name where status = 1'
             const cronList = await ck.query($)
