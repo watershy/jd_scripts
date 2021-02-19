@@ -28,7 +28,8 @@ let stopGoods = $.getdata('jdUnsubscribeStopGoods') || '';//遇到此商品不�
 let stopShop = $.getdata('jdUnsubscribeStopShop') || '';//遇到此店铺不再进行取关，此处内容请尽量从头开始输入店铺名称
 const JD_API_HOST = 'https://wq.jd.com/fav';
 !(async () => {
-  cookiesArr = await ck.getCookie();  if (!cookiesArr[0]) {
+  cookiesArr = await ck.getCookie();
+  if (!cookiesArr[0]) {
     $.msg('【京东账号一】取关京东店铺商品失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -38,7 +39,7 @@ const JD_API_HOST = 'https://wq.jd.com/fav';
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await ck.TotalBean(cookie,$);
+      await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
         continue
       }
@@ -49,11 +50,12 @@ const JD_API_HOST = 'https://wq.jd.com/fav';
 })()
     .catch((e) => {
       $.notice += `\n${e}`
-              $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
     })
     .finally(async () => {
       $.done()
     })
+
 async function jdUnsubscribe(doubleKey) {
   await Promise.all([
     unsubscribeGoods(doubleKey),
@@ -64,6 +66,7 @@ async function jdUnsubscribe(doubleKey) {
     getFollowGoods()
   ])
 }
+
 function showMsg() {
   if (!jdNotify || jdNotify === 'false') {
     $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【已取消关注店铺】${$.unsubscribeShopsCount}个\n【已取消关注商品】${$.unsubscribeGoodsCount}个\n【还剩关注店铺】${$.shopsTotalNum}个\n【还剩关注商品】${$.goodsTotalNum}个\n`);
@@ -71,6 +74,7 @@ function showMsg() {
     $.log(`\n【京东账号${$.index}】${$.nickName}\n【已取消关注店铺】${$.unsubscribeShopsCount}个\n【已取消关注商品】${$.unsubscribeGoodsCount}个\n【还剩关注店铺】${$.shopsTotalNum}个\n【还剩关注商品】${$.goodsTotalNum}个\n`);
   }
 }
+
 function unsubscribeGoods() {
   return new Promise(async (resolve) => {
     let followGoods = await getFollowGoods();
@@ -79,7 +83,9 @@ function unsubscribeGoods() {
       $.unsubscribeGoodsCount = count;
       if ((goodPageSize * 1) !== 0) {
         if (followGoods.totalNum > 0) {
-          for (let item of followGoods.data) {            console.log(`是否匹配：：${item.commTitle.indexOf(stopGoods.replace(/\ufffc|\s*/g, ''))}`)            if (stopGoods && item.commTitle.indexOf(stopGoods.replace(/\ufffc|\s*/g, '')) > -1) {
+          for (let item of followGoods.data) {
+            console.log(`是否匹配：：${item.commTitle.indexOf(stopGoods.replace(/\ufffc|\s*/g, ''))}`)
+            if (stopGoods && item.commTitle.indexOf(stopGoods.replace(/\ufffc|\s*/g, '')) > -1) {
               console.log(`匹配到了您设定的商品--${stopGoods}，不在进行取消关注商品`)
               break;
             }
@@ -87,7 +93,7 @@ function unsubscribeGoods() {
             // console.log('取消关注商品结果', res);
             if (res.iRet === 0 && res.errMsg === 'success') {
               console.log(`取消关注商品---${item.commTitle.substring(0, 20).concat('...')}---成功\n`)
-              count ++;
+              count++;
             } else {
               console.log(`取消关注商品---${item.commTitle.substring(0, 20).concat('...')}---失败\n`)
             }
@@ -104,6 +110,7 @@ function unsubscribeGoods() {
     }
   })
 }
+
 function getFollowGoods() {
   return new Promise((resolve) => {
     const option = {
@@ -133,6 +140,7 @@ function getFollowGoods() {
     });
   })
 }
+
 function unsubscribeGoodsFun(commId) {
   return new Promise(resolve => {
     const option = {
@@ -161,7 +169,9 @@ function unsubscribeGoodsFun(commId) {
       }
     });
   })
-}function unsubscribeShops() {
+}
+
+function unsubscribeShops() {
   return new Promise(async (resolve) => {
     let followShops = await getFollowShops();
     if (followShops.iRet === '0') {
@@ -178,7 +188,7 @@ function unsubscribeGoodsFun(commId) {
             // console.log('取消关注店铺结果', res);
             if (res.iRet === '0') {
               console.log(`取消已关注店铺---${item.shopName}----成功\n`)
-              count ++;
+              count++;
             } else {
               console.log(`取消已关注店铺---${item.shopName}----失败\n`)
             }
@@ -195,6 +205,7 @@ function unsubscribeGoodsFun(commId) {
     }
   })
 }
+
 function getFollowShops() {
   return new Promise((resolve) => {
     const option = {
@@ -223,6 +234,7 @@ function getFollowShops() {
     });
   })
 }
+
 function unsubscribeShopsFun(shopId) {
   return new Promise(resolve => {
     const option = {
@@ -250,6 +262,7 @@ function unsubscribeShopsFun(shopId) {
     });
   })
 }
+
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -291,6 +304,7 @@ function TotalBean() {
     })
   })
 }
+
 function requireConfig() {
   return new Promise(resolve => {
     if ($.isNode() && process.env.UN_SUBSCRIBES) {
@@ -312,12 +326,13 @@ function requireConfig() {
     resolve()
   })
 }
+
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
+      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
