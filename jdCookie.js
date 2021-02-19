@@ -14,7 +14,7 @@ let getCookie = function ($) {
             }
             let res = await query(obj)
             for (let i = 0; i < res.length; i++) {
-                cookieArr.push('pt_pin=' + res[i]['pt_pin'] + ';pt_key=' + res[i]['pt_key'] + ';name=' + res[i]['name'])
+                cookieArr.push('pt_pin=' + res[i]['pt_pin'] + ';pt_key=' + res[i]['pt_key'])
             }
             console.log(`共有账号${cookieArr.length}个`)
         } finally {
@@ -118,12 +118,21 @@ let getShareCode = function ($) {
 let notice = function ($) {
     return new Promise(async resolve => {
         try {
+            $.sql = 'select name from jd_cookie where pt_pin = ?'
+            $.values = [$.UserName]
+            const res = await query($)
+            if (res && res[0]['name']) {
+                $.userName = res[0]['name']
+            }
             $.notice += `----------------------------\n`
-            if ($.nickName) {
+            if ($.userName) {
+                $.notice += `【京东账号${$.index}】${$.userName}\n`;
+            } else if ($.nickName) {
                 $.notice += `【京东账号${$.index}】${$.nickName}\n`;
             } else {
                 $.notice += `【京东账号${$.index}】${$.UserName}\n`;
-            }        } catch (e) {
+            }
+        } catch (e) {
             $.noticeName = `${$.name}错误`
             console.log(`错误: ${e}`)
         } finally {
@@ -133,6 +142,7 @@ let notice = function ($) {
 }
 function TotalBean(cookie, $) {
     return new Promise(async resolve => {
+        $.cookie = cookie
         console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
         const options = {
             "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,

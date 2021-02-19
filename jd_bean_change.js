@@ -31,7 +31,7 @@ $.notice = ''
 const ck = require('./jdCookie.js')
 !(async () => {
   $.sql = 'select * from jd_cookie'
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
     return;
   }
@@ -54,9 +54,9 @@ const ck = require('./jdCookie.js')
         continue
       }
       await bean();
-      const message = `昨日收入：${$.incomeBean}京豆 🐶\n昨日支出：${$.expenseBean}京豆 🐶\n当前京豆：${$.beanCount}京豆 🐶`
+      $.message += `\n昨日收入：${$.incomeBean}京豆 🐶\n昨日支出：${$.expenseBean}京豆 🐶\n当前京豆：${$.beanCount}京豆 🐶`
       await ck.notice($)
-      $.notice = $.notice + message + '\n'
+      $.notice = $.notice + $.message + '\n'
     }
   }
 })()
@@ -80,7 +80,7 @@ async function bean() {
   let page = 1, t = 0, yesterdayArr = [];
   do {
     let response = await getJingBeanBalanceDetail(page);
-    console.log(`第${page}页: ${JSON.stringify(response)}`);
+    // console.log(`第${page}页: ${JSON.stringify(response)}`);
     if (response && response.code === "0") {
       page++;
       let detailList = response.detailList;
@@ -220,7 +220,7 @@ function redPacket() {
             data = JSON.parse(data).data
             $.balance = data.balance
             $.expiredBalance = data.expiredBalance || 0;
-            $.message += `\n当前红包：${$.balance}元🧧`;
+            $.message += `当前红包：${$.balance}元🧧`;
             if ($.expiredBalance > 0) $.message += `\n今日将过期：${$.expiredBalance}元红包🧧`;
           } else {
             console.log(`京东服务器返回空数据`)
