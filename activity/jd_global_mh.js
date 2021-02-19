@@ -9,14 +9,20 @@
 ============Quantumultx===============
 [task_local]
 #京东国际盲盒
-0 9,12,20,21 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_global_mh.js, tag=京东国际盲盒, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_global_mh.png, enabled=true================Loon==============
+0 9,12,20,21 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_global_mh.js, tag=京东国际盲盒, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_global_mh.png, enabled=true
+
+================Loon==============
 [Script]
-cron "0 9,12,20,21 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_global_mh.js,tag=京东国际盲盒===============Surge=================
-京东国际盲盒 = type=cron,cronexp="0 9,12,20,21 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_global_mh.js============小火箭=========
+cron "0 9,12,20,21 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_global_mh.js,tag=京东国际盲盒
+
+===============Surge=================
+京东国际盲盒 = type=cron,cronexp="0 9,12,20,21 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_global_mh.js
+
+============小火箭=========
 京东国际盲盒 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_global_mh.js, cronexpr="0 9,12,20,21 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东国际盲盒');
-const notify = $.isNode() ? require('./sendNotify') : '';
+
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
@@ -297,7 +303,7 @@ function taskUrl(function_id, body = {}) {
       'accept': 'application/json, text/plain, */*',
       'accept-encoding': 'gzip, deflate, br',
       'accept-language': 'zh-cn',
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
+      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('../USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
     }
   }
 }
@@ -315,7 +321,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
       "origin": "https://h5.m.jd.com",
       "referer": "https://h5.m.jd.com/",
       'Content-Type': 'application/x-www-form-urlencoded',
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
+      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('../USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
     }
   }
 }
@@ -332,7 +338,7 @@ function TotalBean() {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('../USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
       }
     }
     $.post(options, (err, resp, data) => {
