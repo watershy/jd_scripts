@@ -57,7 +57,7 @@ if ($.isNode() && process.env.jdJoyStealCoin) {
 }
 const ck = require('./jdCookie.js')
 !(async () => {
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
     return;
   }

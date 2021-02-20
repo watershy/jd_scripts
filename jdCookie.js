@@ -23,7 +23,8 @@ let getCookie = function ($) {
             resolve(cookieArr)
         }
     })
-}//查询sql
+}
+//查询sql
 let query = function ($) {
     return new Promise(async resolve => {
         let res;

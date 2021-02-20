@@ -32,8 +32,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const urlSchema = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/3KSjXqQabiTuD1cJ28QskrpWoBKT/index.html%22%20%7D`;
 const ck = require('./jdCookie.js')
 !(async () => {
-  $.sql = 'select * from jd_cookie where id = 8'
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
     return;
   }

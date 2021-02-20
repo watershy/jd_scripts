@@ -31,7 +31,7 @@ const JD_API_HOST = `https://api.m.jd.com/api?appid=jdsupermarket`;
 const ck = require('./jdCookie.js')
 $.notice = ''
 !(async () => {
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
     return;
   }

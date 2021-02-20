@@ -32,7 +32,7 @@ const inviteCodes = [
   'AUWE539_4h19USRmmlDUR',
 ]
 !(async () => {
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie($);
   $.tuanList = []
   await requireConfig();
   // if (helpAuthor) await getAuthorShareCode('https://gitee.com/shylocks/updateTeam/raw/main/jd_zz.json');

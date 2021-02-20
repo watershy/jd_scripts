@@ -22,7 +22,7 @@ $.notice = ''
 const ck = require('./jdCookie.js')
 !(async () => {
     $.sql = 'select * from jd_cookie'
-    cookiesArr = await ck.getCookie();
+    cookiesArr = await ck.getCookie($);
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         return;
@@ -55,8 +55,8 @@ const ck = require('./jdCookie.js')
 
 async function execSign() {
     console.log(`\n开始执行脚本签到，请稍等`)
-    // await exec(`node ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
-    await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
+    await exec(`node ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
+    // await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
     let notifyContent = await fs.readFileSync(resultPath, "utf8");
     console.log(`👇👇👇👇👇👇👇👇👇👇👇LOG记录👇👇👇👇👇👇👇👇👇👇👇\n${notifyContent}\n👆👆👆👆👆👆👆👆👆LOG记录👆👆👆👆👆👆👆👆👆👆👆`);
     let BarkContent = '';

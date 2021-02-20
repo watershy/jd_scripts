@@ -28,7 +28,7 @@ const JD_API_HOST = 'https://api.m.jd.com/', actCode = 'visa-card-001';
 $.invites = [];
 !(async () => {
   $.sql = 'select * from jd_cookie'
-  cookiesArr = await ck.getCookie();
+  cookiesArr = await ck.getCookie($);
   await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
