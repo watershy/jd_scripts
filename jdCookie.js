@@ -36,7 +36,8 @@ let query = function ($) {
             resolve(res)
         }
     })
-}//关闭连接池
+}
+//关闭连接池
 let methodEnd = function ($, notice) {
     return new Promise(async resolve => {
         try {
@@ -60,6 +61,9 @@ let methodEnd = function ($, notice) {
                     await notify.sendNotify(`${$.name}`, `${$.notice}`)
                 } else {
                     console.log('未开启推送通知')
+                }
+                if ($.cookieName && $.cookieInfo.length !== 0) {
+                    await notify.sendNotify(`${$.cookieName}`, `${$.cookieInfo}`)
                 }
                 $.done()
             }
@@ -162,8 +166,11 @@ function TotalBean(cookie, $) {
                 if (data) {
                     data = JSON.parse(data);
                     if (data['retcode'] === 13) {
-                        $.noticeName = 'cookie过期'
-                        await methodEnd($,$.cookieMap.get($.UserName)?$.cookieMap.get($.UserName):$.UserName)
+                        $.cookieName = 'cookie过期'
+                        if (!$.cookieInfo) {
+                            $.cookieInfo = []
+                        }
+                        $.cookieInfo.push($.cookieMap.get($.UserName)?$.cookieMap.get($.UserName):$.UserName)
                         $.isLogin = false; //cookie过期
                     }
                     $.nickName = data['base'].nickname;
@@ -177,7 +184,8 @@ function TotalBean(cookie, $) {
             resolve(data);
         })
     })
-}//导出方法
+}
+//导出方法
 module.exports = {
     getShareCode,
     getCookie,
