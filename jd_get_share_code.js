@@ -8,16 +8,22 @@
 ============Quantumultx===============
 [task_local]
 #获取互助码
-20 13 * * 6 https://gitee.com/lxk0301/jd_scripts/raw/master/jd_get_share_code.js, tag=获取互助码, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
+20 13 * * 6 https://gitee.com/lxk0301/jd_scripts/raw/master/jd_get_share_code.js, tag=获取互助码, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+
+================Loon==============
 [Script]
-cron "20 13 * * 6" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_get_share_code.js, tag=获取互助码===============Surge=================
-获取互助码 = type=cron,cronexp="20 13 * * 6",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_get_share_code.js============小火箭=========
+cron "20 13 * * 6" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_get_share_code.js, tag=获取互助码
+
+===============Surge=================
+获取互助码 = type=cron,cronexp="20 13 * * 6",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_get_share_code.js
+
+============小火箭=========
 获取互助码 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_get_share_code.js, cronexpr="20 13 * * 6", timeout=3600, enable=true
  */
 const $ = new Env("获取互助码");
 const JD_API_HOST = "https://api.m.jd.com/client.action";
 let cookiesArr = [], cookie = '', message;
-const ck = require('./jdCookie')
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 !function (n) {
   "use strict";
 
@@ -52,18 +58,18 @@ const ck = require('./jdCookie')
 
   function i(n, r) {
     n[r >> 5] |= 128 << r % 32,
-        n[14 + (r + 64 >>> 9 << 4)] = r;
+      n[14 + (r + 64 >>> 9 << 4)] = r;
     var e, i, a, d, h, l = 1732584193, g = -271733879, v = -1732584194, m = 271733878;
     for (e = 0; e < n.length; e += 16)
       i = l,
-          a = g,
-          d = v,
-          h = m,
-          g = f(g = f(g = f(g = f(g = c(g = c(g = c(g = c(g = u(g = u(g = u(g = u(g = o(g = o(g = o(g = o(g, v = o(v, m = o(m, l = o(l, g, v, m, n[e], 7, -680876936), g, v, n[e + 1], 12, -389564586), l, g, n[e + 2], 17, 606105819), m, l, n[e + 3], 22, -1044525330), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 4], 7, -176418897), g, v, n[e + 5], 12, 1200080426), l, g, n[e + 6], 17, -1473231341), m, l, n[e + 7], 22, -45705983), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 8], 7, 1770035416), g, v, n[e + 9], 12, -1958414417), l, g, n[e + 10], 17, -42063), m, l, n[e + 11], 22, -1990404162), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 12], 7, 1804603682), g, v, n[e + 13], 12, -40341101), l, g, n[e + 14], 17, -1502002290), m, l, n[e + 15], 22, 1236535329), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 1], 5, -165796510), g, v, n[e + 6], 9, -1069501632), l, g, n[e + 11], 14, 643717713), m, l, n[e], 20, -373897302), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 5], 5, -701558691), g, v, n[e + 10], 9, 38016083), l, g, n[e + 15], 14, -660478335), m, l, n[e + 4], 20, -405537848), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 9], 5, 568446438), g, v, n[e + 14], 9, -1019803690), l, g, n[e + 3], 14, -187363961), m, l, n[e + 8], 20, 1163531501), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 13], 5, -1444681467), g, v, n[e + 2], 9, -51403784), l, g, n[e + 7], 14, 1735328473), m, l, n[e + 12], 20, -1926607734), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 5], 4, -378558), g, v, n[e + 8], 11, -2022574463), l, g, n[e + 11], 16, 1839030562), m, l, n[e + 14], 23, -35309556), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 1], 4, -1530992060), g, v, n[e + 4], 11, 1272893353), l, g, n[e + 7], 16, -155497632), m, l, n[e + 10], 23, -1094730640), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 13], 4, 681279174), g, v, n[e], 11, -358537222), l, g, n[e + 3], 16, -722521979), m, l, n[e + 6], 23, 76029189), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 9], 4, -640364487), g, v, n[e + 12], 11, -421815835), l, g, n[e + 15], 16, 530742520), m, l, n[e + 2], 23, -995338651), v = f(v, m = f(m, l = f(l, g, v, m, n[e], 6, -198630844), g, v, n[e + 7], 10, 1126891415), l, g, n[e + 14], 15, -1416354905), m, l, n[e + 5], 21, -57434055), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 12], 6, 1700485571), g, v, n[e + 3], 10, -1894986606), l, g, n[e + 10], 15, -1051523), m, l, n[e + 1], 21, -2054922799), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 8], 6, 1873313359), g, v, n[e + 15], 10, -30611744), l, g, n[e + 6], 15, -1560198380), m, l, n[e + 13], 21, 1309151649), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 4], 6, -145523070), g, v, n[e + 11], 10, -1120210379), l, g, n[e + 2], 15, 718787259), m, l, n[e + 9], 21, -343485551),
-          l = t(l, i),
-          g = t(g, a),
-          v = t(v, d),
-          m = t(m, h);
+        a = g,
+        d = v,
+        h = m,
+        g = f(g = f(g = f(g = f(g = c(g = c(g = c(g = c(g = u(g = u(g = u(g = u(g = o(g = o(g = o(g = o(g, v = o(v, m = o(m, l = o(l, g, v, m, n[e], 7, -680876936), g, v, n[e + 1], 12, -389564586), l, g, n[e + 2], 17, 606105819), m, l, n[e + 3], 22, -1044525330), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 4], 7, -176418897), g, v, n[e + 5], 12, 1200080426), l, g, n[e + 6], 17, -1473231341), m, l, n[e + 7], 22, -45705983), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 8], 7, 1770035416), g, v, n[e + 9], 12, -1958414417), l, g, n[e + 10], 17, -42063), m, l, n[e + 11], 22, -1990404162), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 12], 7, 1804603682), g, v, n[e + 13], 12, -40341101), l, g, n[e + 14], 17, -1502002290), m, l, n[e + 15], 22, 1236535329), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 1], 5, -165796510), g, v, n[e + 6], 9, -1069501632), l, g, n[e + 11], 14, 643717713), m, l, n[e], 20, -373897302), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 5], 5, -701558691), g, v, n[e + 10], 9, 38016083), l, g, n[e + 15], 14, -660478335), m, l, n[e + 4], 20, -405537848), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 9], 5, 568446438), g, v, n[e + 14], 9, -1019803690), l, g, n[e + 3], 14, -187363961), m, l, n[e + 8], 20, 1163531501), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 13], 5, -1444681467), g, v, n[e + 2], 9, -51403784), l, g, n[e + 7], 14, 1735328473), m, l, n[e + 12], 20, -1926607734), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 5], 4, -378558), g, v, n[e + 8], 11, -2022574463), l, g, n[e + 11], 16, 1839030562), m, l, n[e + 14], 23, -35309556), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 1], 4, -1530992060), g, v, n[e + 4], 11, 1272893353), l, g, n[e + 7], 16, -155497632), m, l, n[e + 10], 23, -1094730640), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 13], 4, 681279174), g, v, n[e], 11, -358537222), l, g, n[e + 3], 16, -722521979), m, l, n[e + 6], 23, 76029189), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 9], 4, -640364487), g, v, n[e + 12], 11, -421815835), l, g, n[e + 15], 16, 530742520), m, l, n[e + 2], 23, -995338651), v = f(v, m = f(m, l = f(l, g, v, m, n[e], 6, -198630844), g, v, n[e + 7], 10, 1126891415), l, g, n[e + 14], 15, -1416354905), m, l, n[e + 5], 21, -57434055), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 12], 6, 1700485571), g, v, n[e + 3], 10, -1894986606), l, g, n[e + 10], 15, -1051523), m, l, n[e + 1], 21, -2054922799), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 8], 6, 1873313359), g, v, n[e + 15], 10, -30611744), l, g, n[e + 6], 15, -1560198380), m, l, n[e + 13], 21, 1309151649), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 4], 6, -145523070), g, v, n[e + 11], 10, -1120210379), l, g, n[e + 2], 15, 718787259), m, l, n[e + 9], 21, -343485551),
+        l = t(l, i),
+        g = t(g, a),
+        v = t(v, d),
+        m = t(m, h);
     return [l, g, v, m]
   }
 
@@ -77,7 +83,7 @@ const ck = require('./jdCookie')
   function d(n) {
     var t, r = [];
     for (r[(n.length >> 2) - 1] = void 0,
-             t = 0; t < r.length; t += 1)
+           t = 0; t < r.length; t += 1)
       r[t] = 0;
     var e = 8 * n.length;
     for (t = 0; t < e; t += 8)
@@ -93,18 +99,18 @@ const ck = require('./jdCookie')
     var r, e, o = d(n), u = [], c = [];
     for (u[15] = c[15] = void 0,
          o.length > 16 && (o = i(o, 8 * n.length)),
-             r = 0; r < 16; r += 1)
+           r = 0; r < 16; r += 1)
       u[r] = 909522486 ^ o[r],
-          c[r] = 1549556828 ^ o[r];
+        c[r] = 1549556828 ^ o[r];
     return e = i(u.concat(d(t)), 512 + 8 * t.length),
-        a(i(c.concat(e), 640))
+      a(i(c.concat(e), 640))
   }
 
   function g(n) {
     var t, r, e = "";
     for (r = 0; r < n.length; r += 1)
       t = n.charCodeAt(r),
-          e += "0123456789abcdef".charAt(t >>> 4 & 15) + "0123456789abcdef".charAt(15 & t);
+        e += "0123456789abcdef".charAt(t >>> 4 & 15) + "0123456789abcdef".charAt(15 & t);
     return e
   }
 
@@ -134,6 +140,20 @@ const ck = require('./jdCookie')
 
   $.md5 = A
 }(this);
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+} else {
+  let cookiesData = $.getdata('CookiesJD') || "[]";
+  cookiesData = jsonParse(cookiesData);
+  cookiesArr = cookiesData.map(item => item.cookie);
+  cookiesArr.reverse();
+  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
+  cookiesArr.reverse();
+  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+}
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -148,7 +168,7 @@ const ck = require('./jdCookie')
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await ck.TotalBean(cookie, $);
+      await TotalBean();
       if (!$.isLogin) {
         continue
       }
@@ -156,48 +176,46 @@ const ck = require('./jdCookie')
     }
   }
 })()
-    .catch((e) => {
-    })
-    .finally(async () => {
-      await ck.methodEnd($)
-    })
-
+  .catch((e) => {
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+  })
+  .finally(() => {
+    $.done();
+  })
 function getJdFactory() {
   return new Promise(resolve => {
     $.post(
-        taskPostUrl("jdfactory_getTaskDetail", {}, "jdfactory_getTaskDetail"),
-        async (err, resp, data) => {
-          try {
-            if (err) {
-              console.log(`${JSON.stringify(err)}`);
-              console.log(`$东东工厂 API请求失败，请检查网路重试`);
-            } else {
-              if (safeGet(data)) {
-                data = JSON.parse(data);
-                if (data.data.bizCode === 0) {
-                  $.taskVos = data.data.result.taskVos; //任务列表
-                  $.taskVos.map((item) => {
-                    if (item.taskType === 14) {
-                      console.log(
-                          `【账号${$.index}（${$.nickName || $.UserName}）东东工厂】${item.assistTaskDetailVo.taskToken}`
-                      );
-                    }
-                  });
-                }
+      taskPostUrl("jdfactory_getTaskDetail", {}, "jdfactory_getTaskDetail"),
+      async (err, resp, data) => {
+        try {
+          if (err) {
+            console.log(`${JSON.stringify(err)}`);
+            console.log(`$东东工厂 API请求失败，请检查网路重试`);
+          } else {
+            if (safeGet(data)) {
+              data = JSON.parse(data);
+              if (data.data.bizCode === 0) {
+                $.taskVos = data.data.result.taskVos; //任务列表
+                $.taskVos.map((item) => {
+                  if (item.taskType === 14) {
+                    console.log(
+                      `【账号${$.index}（${$.nickName || $.UserName}）东东工厂】${item.assistTaskDetailVo.taskToken}`
+                    );
+                  }
+                });
               }
             }
-          } catch (e) {
-            $.noticeName = `${$.name}错误`
-            $.notice += `\n${e}`;
-          } finally {
-            resolve();
           }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve();
         }
+      }
     );
   })
 }
-
-function getJxFactory() {
+function getJxFactory(){
   const JX_API_HOST = "https://m.jingxi.com";
 
   function JXGC_taskurl(functionId, body = "") {
@@ -209,7 +227,7 @@ function getJxFactory() {
         Accept: "*/*",
         Connection: "keep-alive",
         "User-Agent":
-            "jdpingou;iPhone;3.14.4;14.0;ae75259f6ca8378672006fc41079cd8c90c53be8;network/wifi;model/iPhone10,2;appBuild/100351;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/62;pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
+          "jdpingou;iPhone;3.14.4;14.0;ae75259f6ca8378672006fc41079cd8c90c53be8;network/wifi;model/iPhone10,2;appBuild/100351;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/62;pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
         "Accept-Language": "zh-cn",
         Referer: "https://wqsd.jd.com/pingou/dream_factory/index.html",
         "Accept-Encoding": "gzip, deflate, br",
@@ -219,62 +237,61 @@ function getJxFactory() {
 
   return new Promise(resolve => {
     $.get(
-        JXGC_taskurl(
-            "userinfo/GetUserInfo",
-            `pin=&sharePin=&shareType=&materialTuanPin=&materialTuanId=`
-        ),
-        async (err, resp, data) => {
-          try {
-            if (err) {
-              console.log(`${JSON.stringify(err)}`);
-              console.log(`京喜工厂 API请求失败，请检查网路重试`);
-            } else {
-              if (safeGet(data)) {
-                data = JSON.parse(data);
-                if (data["ret"] === 0) {
-                  data = data["data"];
-                  $.unActive = true; //标记是否开启了京喜活动或者选购了商品进行生产
-                  $.encryptPin = "";
-                  $.shelvesList = [];
-                  if (data.factoryList && data.productionList) {
-                    const production = data.productionList[0];
-                    const factory = data.factoryList[0];
-                    const productionStage = data.productionStage;
-                    $.factoryId = factory.factoryId; //工厂ID
-                    $.productionId = production.productionId; //商品ID
-                    $.commodityDimId = production.commodityDimId;
-                    $.encryptPin = data.user.encryptPin;
-                    // subTitle = data.user.pin;
-                    console.log(`【账号${$.index}（${$.nickName || $.UserName}）京喜工厂】${data.user.encryptPin}`);
-                  }
-                } else {
-                  $.unActive = false; //标记是否开启了京喜活动或者选购了商品进行生产
-                  if (!data.factoryList) {
-                    console.log(
-                        `【提示】京东账号${$.index}[${$.nickName}]京喜工厂活动未开始请手动去京东APP->游戏与互动->查看更多->京喜工厂 开启活动`
-                    );
-                  } else if (data.factoryList && !data.productionList) {
-                    console.log(
-                        `【提示】京东账号${$.index}[${$.nickName}]京喜工厂未选购商品请手动去京东APP->游戏与互动->查看更多->京喜工厂 选购`
-                    );
-                  }
+      JXGC_taskurl(
+        "userinfo/GetUserInfo",
+        `pin=&sharePin=&shareType=&materialTuanPin=&materialTuanId=`
+      ),
+      async (err, resp, data) => {
+        try {
+          if (err) {
+            console.log(`${JSON.stringify(err)}`);
+            console.log(`京喜工厂 API请求失败，请检查网路重试`);
+          } else {
+            if (safeGet(data)) {
+              data = JSON.parse(data);
+              if (data["ret"] === 0) {
+                data = data["data"];
+                $.unActive = true; //标记是否开启了京喜活动或者选购了商品进行生产
+                $.encryptPin = "";
+                $.shelvesList = [];
+                if (data.factoryList && data.productionList) {
+                  const production = data.productionList[0];
+                  const factory = data.factoryList[0];
+                  const productionStage = data.productionStage;
+                  $.factoryId = factory.factoryId; //工厂ID
+                  $.productionId = production.productionId; //商品ID
+                  $.commodityDimId = production.commodityDimId;
+                  $.encryptPin = data.user.encryptPin;
+                  // subTitle = data.user.pin;
+                  console.log(`【账号${$.index}（${$.nickName || $.UserName}）京喜工厂】${data.user.encryptPin}`);
                 }
               } else {
-                console.log(`GetUserInfo异常：${JSON.stringify(data)}`);
+                $.unActive = false; //标记是否开启了京喜活动或者选购了商品进行生产
+                if (!data.factoryList) {
+                  console.log(
+                    `【提示】京东账号${$.index}[${$.nickName}]京喜工厂活动未开始请手动去京东APP->游戏与互动->查看更多->京喜工厂 开启活动`
+                  );
+                } else if (data.factoryList && !data.productionList) {
+                  console.log(
+                    `【提示】京东账号${$.index}[${$.nickName}]京喜工厂未选购商品请手动去京东APP->游戏与互动->查看更多->京喜工厂 选购`
+                  );
+                }
               }
+            } else {
+              console.log(`GetUserInfo异常：${JSON.stringify(data)}`);
             }
-          } catch (e) {
-            $.noticeName = `${$.name}错误`
-            $.notice += `\n${e}`;
-          } finally {
-            resolve()
           }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve()
         }
+      }
     );
   })
 }
 
-function getJxNc() {
+function getJxNc(){
   const JXNC_API_HOST = "https://wq.jd.com/";
 
   function JXNC_taskurl(function_path, body) {
@@ -294,45 +311,44 @@ function getJxNc() {
 
   return new Promise(resolve => {
     $.get(
-        JXNC_taskurl('query', `type=1`),
-        async (err, resp, data) => {
-          try {
-            if (err) {
-              console.log(`${JSON.stringify(err)}`);
-              console.log(`京喜农场 API请求失败，请检查网路重试`);
-            } else {
-              data = data.match(/try\{Query\(([\s\S]*)\)\;\}catch\(e\)\{\}/)[1];
-              if (safeGet(data)) {
-                data = JSON.parse(data);
-                if (data["ret"] === 0) {
-                  if (data.active) {
-                    let shareCodeJson = {
-                      'smp': data.smp,
-                      'active': data.active,
-                      'joinnum': data.joinnum,
-                    };
-                    console.log(`注意：京喜农场 种植种子发生变化的时候，互助码也会变！！`);
-                    console.log(`【账号${$.index}（${$.nickName || $.UserName}）京喜农场】` + JSON.stringify(shareCodeJson));
-                  } else {
-                    console.log(`【账号${$.index}（${$.nickName || $.UserName}）京喜农场】未选择种子，请先去京喜农场选择种子`);
-                  }
+      JXNC_taskurl('query', `type=1`),
+      async (err, resp, data) => {
+        try {
+          if (err) {
+            console.log(`${JSON.stringify(err)}`);
+            console.log(`京喜农场 API请求失败，请检查网路重试`);
+          } else {
+            data = data.match(/try\{Query\(([\s\S]*)\)\;\}catch\(e\)\{\}/)[1];
+            if (safeGet(data)) {
+              data = JSON.parse(data);
+              if (data["ret"] === 0) {
+                if (data.active) {
+                  let shareCodeJson = {
+                    'smp': data.smp,
+                    'active': data.active,
+                    'joinnum': data.joinnum,
+                  };
+                  console.log(`注意：京喜农场 种植种子发生变化的时候，互助码也会变！！`);
+                  console.log(`【账号${$.index}（${$.nickName || $.UserName}）京喜农场】` + JSON.stringify(shareCodeJson));
+                } else {
+                  console.log(`【账号${$.index}（${$.nickName || $.UserName}）京喜农场】未选择种子，请先去京喜农场选择种子`);
                 }
-              } else {
-                console.log(`京喜农场返回值解析异常：${JSON.stringify(data)}`);
               }
+            } else {
+              console.log(`京喜农场返回值解析异常：${JSON.stringify(data)}`);
             }
-          } catch (e) {
-            $.noticeName = `${$.name}错误`
-            $.notice += `\n${e}`;
-          } finally {
-            resolve()
           }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve()
         }
+      }
     );
   })
 }
 
-function getJdPet() {
+function getJdPet(){
   const JDPet_API_HOST = "https://api.m.jd.com/client.action";
 
   function jdPet_Url(function_id, body = {}) {
@@ -341,23 +357,22 @@ function getJdPet() {
     return {
       url: `${JDPet_API_HOST}?functionId=${function_id}`,
       body: `body=${escape(
-          JSON.stringify(body)
+        JSON.stringify(body)
       )}&appid=wh5&loginWQBiz=pet-town&clientVersion=9.0.4`,
       headers: {
         Cookie: cookie,
         "User-Agent": $.isNode()
+          ? process.env.JD_USER_AGENT
             ? process.env.JD_USER_AGENT
-                ? process.env.JD_USER_AGENT
-                : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"
-            : $.getdata("JDUA")
-                ? $.getdata("JDUA")
-                : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
+            : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"
+          : $.getdata("JDUA")
+            ? $.getdata("JDUA")
+            : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
         Host: "api.m.jd.com",
         "Content-Type": "application/x-www-form-urlencoded",
       },
     };
   }
-
   return new Promise(resolve => {
     $.post(jdPet_Url("initPetTown"), async (err, resp, data) => {
       try {
@@ -367,12 +382,14 @@ function getJdPet() {
           $.logErr(err);
         } else {
           data = JSON.parse(data);
+
           const initPetTownRes = data;
+
           message = `【京东账号${$.index}】${$.nickName}`;
           if (
-              initPetTownRes.code === "0" &&
-              initPetTownRes.resultCode === "0" &&
-              initPetTownRes.message === "success"
+            initPetTownRes.code === "0" &&
+            initPetTownRes.resultCode === "0" &&
+            initPetTownRes.message === "success"
           ) {
             $.petInfo = initPetTownRes.result;
             if ($.petInfo.userStatus === 0) {
@@ -381,9 +398,11 @@ function getJdPet() {
               );*/
               return;
             }
+
             console.log(
-                `【账号${$.index}（${$.nickName || $.UserName}）京东萌宠】${$.petInfo.shareCode}`
+              `【账号${$.index}（${$.nickName || $.UserName}）京东萌宠】${$.petInfo.shareCode}`
             );
+
           } else if (initPetTownRes.code === "0") {
             console.log(`初始化萌宠失败:  ${initPetTownRes.message}`);
           } else {
@@ -391,15 +410,13 @@ function getJdPet() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
     });
   })
 }
-
 async function getJdZZ() {
   const JDZZ_API_HOST = "https://api.m.jd.com/client.action";
 
@@ -421,8 +438,7 @@ async function getJdZZ() {
             }
           }
         } catch (e) {
-          $.noticeName = `${$.name}错误`
-          $.notice += `\n${e}`
+          $.logErr(e, resp)
         } finally {
           resolve(data);
         }
@@ -448,7 +464,6 @@ async function getJdZZ() {
 
   await getUserInfo()
 }
-
 async function getPlantBean() {
   const JDplant_API_HOST = "https://api.m.jd.com/client.action";
 
@@ -468,8 +483,7 @@ async function getPlantBean() {
             data = JSON.parse(data);
           }
         } catch (e) {
-          $.noticeName = `${$.name}错误`
-          $.notice += `\n${e}`;
+          $.logErr(e, resp);
         } finally {
           resolve(data);
         }
@@ -484,7 +498,7 @@ async function getPlantBean() {
     return {
       url: JDplant_API_HOST,
       body: `functionId=${function_id}&body=${escape(
-          JSON.stringify(body)
+        JSON.stringify(body)
       )}&appid=ld&client=apple&area=5_274_49707_49973&build=167283&clientVersion=9.1.0`,
       headers: {
         Cookie: cookie,
@@ -492,12 +506,12 @@ async function getPlantBean() {
         Accept: "*/*",
         Connection: "keep-alive",
         "User-Agent": $.isNode()
+          ? process.env.JD_USER_AGENT
             ? process.env.JD_USER_AGENT
-                ? process.env.JD_USER_AGENT
-                : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"
-            : $.getdata("JDUA")
-                ? $.getdata("JDUA")
-                : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
+            : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"
+          : $.getdata("JDUA")
+            ? $.getdata("JDUA")
+            : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
         "Accept-Language": "zh-Hans-CN;q=1,en-CN;q=0.9",
         "Accept-Encoding": "gzip, deflate, br",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -519,23 +533,23 @@ async function getPlantBean() {
       const shareUrl = $.plantBeanIndexResult.data.jwordShareInfo.shareUrl;
       $.myPlantUuid = getParam(shareUrl, "plantUuid");
       console.log(`【账号${$.index}（${$.nickName || $.UserName}）种豆得豆】${$.myPlantUuid}`);
+
     } else {
       console.log(
-          `种豆得豆-初始失败:  ${JSON.stringify($.plantBeanIndexResult)}`
+        `种豆得豆-初始失败:  ${JSON.stringify($.plantBeanIndexResult)}`
       );
     }
   }
 
   await jdPlantBean();
 }
-
 async function getJDFruit() {
   async function initForFarm() {
     return new Promise((resolve) => {
       const option = {
         url: `${JD_API_HOST}?functionId=initForFarm`,
         body: `body=${escape(
-            JSON.stringify({version: 4})
+          JSON.stringify({version: 4})
         )}&appid=wh5&clientVersion=9.1.0`,
         headers: {
           accept: "*/*",
@@ -550,12 +564,12 @@ async function getJDFruit() {
           "sec-fetch-mode": "cors",
           "sec-fetch-site": "same-site",
           "User-Agent": $.isNode()
+            ? process.env.JD_USER_AGENT
               ? process.env.JD_USER_AGENT
-                  ? process.env.JD_USER_AGENT
-                  : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"
-              : $.getdata("JDUA")
-                  ? $.getdata("JDUA")
-                  : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
+              : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"
+            : $.getdata("JDUA")
+              ? $.getdata("JDUA")
+              : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
           "Content-Type": "application/x-www-form-urlencoded",
         },
       };
@@ -571,8 +585,7 @@ async function getJDFruit() {
             }
           }
         } catch (e) {
-          $.noticeName = `${$.name}错误`
-          $.notice += `\n${e}`;
+          $.logErr(e, resp);
         } finally {
           resolve();
         }
@@ -584,8 +597,9 @@ async function getJDFruit() {
     await initForFarm();
     if ($.farmInfo.farmUserPro) {
       console.log(
-          `【账号${$.index}（${$.nickName || $.UserName}）京东农场】${$.farmInfo.farmUserPro.shareCode}`
+        `【账号${$.index}（${$.nickName || $.UserName}）京东农场】${$.farmInfo.farmUserPro.shareCode}`
       );
+
     } else {
       /*console.log(
         `初始化农场数据异常, 请登录京东 app查看农场0元水果功能是否正常,农场初始化数据: ${JSON.stringify(
@@ -597,8 +611,7 @@ async function getJDFruit() {
 
   await jdFruit();
 }
-
-async function getJoy() {
+async function getJoy(){
   function taskUrl(functionId, body = '') {
     let t = Date.now().toString().substr(0, 10)
     let e = body || ""
@@ -619,7 +632,6 @@ async function getJoy() {
       }
     }
   }
-
   let body = {"paramData": {}}
   return new Promise(async resolve => {
     $.get(taskUrl('crazyJoy_user_gameState', JSON.stringify(body)), async (err, resp, data) => {
@@ -636,33 +648,32 @@ async function getJoy() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
     })
   })
 }
-
 //闪购盲盒
 async function getSgmh(timeout = 0) {
   return new Promise((resolve) => {
-    setTimeout(() => {
+    setTimeout( ()=>{
       let url = {
-        url: `https://api.m.jd.com/client.action`,
-        headers: {
-          'Origin': `https://h5.m.jd.com`,
-          'Cookie': cookie,
-          'Connection': `keep-alive`,
-          'Accept': `application/json, text/plain, */*`,
-          'Referer': `https://h5.m.jd.com/babelDiy/Zeus/2WBcKYkn8viyxv7MoKKgfzmu7Dss/index.html`,
-          'Host': `api.m.jd.com`,
-          'Accept-Encoding': `gzip, deflate, br`,
-          'Accept-Language': `zh-cn`
+        url : `https://api.m.jd.com/client.action`,
+        headers : {
+          'Origin' : `https://h5.m.jd.com`,
+          'Cookie' : cookie,
+          'Connection' : `keep-alive`,
+          'Accept' : `application/json, text/plain, */*`,
+          'Referer' : `https://h5.m.jd.com/babelDiy/Zeus/2WBcKYkn8viyxv7MoKKgfzmu7Dss/index.html`,
+          'Host' : `api.m.jd.com`,
+          'Accept-Encoding' : `gzip, deflate, br`,
+          'Accept-Language' : `zh-cn`
         },
-        body: `functionId=interact_template_getHomeData&body={"appId":"1EFRRxA","taskToken":""}&client=wh5&clientVersion=1.0.0`
+        body : `functionId=interact_template_getHomeData&body={"appId":"1EFRRxA","taskToken":""}&client=wh5&clientVersion=1.0.0`
       }
+
       $.post(url, async (err, resp, data) => {
         try {
           if (safeGet(data)) {
@@ -676,16 +687,14 @@ async function getSgmh(timeout = 0) {
             }
           }
         } catch (e) {
-          $.noticeName = `${$.name}错误`
-          $.notice += `\n${e}`;
+          $.logErr(e, resp);
         } finally {
           resolve()
         }
       })
-    }, timeout)
+    },timeout)
   })
 }
-
 async function getShareCode() {
   console.log(`======账号${$.index}开始======`)
   await getJdFactory()
@@ -706,13 +715,11 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
 }
-
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -746,15 +753,13 @@ function TotalBean() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
     })
   })
 }
-
 function taskPostUrl(function_id, body = {}, function_id2) {
   let url = `${JD_API_HOST}`;
   if (function_id2) {
@@ -763,7 +768,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
   return {
     url,
     body: `functionId=${function_id}&body=${escape(
-        JSON.stringify(body)
+      JSON.stringify(body)
     )}&client=wh5&clientVersion=9.1.0`,
     headers: {
       Cookie: cookie,
@@ -771,22 +776,20 @@ function taskPostUrl(function_id, body = {}, function_id2) {
       referer: "https://h5.m.jd.com/",
       "Content-Type": "application/x-www-form-urlencoded",
       "User-Agent": $.isNode()
+        ? process.env.JD_USER_AGENT
           ? process.env.JD_USER_AGENT
-              ? process.env.JD_USER_AGENT
-              : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"
-          : $.getdata("JDUA")
-              ? $.getdata("JDUA")
-              : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
+          : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"
+        : $.getdata("JDUA")
+          ? $.getdata("JDUA")
+          : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
     },
   };
 }
-
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

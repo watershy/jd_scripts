@@ -5,10 +5,16 @@
 ============Quantumultx===============
 [task_local]
 #京喜签到
-5 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, tag=京喜签到, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true================Loon==============
+5 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, tag=京喜签到, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+
+================Loon==============
 [Script]
-cron "5 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js,tag=京喜签到===============Surge=================
-京喜签到 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js============小火箭=========
+cron "5 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js,tag=京喜签到
+
+===============Surge=================
+京喜签到 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js
+
+============小火箭=========
 京喜签到 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, cronexpr="5 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京喜签到');
@@ -35,18 +41,17 @@ const JD_API_HOST = 'https://m.jingxi.com/';
       message = '';
       await ck.TotalBean(cookie,$);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});        if ($.isNode()) {
-          await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-        }
         continue
       }
       await jdCash()
     }
   }
 })()
-    .catch((e) => {    })
-    .finally(async () => {
-      await ck.methodEnd($)
+    .catch((e) => {
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    })
+    .finally(() => {
+      $.done();
     })
 async function jdCash() {
   $.coins = 0
