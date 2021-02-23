@@ -70,38 +70,6 @@ const headers = {
   'Accept' : '*/*',
   'LKYLToken' : ''
 }
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-} else {
-  //支持 "京东多账号 Ck 管理"的cookie
-  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
-  if ($.getdata('jd_joy_invite_pin')) {
-    invite_pins = [];
-    invite_pins.push($.getdata('jd_joy_invite_pin'));
-  }
-  if ($.getdata('jd2_joy_invite_pin')) {
-    if (invite_pins.length > 0) {
-      invite_pins.push($.getdata('jd2_joy_invite_pin'))
-    } else {
-      invite_pins = [];
-      invite_pins.push($.getdata('jd2_joy_invite_pin'));
-    }
-  }
-  if ($.getdata('jd_joy_run_pin')) {
-    run_pins = []
-    run_pins.push($.getdata('jd_joy_run_pin'));
-  }
-  if ($.getdata('jd2_joy_run_pin')) {
-    if (run_pins.length > 0) {
-      run_pins.push($.getdata('jd2_joy_run_pin'))
-    } else {
-      run_pins = [];
-      run_pins.push($.getdata('jd2_joy_run_pin'));
-    }
-  }
-}
 
 //获取来客有礼Token
 let count = 0;
