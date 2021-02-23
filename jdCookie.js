@@ -173,7 +173,9 @@ function TotalBean(cookie, $) {
                         $.cookieInfo.push($.cookieMap.get($.UserName)?$.cookieMap.get($.UserName):$.UserName)
                         $.isLogin = false; //cookie过期
                     }
-                    $.nickName = data['base'].nickname;
+                    if (data['base']['nickname']) {
+                        $.nickName = data['base']['nickname'];
+                    }
                     if (data['retcode'] === 0) {
                         $.beanCount = data['base'].jdNum;
                     }
