@@ -38,7 +38,6 @@ const ck = require('./jdCookie.js')
       $.isLogin = true;
       $.nickName = '';
       await ck.TotalBean(cookie, $);
-      console.log(`\n***********开始【京东账号${$.index}】${$.UserName}********\n`);
       if (!$.isLogin) {
         continue
       }

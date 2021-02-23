@@ -159,31 +159,36 @@ function TotalBean(cookie, $) {
             }
         }
         $.post(options, async (err, resp, data) => {
-            if (err) {
-                console.log(`${JSON.stringify(err)}`)
-                console.log(`${$.name} API请求失败，请检查网路重试`)
-            } else {
-                if (data) {
-                    data = JSON.parse(data);
-                    if (data['retcode'] === 13) {
-                        $.cookieName = 'cookie过期'
-                        if (!$.cookieInfo) {
-                            $.cookieInfo = []
-                        }
-                        $.cookieInfo.push($.cookieMap.get($.UserName)?$.cookieMap.get($.UserName):$.UserName)
-                        $.isLogin = false; //cookie过期
-                    }
-                    if (data['base'] && data['base']['nickname']) {
-                        $.nickName = data['base']['nickname'];
-                    }
-                    if (data['retcode'] === 0) {
-                        $.beanCount = data['base'].jdNum;
-                    }
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
-                    console.log(`京东服务器返回空数据`)
+                    if (data) {
+                        data = JSON.parse(data);
+                        if (data['retcode'] === 13) {
+                            $.cookieName = 'cookie过期'
+                            if (!$.cookieInfo) {
+                                $.cookieInfo = []
+                            }
+                            $.cookieInfo.push($.cookieMap.get($.UserName)?$.cookieMap.get($.UserName):$.UserName)
+                            $.isLogin = false; //cookie过期
+                        }
+                        if (data['base'] && data['base']['nickname']) {
+                            $.nickName = data['base']['nickname'];
+                        }
+                        if (data['retcode'] === 0) {
+                            $.beanCount = data['base'].jdNum;
+                        }
+                    } else {
+                        console.log(`京东服务器返回空数据`)
+                    }
                 }
+            } catch (e) {
+
+            } finally {
+                resolve(data);
             }
-            resolve(data);
         })
     })
 }
