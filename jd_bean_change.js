@@ -27,10 +27,8 @@ cron "2 9 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_
 const $ = new Env('京豆变动通知');
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
-$.notice = ''
 const ck = require('./jdCookie.js')
 !(async () => {
-  $.sql = 'select * from jd_cookie'
   cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
     return;

@@ -2,26 +2,25 @@ const db = require('./utils/db_util')
 const notify = require('./sendNotify');//获取cookie数据
 let getCookie = function ($) {
     return new Promise(async resolve => {
+        $.possessor = 'zzs'
+        $.sql = 'select cookie_id from jd_cookie_info where active_name = ? and possessor = ?'
+        $.values = [$.name,$.possessor]
         $.cookieMap = new Map()
         let cookieArr = []
-        let obj = {
-            sql: 'select * from jd_cookie where possessor = \'hyk\''
+        let res = await query($)
+        if (res.length !== 0 && res[0].cookie_id !== 'a') {
+            $.sql = 'select * from jd_cookie where id in (?)'
+            $.values = [res[0].cookie_id.split(',')]
+        } else {
+            $.sql = 'select * from jd_cookie'
         }
-        try {
-            if ($ && $.sql) {
-                // sql = 'select * from jd_cookie where id = 1'
-                obj.sql = $.sql
-                // sql = 'select * from jd_cookie'
-            }
-            let res = await query(obj)
-            for (let i = 0; i < res.length; i++) {
-                cookieArr.push('pt_pin=' + res[i]['pt_pin'] + ';pt_key=' + res[i]['pt_key'])
-                $.cookieMap.set(res[i]['pt_pin'],res[i]['name'])
-            }
-            console.log(`共有账号${cookieArr.length}个`)
-        } finally {
-            resolve(cookieArr)
+        res = await query($)
+        for (let i = 0; i < res.length; i++) {
+            cookieArr.push('pt_pin=' + res[i]['pt_pin'] + ';pt_key=' + res[i]['pt_key'])
+            $.cookieMap.set(res[i]['pt_pin'], res[i]['name'])
         }
+        console.log(`共有账号${cookieArr.length}个`)
+        resolve(cookieArr)
     })
 }
 //查询sql
@@ -124,6 +123,7 @@ let getShareCode = function ($) {
 //notice数据处理
 let notice = function ($) {
     return new Promise(async resolve => {
+        $.notice = $.notice.replace('\n\n', '\n')
         try {
             $.notice += `----------------------------\n`
             if ($.cookieMap.get($.UserName)) {
@@ -141,9 +141,11 @@ let notice = function ($) {
         }
     })
 }
+
 function TotalBean(cookie, $) {
     return new Promise(async resolve => {
         $.cookie = cookie
+        $.notice = ''
         console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
         const options = {
             "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
@@ -171,7 +173,7 @@ function TotalBean(cookie, $) {
                             if (!$.cookieInfo) {
                                 $.cookieInfo = []
                             }
-                            $.cookieInfo.push($.cookieMap.get($.UserName)?$.cookieMap.get($.UserName):$.UserName)
+                            $.cookieInfo.push($.cookieMap.get($.UserName) ? $.cookieMap.get($.UserName) : $.UserName)
                             $.isLogin = false; //cookie过期
                         }
                         if (data['base'] && data['base']['nickname']) {
@@ -192,6 +194,7 @@ function TotalBean(cookie, $) {
         })
     })
 }
+
 //导出方法
 module.exports = {
     getShareCode,

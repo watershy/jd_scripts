@@ -21,7 +21,7 @@ let cookiesArr = [], cookie = '';
 $.notice = ''
 const ck = require('./jdCookie.js')
 !(async () => {
-    $.sql = 'select * from jd_cookie'
+    $.sql = 'select * from jd_cookie where id in (16,17)'
     cookiesArr = await ck.getCookie($);
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -38,8 +38,6 @@ const ck = require('./jdCookie.js')
             $.index = i + 1;
             $.nickName = '';
             await ck.TotalBean(cookie, $);
-            console.log(`*****************开始京东账号${$.index} ${$.UserName}京豆签到*******************\n`);
-            console.log(`⚠️⚠️⚠️⚠️目前Bark APP推送通知消息对推送内容长度有限制，如推送通知中包含此推送方式脚本会默认转换成简洁内容推送 ⚠️⚠️⚠️⚠️\n`)
             await changeFile(content);
             await execSign();
         }
@@ -55,8 +53,8 @@ const ck = require('./jdCookie.js')
 
 async function execSign() {
     console.log(`\n开始执行脚本签到，请稍等`)
-    // await exec(`node ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
-    await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
+    await exec(`node ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
+    // await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
     let notifyContent = await fs.readFileSync(resultPath, "utf8");
     console.log(`👇👇👇👇👇👇👇👇👇👇👇LOG记录👇👇👇👇👇👇👇👇👇👇👇\n${notifyContent}\n👆👆👆👆👆👆👆👆👆LOG记录👆👆👆👆👆👆👆👆👆👆👆`);
     let BarkContent = '';
@@ -66,8 +64,9 @@ async function execSign() {
         const barkContentEnd = notifyContent.length;
         if (barkContentStart > -1 && barkContentEnd > -1) {
             BarkContent = notifyContent.substring(barkContentStart, barkContentEnd);
-            $.notice += `【京东账号${$.index}】${$.UserName}\n`
-            $.notice += `${BarkContent}\n--------------------\n`
+            BarkContent = BarkContent.substring(0,BarkContent.indexOf('京东商城'))
+            await ck.notice($)
+            $.notice += `${BarkContent}\n`
         }
     }
     //运行完成后，删除下载的文件

@@ -59,7 +59,6 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
       $.isLogin = true;
       $.nickName = '';
       await ck.TotalBean(cookie, $);
-      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       if (!$.isLogin) {
         continue
       }
