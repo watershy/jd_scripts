@@ -143,7 +143,6 @@ async function deleteFile(path) {
         // console.log('unlinkRes', unlinkRes)
     }
 }
-
 function downloadUrl(url = 'https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js') {
     return new Promise(resolve => {
         const options = {url};

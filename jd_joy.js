@@ -981,7 +981,6 @@ function getSupplyInfo(showOrder) {
     })
   })
 }
-
 function taskUrl(url, Host, reqSource) {
   return {
     url: url,
