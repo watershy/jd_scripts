@@ -53,8 +53,8 @@ const ck = require('./jdCookie.js')
 
 async function execSign() {
     console.log(`\n开始执行脚本签到，请稍等`)
-    await exec(`node ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
-    // await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
+    // await exec(`node ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
+    await exec(`${process.execPath} ${JD_DailyBonusPath} >> ${resultPath}`, {stdio: "inherit"});
     let notifyContent = await fs.readFileSync(resultPath, "utf8");
     console.log(`👇👇👇👇👇👇👇👇👇👇👇LOG记录👇👇👇👇👇👇👇👇👇👇👇\n${notifyContent}\n👆👆👆👆👆👆👆👆👆LOG记录👆👆👆👆👆👆👆👆👆👆👆`);
     let BarkContent = '';
