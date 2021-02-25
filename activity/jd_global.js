@@ -33,7 +33,6 @@ const ck = require('./jdCookie')
 const JD_API_HOST = 'https://api.m.jd.com/', actCode = 'visa-card-001';
 $.invites = [];
 !(async () => {
-  $.sql = 'select * from jd_cookie'
   cookiesArr = await ck.getCookie($);
   await requireConfig();
   if (!cookiesArr[0]) {

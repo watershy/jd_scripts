@@ -41,7 +41,6 @@ let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = ['wUjR_aJ43-uLjZU5cS9KGg=='];
 const ck = require('./jdCookie.js')
 !(async () => {
-  $.sql = 'select * from jd_cookie'
   cookiesArr = await ck.getCookie($);
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   if (!cookiesArr[0]) {

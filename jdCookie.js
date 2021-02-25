@@ -152,7 +152,9 @@ let notice = function ($) {
 function TotalBean(cookie, $) {
     return new Promise(async resolve => {
         $.cookie = cookie
-        $.notice = ''
+        if ($.index === 1) {
+            $.notice = ''
+        }
         console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
         const options = {
             "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
