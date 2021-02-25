@@ -1,5 +1,11 @@
 /*
-感谢github@dompling的PRAuthor: 2YaGithub: https://github.com/dompling===================
+感谢github@dompling的PR
+
+Author: 2Ya
+
+Github: https://github.com/dompling
+
+===================
 特别说明：
 1.获取多个京东cookie的脚本，不和NobyDa的京东cookie冲突。注：如与NobyDa的京东cookie重复，建议在此处删除重复的cookie
 ===================
@@ -10,26 +16,34 @@
 new Env('获取多账号京东Cookie');//此处忽略即可，为自动生成iOS端软件配置文件所需
 ===================
 [MITM]
-hostname = wq.jd.com===================Surge===================
-[Script]
-获取京东Cookie = type=http-request,pattern=^https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/JD_extra_cookie.js,script-update-interval=0===================Loon===================
-[Script]
-http-request https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion tag=获取京东Cookie, script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/JD_extra_cookie.js===================Quantumult X=====================
+hostname = me-api.jd.com
+
+===================Quantumult X=====================
 [rewrite_local]
 # 获取多账号京东Cookie
-https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion url script-request-header https://gitee.com/lxk0301/jd_scripts/raw/master/JD_extra_cookie.js===================Loon===================
+https:\/\/me-api\.jd\.com\/user_new\/info\/GetJDUserInfoUnion url script-request-header https://gitee.com/lxk0301/jd_scripts/raw/master/JD_extra_cookie.js
+
+===================Loon===================
 [Script]
-http-request https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/JD_extra_cookie.js, tag=获取多账号京东Cookie===================Surge===================
+http-request https:\/\/me-api\.jd\.com\/user_new\/info\/GetJDUserInfoUnion script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/JD_extra_cookie.js, tag=获取多账号京东Cookie
+
+===================Surge===================
 [Script]
-获取多账号京东Cookie = type=http-request,pattern=^https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion,requires-body=1,max-size=0,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/JD_extra_cookie.js,script-update-interval=0
- */const APIKey = "CookiesJD";
+获取多账号京东Cookie = type=http-request,pattern=^https:\/\/me-api\.jd\.com\/user_new\/info\/GetJDUserInfoUnion,requires-body=1,max-size=0,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/JD_extra_cookie.js,script-update-interval=0
+ */
+
+const APIKey = "CookiesJD";
 $ = new API(APIKey, true);
 const CacheKey = `#${APIKey}`;
-if ($request) GetCookie();function getCache() {
+if ($request) GetCookie();
+
+function getCache() {
   var cache = $.read(CacheKey) || "[]";
   $.log(cache);
   return JSON.parse(cache);
-}function GetCookie() {
+}
+
+function GetCookie() {
   try {
     if ($request.headers && $request.url.indexOf("GetJDUserInfoUnion") > -1) {
       var CV = $request.headers["Cookie"] || $request.headers["cookie"];
@@ -77,6 +91,7 @@ if ($request) GetCookie();function getCache() {
       } else {
         $.notify("写入京东Cookie失败", "", "请查看脚本内说明, 登录网页获取 ‼️");
       }
+      $.done();
       return;
     } else {
       $.notify("写入京东Cookie失败", "", "请检查匹配URL或配置内脚本类型 ‼️");
@@ -90,7 +105,10 @@ if ($request) GetCookie();function getCache() {
       )}\n\n${eor}\n\n${JSON.stringify($request.headers)}\n`
     );
   }
-}// prettier-ignore
+  $.done();
+}
+
+// prettier-ignore
 function ENV(){const isQX=typeof $task!=="undefined";const isLoon=typeof $loon!=="undefined";const isSurge=typeof $httpClient!=="undefined"&&!isLoon;const isJSBox=typeof require=="function"&&typeof $jsbox!="undefined";const isNode=typeof require=="function"&&!isJSBox;const isRequest=typeof $request!=="undefined";const isScriptable=typeof importModule!=="undefined";return{isQX,isLoon,isSurge,isNode,isJSBox,isRequest,isScriptable}}
 // prettier-ignore
 function HTTP(baseURL,defaultOptions={}){const{isQX,isLoon,isSurge,isScriptable,isNode}=ENV();const methods=["GET","POST","PUT","DELETE","HEAD","OPTIONS","PATCH"];function send(method,options){options=typeof options==="string"?{url:options}:options;options.url=baseURL?baseURL+options.url:options.url;options={...defaultOptions,...options};const timeout=options.timeout;const events={...{onRequest:()=>{},onResponse:(resp)=>resp,onTimeout:()=>{},},...options.events,};events.onRequest(method,options);let worker;if(isQX){worker=$task.fetch({method,...options})}else if(isLoon||isSurge||isNode){worker=new Promise((resolve,reject)=>{const request=isNode?require("request"):$httpClient;request[method.toLowerCase()](options,(err,response,body)=>{if(err)reject(err);else resolve({statusCode:response.status||response.statusCode,headers:response.headers,body,})})})}else if(isScriptable){const request=new Request(options.url);request.method=method;request.headers=options.headers;request.body=options.body;worker=new Promise((resolve,reject)=>{request.loadString().then((body)=>{resolve({statusCode:request.response.statusCode,headers:request.response.headers,body,})}).catch((err)=>reject(err))})}let timeoutid;const timer=timeout?new Promise((_,reject)=>{timeoutid=setTimeout(()=>{events.onTimeout();return reject(`${method}URL:${options.url}exceeds the timeout ${timeout}ms`)},timeout)}):null;return(timer?Promise.race([timer,worker]).then((res)=>{clearTimeout(timeoutid);return res}):worker).then((resp)=>events.onResponse(resp))}const http={};methods.forEach((method)=>(http[method.toLowerCase()]=(options)=>send(method,options)));return http}
