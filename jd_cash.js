@@ -47,10 +47,6 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       message = '';
       await ck.TotalBean(cookie, $);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-        if ($.isNode()) {
-          await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-        }
         continue
       }
       await jdCash()
@@ -58,11 +54,11 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
   }
 })()
     .catch((e) => {
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
     .finally(async () => {
       await ck.methodEnd($)
     })
-
 async function jdCash() {
   await index()
   await shareCodesFormat()
@@ -70,8 +66,7 @@ async function jdCash() {
   await index(true)
   await getReward()
 }
-
-function index(info = false) {
+function index(info=false) {
   return new Promise((resolve) => {
     $.get(taskUrl("cash_mob_home",), async (err, resp, data) => {
       try {
@@ -81,8 +76,8 @@ function index(info = false) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data.code === 0 && data.data.result) {
-              if (info) {
+            if(data.code===0 && data.data.result){
+              if(info){
                 message += `当前现金：${data.data.result.signMoney}`
                 return
               }
@@ -92,24 +87,26 @@ function index(info = false) {
                 'shareDate': data.data.result.shareDate
               }
               $.shareDate = data.data.result.shareDate;
-              $.log(`shareDate: ${$.shareDate}`)
+              // $.log(`shareDate: ${$.shareDate}`)
               // console.log(helpInfo)
-              for (let task of data.data.result.taskInfos) {
+              for(let task of data.data.result.taskInfos){
                 if (task.type === 4) {
                   for (let i = task.doTimes; i < task.times; ++i) {
-                    console.log(`去做${task.name}任务 ${i + 1}/${task.times}`)
+                    console.log(`去做${task.name}任务 ${i+1}/${task.times}`)
                     await doTask(task.type, task.jump.params.skuId)
                     await $.wait(5000)
                   }
-                } else if (task.type === 2) {
+                }
+                else if (task.type === 2) {
                   for (let i = task.doTimes; i < task.times; ++i) {
-                    console.log(`去做${task.name}任务 ${i + 1}/${task.times}`)
+                    console.log(`去做${task.name}任务 ${i+1}/${task.times}`)
                     await doTask(task.type, task.jump.params.shopId)
                     await $.wait(5000)
                   }
-                } else if (task.type === 16 || task.type === 3 || task.type === 5 || task.type === 17 || task.type === 21) {
+                }
+                else if (task.type === 16 || task.type===3 || task.type===5 || task.type===17 || task.type===21) {
                   for (let i = task.doTimes; i < task.times; ++i) {
-                    console.log(`去做${task.name}任务 ${i + 1}/${task.times}`)
+                    console.log(`去做${task.name}任务 ${i+1}/${task.times}`)
                     await doTask(task.type, task.jump.params.url)
                     await $.wait(5000)
                   }
@@ -127,13 +124,12 @@ function index(info = false) {
     })
   })
 }
-
 async function helpFriends() {
   $.canHelp = true
   for (let code of $.newShareCodes) {
     console.log(`去帮助好友${code['inviteCode']}`)
     await helpFriend(code)
-    if (!$.canHelp) break
+    if(!$.canHelp) break
     await $.wait(1000)
   }
   // if (helpAuthor && $.authorCode) {
@@ -145,10 +141,9 @@ async function helpFriends() {
   //   }
   // }
 }
-
 function helpFriend(helpInfo) {
   return new Promise((resolve) => {
-    $.get(taskUrl("cash_mob_assist", {...helpInfo, "source": 1}), (err, resp, data) => {
+    $.get(taskUrl("cash_mob_assist", {...helpInfo,"source":1}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -156,13 +151,13 @@ function helpFriend(helpInfo) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data.code === 0 && data.data.bizCode === 0) {
+            if( data.code === 0 && data.data.bizCode === 0){
               console.log(`助力成功，获得${data.data.result.cashStr}`)
               // console.log(data.data.result.taskInfos)
-            } else if (data.data.bizCode === 207) {
+            } else if (data.data.bizCode===207){
               console.log(data.data.bizMsg)
               $.canHelp = false
-            } else {
+            } else{
               console.log(data.data.bizMsg)
             }
           }
@@ -176,10 +171,9 @@ function helpFriend(helpInfo) {
     })
   })
 }
-
-function doTask(type, taskInfo) {
+function doTask(type,taskInfo) {
   return new Promise((resolve) => {
-    $.get(taskUrl("cash_doTask", {"type": type, "taskInfo": taskInfo}), (err, resp, data) => {
+    $.get(taskUrl("cash_doTask",{"type":type,"taskInfo":taskInfo}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -187,10 +181,10 @@ function doTask(type, taskInfo) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data.code === 0) {
+            if( data.code === 0){
               console.log(`任务完成成功`)
               // console.log(data.data.result.taskInfos)
-            } else {
+            }else{
               console.log(data)
             }
           }
@@ -204,10 +198,9 @@ function doTask(type, taskInfo) {
     })
   })
 }
-
 function getReward() {
   return new Promise((resolve) => {
-    $.get(taskUrl("cash_mob_reward", {"source": 1, "rewardNode": ""}), (err, resp, data) => {
+    $.get(taskUrl("cash_mob_reward",{"source":1,"rewardNode":""}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -215,10 +208,10 @@ function getReward() {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data.code === 0 && data.data.bizCode === 0) {
+            if( data.code === 0 && data.data.bizCode === 0 ){
               console.log(`领奖成功，${data.data.result.shareRewardTip}【${data.data.result.shareRewardAmount}】`)
               // console.log(data.data.result.taskInfos)
-            } else {
+            }else{
               console.log(`领奖失败，${data.data.bizMsg}`)
             }
           }
@@ -243,14 +236,10 @@ function showMsg() {
     resolve()
   })
 }
-
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({
-      url: `https://code.chiang.fun/api/v1/jd/jdcash/read/${randomCount}/`,
-      'timeout': 10000
-    }, (err, resp, data) => {
+    $.get({url: `https://code.chiang.fun/api/v1/jd/jdcash/read/${randomCount}/`, 'timeout': 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -272,7 +261,6 @@ function readShareCode() {
     resolve()
   })
 }
-
 //格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
@@ -317,7 +305,6 @@ function requireConfig() {
     resolve()
   })
 }
-
 function deepCopy(obj) {
   let objClone = Array.isArray(obj) ? [] : {};
   if (obj && typeof obj === "object") {
@@ -335,7 +322,6 @@ function deepCopy(obj) {
   }
   return objClone;
 }
-
 function taskUrl(functionId, body = {}) {
   return {
     url: `${JD_API_HOST}?functionId=${functionId}&body=${escape(JSON.stringify(body))}&appid=CashRewardMiniH5Env&appid=9.1.0`,
@@ -352,71 +338,24 @@ function taskUrl(functionId, body = {}) {
   }
 }
 
-function TotalBean() {
-  return new Promise(async resolve => {
-    const options = {
-      "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
-      "headers": {
-        "Accept": "application/json,text/plain, */*",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-cn",
-        "Connection": "keep-alive",
-        "Cookie": cookie,
-        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
-      }
-    }
-    $.post(options, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (data) {
-            data = JSON.parse(data);
-            if (data['retcode'] === 13) {
-              $.isLogin = false; //cookie过期
-              return
-            }
-            if (data['retcode'] === 0) {
-              $.nickName = data['base'].nickname;
-            } else {
-              $.nickName = $.UserName
-            }
-          } else {
-            console.log(`京东服务器返回空数据`)
-          }
-        }
-      } catch (e) {
         $.noticeName = `${$.name}错误`
         $.notice += `\n${e}`
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
-
 function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
     }
   } catch (e) {
-    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
 }
-
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

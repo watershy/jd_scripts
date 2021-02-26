@@ -1,6 +1,6 @@
 /**
 宠汪汪邀请助力与赛跑助力脚本，感谢github@Zero-S1提供帮助
-更新时间：2021-1-7（宠汪汪助力更新Token的配置正则表达式已改）
+更新时间：2021-2-26
 活动入口：京东APP我的-更多工具-宠汪汪
 token时效很短，几个小时就失效了,闲麻烦的放弃就行
 每天拿到token后，可一次性运行完毕即可。
@@ -44,9 +44,20 @@ http-request ^https:\/\/draw\.jdfcloud\.com(\/mirror)?\/\/api\/user\/user\/detai
 const isRequest = typeof $request != "undefined"
 const $ = new Env('宠汪汪赛跑');
 const JD_BASE_API = `https://draw.jdfcloud.com//pet`;
-//此处填入你需要助力好友的京东用户名
 //下面给出好友邀请助力的示例填写规则
-var _0xod3='jsjiami.com.v6',_0x4ba3=[_0xod3,'FMObc8KWRw==','W23DnRrDhcOH','DsOFe8KaSxoO','wolOw7gAwp3Dkw==','G8OTwrXCuMOGw4DDgw==','wqrDnsONeHwWw5jDsV3Dr2A9woLCu8Olw6E=','6KK75ouX5Y6r55qu6K+j5b6Ow4EO','bD17woTCnQwbwofCmzXCpyLDncOWRsKT','bD17wofCmFlMw5fDiznDtyPCh8KGRcOH','wrsXwrvDpAfDhU0H','wqZtw5AMw5fDrsK8w5EGwrLDvzPDnU3DrsOQ','6KOq5omY5Y6B55iY6K+h5b+fw57DusOLwrzCmhpkwprCl8OpwpASOmnCsMKnwqBEVG3DlUk6EsKoAU8Sw6ZqWQEEfgQwRMOKEXzDvQzCn8KsL8O5w6HCqXV+JsO2w5tpGcOYKDRuw6fDpW7Cu2REYkjDkmdnI8OvwrnDicKUL8K2RcONQMKRwpPCsMK3woHCtBrDnzsLdx7DqitvwqsORMKIw4dMwrbDj8Ovw6nDg8K2w6M5wqB9A09aB8KWP0ZSwrbCrsK0w7d6fgPDtS7CmnTCgQwow7FpwojDpXtkR8KUwqbDvcKSw6XDp8Kxwq0tC8KtdiTDoGUsBV0RwofDrsOZMyjDssOOYR9Gwp4nDsOYfwhiJw==','HjsjENhWSidaAmHxlli.com.v6=='];(function(_0x2d8f05,_0x4b81bb,_0x4d74cb){var _0x32719f=function(_0x2dc776,_0x362d54,_0x2576f4,_0x5845c1,_0x4fbc7a){_0x362d54=_0x362d54>>0x8,_0x4fbc7a='po';var _0x292610='shift',_0x151bd2='push';if(_0x362d54<_0x2dc776){while(--_0x2dc776){_0x5845c1=_0x2d8f05[_0x292610]();if(_0x362d54===_0x2dc776){_0x362d54=_0x5845c1;_0x2576f4=_0x2d8f05[_0x4fbc7a+'p']();}else if(_0x362d54&&_0x2576f4['replace'](/[HENhWSdAHxll=]/g,'')===_0x362d54){_0x2d8f05[_0x151bd2](_0x5845c1);}}_0x2d8f05[_0x151bd2](_0x2d8f05[_0x292610]());}return 0x73f5d;};return _0x32719f(++_0x4b81bb,_0x4d74cb)>>_0x4b81bb^_0x4d74cb;}(_0x4ba3,0x14f,0x14f00));var _0x51f5=function(_0x542044,_0x17cf38){_0x542044=~~'0x'['concat'](_0x542044);var _0x112687=_0x4ba3[_0x542044];if(_0x51f5['bSwgUi']===undefined){(function(){var _0xab313c=typeof window!=='undefined'?window:typeof process==='object'&&typeof require==='function'&&typeof global==='object'?global:this;var _0x4e6f6d='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';_0xab313c['atob']||(_0xab313c['atob']=function(_0x5f39d6){var _0x208cb4=String(_0x5f39d6)['replace'](/=+$/,'');for(var _0x3d6b71=0x0,_0xe5dc75,_0x3df178,_0x4fddde=0x0,_0x35f558='';_0x3df178=_0x208cb4['charAt'](_0x4fddde++);~_0x3df178&&(_0xe5dc75=_0x3d6b71%0x4?_0xe5dc75*0x40+_0x3df178:_0x3df178,_0x3d6b71++%0x4)?_0x35f558+=String['fromCharCode'](0xff&_0xe5dc75>>(-0x2*_0x3d6b71&0x6)):0x0){_0x3df178=_0x4e6f6d['indexOf'](_0x3df178);}return _0x35f558;});}());var _0x231047=function(_0x45dc9c,_0x17cf38){var _0x537b35=[],_0x277672=0x0,_0x3f8468,_0x1c92dc='',_0x17ca2c='';_0x45dc9c=atob(_0x45dc9c);for(var _0x962db4=0x0,_0x42829e=_0x45dc9c['length'];_0x962db4<_0x42829e;_0x962db4++){_0x17ca2c+='%'+('00'+_0x45dc9c['charCodeAt'](_0x962db4)['toString'](0x10))['slice'](-0x2);}_0x45dc9c=decodeURIComponent(_0x17ca2c);for(var _0x411a1b=0x0;_0x411a1b<0x100;_0x411a1b++){_0x537b35[_0x411a1b]=_0x411a1b;}for(_0x411a1b=0x0;_0x411a1b<0x100;_0x411a1b++){_0x277672=(_0x277672+_0x537b35[_0x411a1b]+_0x17cf38['charCodeAt'](_0x411a1b%_0x17cf38['length']))%0x100;_0x3f8468=_0x537b35[_0x411a1b];_0x537b35[_0x411a1b]=_0x537b35[_0x277672];_0x537b35[_0x277672]=_0x3f8468;}_0x411a1b=0x0;_0x277672=0x0;for(var _0x452d95=0x0;_0x452d95<_0x45dc9c['length'];_0x452d95++){_0x411a1b=(_0x411a1b+0x1)%0x100;_0x277672=(_0x277672+_0x537b35[_0x411a1b])%0x100;_0x3f8468=_0x537b35[_0x411a1b];_0x537b35[_0x411a1b]=_0x537b35[_0x277672];_0x537b35[_0x277672]=_0x3f8468;_0x1c92dc+=String['fromCharCode'](_0x45dc9c['charCodeAt'](_0x452d95)^_0x537b35[(_0x537b35[_0x411a1b]+_0x537b35[_0x277672])%0x100]);}return _0x1c92dc;};_0x51f5['uERWbC']=_0x231047;_0x51f5['wXWxPt']={};_0x51f5['bSwgUi']=!![];}var _0x406e23=_0x51f5['wXWxPt'][_0x542044];if(_0x406e23===undefined){if(_0x51f5['ySEjIN']===undefined){_0x51f5['ySEjIN']=!![];}_0x112687=_0x51f5['uERWbC'](_0x112687,_0x17cf38);_0x51f5['wXWxPt'][_0x542044]=_0x112687;}else{_0x112687=_0x406e23;}return _0x112687;};let invite_pins=['jd_6cd93e613b0e5,被折叠的记忆33,jd_704a2e5e28a66,jd_45a6b5953b15b,zooooo58,jd_66f5cecc1efcd,jd_41345a6f96aa5,jd_sIhNpDXJehOr,jd_mCbhXxmqzYJC,wddpzLSxORvLGo,jd_7bb2be8dbd65c'];let run_pins=[_0x51f5('0','H1$v')];let temp=run_pins[0x0][_0x51f5('1','EsGC')](',');let fixPins=temp[_0x51f5('2','r*yV')](temp[_0x51f5('3','EsGC')]('jd_6cd93e613b0e5'),0x1);fixPins['push'](...temp[_0x51f5('4','8b]e')](temp[_0x51f5('5','EGiV')]('被折叠的记忆33'),0x1));run_pins=[temp['join'](',')];let friendsArr=[_0x51f5('6','sgc['),_0x51f5('7','Ik*@'),_0x51f5('8','5MKk'),_0x51f5('9','5MKk'),_0x51f5('a','qPzP'),_0x51f5('b','Gr78'),'jd_41345a6f96aa5'];;_0xod3='jsjiami.com.v6';
+let invite_pins = ['jd_6cd93e613b0e5,被折叠的记忆33,jd_704a2e5e28a66,jd_45a6b5953b15b,zooooo58,jd_66f5cecc1efcd,jd_41345a6f96aa5,jd_sIhNpDXJehOr,jd_mCbhXxmqzYJC,wddpzLSxORvLGo,jd_7bb2be8dbd65c'];
+//下面给出好友赛跑助力的示例填写规则
+let run_pins = ['jd_6cd93e613b0e5,被折叠的记忆33,jd_704a2e5e28a66,jd_45a6b5953b15b,zooooo58,jd_66f5cecc1efcd,jd_41345a6f96aa5,jd_sIhNpDXJehOr,jd_mCbhXxmqzYJC,wddpzLSxORvLGo,jd_7bb2be8dbd65c'];
+let temp = run_pins[0].split(',')
+let fixPins = temp.splice(temp.indexOf('jd_6cd93e613b0e5'), 1);
+fixPins.push(...temp.splice(temp.indexOf('被折叠的记忆33'), 1));
+const randomPins = getRandomArrayElements(temp, 4);
+temp = [...fixPins, ...randomPins];
+run_pins = [temp.join(',')];
+// $.LKYLToken = '76fe7794c475c18711e3b47185f114b5' || $.getdata('jdJoyRunToken');
+// $.LKYLToken = $.getdata('jdJoyRunToken');
+//friendsArr内置太多会导致IOS端部分软件重启,可PR过来(此处目的:帮别人助力可得30g狗粮)
+let friendsArr = ["jd_6cd93e613b0e5", "被折叠的记忆33", "jd_704a2e5e28a66", "jd_45a6b5953b15b", "zooooo58", "jd_66f5cecc1efcd", "jd_41345a6f96aa5"]
 // $.LKYLToken = '76fe7794c475c18711e3b47185f114b5' || $.getdata('jdJoyRunToken');
 // $.LKYLToken = $.getdata('jdJoyRunToken');
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -80,24 +91,38 @@ async function getToken() {
     const LKYLToken = body.data && body.data.token;
     if (LKYLToken) {
       $.log(`${$.name} token\n${LKYLToken}\n`);
-      count = $.getdata('countFlag') ? $.getdata('countFlag') * 1 : 0;
-      count ++;
-      console.log(`count: ${count}`)
-      $.setdata(`${count}`, 'countFlag');
-      if ($.getdata('countFlag') * 1 === 2) {
-        count = 0;
-        $.setdata(`${count}`, 'countFlag');
-        $.msg($.name, '更新Token: 成功🎉', ``);
-        console.log(`开始上传Token，${LKYLToken}\n`)
-        await $.http.get({url: `http://jd.turinglabs.net/api/v2/jd/joy/create/${LKYLToken}/`}).then((resp) => {
-          if (resp.statusCode === 200) {
+      $.msg($.name, '更新Token: 成功🎉', ``);
+      console.log(`\nToken，${LKYLToken}\n`)
+      $.http.get({url: `http://jd.turinglabs.net/api/v2/jd/joy/create/${LKYLToken}/`}).then((resp) => {
+        if (resp.statusCode === 200) {
+          try {
             let { body } = resp;
             console.log(`Token提交结果:${body}\n`)
             body = JSON.parse(body);
             console.log(`${body.message}`)
+          } catch (e) {
+            console.log(`更新Token异常:${e}`)
           }
-        });
-      }
+        }
+      });
+      // count = $.getdata('countFlag') ? $.getdata('countFlag') * 1 : 0;
+      // count ++;
+      // console.log(`count: ${count}`)
+      // $.setdata(`${count}`, 'countFlag');
+      // if ($.getdata('countFlag') * 1 === 2) {
+      //   count = 0;
+      //   $.setdata(`${count}`, 'countFlag');
+      //   $.msg($.name, '更新Token: 成功🎉', ``);
+      //   console.log(`开始上传Token，${LKYLToken}\n`)
+      //   await $.http.get({url: `http://jd.turinglabs.net/api/v2/jd/joy/create/${LKYLToken}/`}).then((resp) => {
+      //     if (resp.statusCode === 200) {
+      //       let { body } = resp;
+      //       console.log(`Token提交结果:${body}\n`)
+      //       body = JSON.parse(body);
+      //       console.log(`${body.message}`)
+      //     }
+      //   });
+      // }
       $.setdata(LKYLToken, 'jdJoyRunToken');
     }
     $.done({ body: JSON.stringify(body) })
@@ -410,6 +435,42 @@ function jsonParse(str) {
       return [];
     }
   }
+}
+function getRandomArrayElements(arr, count) {
+  let shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
+}
+function getFriendPins() {
+  return new Promise(resolve => {
+    $.get({
+      url: "https://gitee.com/lxk0301/updateTeam/raw/master/friendPins.json",
+      headers:{
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      },
+      timeout: 100000}, async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`getFriendPins::${JSON.stringify(err)}`);
+        } else {
+          $.friendPins = data && JSON.parse(data);
+          if ($.friendPins && $.friendPins['friendsArr']) {
+            friendsArr = $.friendPins['friendsArr'];
+            console.log(`\n共提供 ${friendsArr.length}个好友供来进行邀请助力\n`)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
 }
 isRequest ? getToken() : main();
 var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxb227b=["\x69\x73\x4E\x6F\x64\x65","\x63\x72\x79\x70\x74\x6F\x2D\x6A\x73","\x39\x38\x63\x31\x34\x63\x39\x39\x37\x66\x64\x65\x35\x30\x63\x63\x31\x38\x62\x64\x65\x66\x65\x63\x66\x64\x34\x38\x63\x65\x62\x37","\x70\x61\x72\x73\x65","\x55\x74\x66\x38","\x65\x6E\x63","\x65\x61\x36\x35\x33\x66\x34\x66\x33\x63\x35\x65\x64\x61\x31\x32","\x63\x69\x70\x68\x65\x72\x74\x65\x78\x74","\x43\x42\x43","\x6D\x6F\x64\x65","\x50\x6B\x63\x73\x37","\x70\x61\x64","\x65\x6E\x63\x72\x79\x70\x74","\x41\x45\x53","\x48\x65\x78","\x73\x74\x72\x69\x6E\x67\x69\x66\x79","\x42\x61\x73\x65\x36\x34","\x64\x65\x63\x72\x79\x70\x74","\x6C\x65\x6E\x67\x74\x68","\x6D\x61\x70","\x73\x6F\x72\x74","\x6B\x65\x79\x73","\x67\x69\x66\x74","\x70\x65\x74","\x69\x6E\x63\x6C\x75\x64\x65\x73","\x26","\x6A\x6F\x69\x6E","\x3D","\x3F","\x69\x6E\x64\x65\x78\x4F\x66","\x63\x6F\x6D\x6D\x6F\x6E\x2F","\x72\x65\x70\x6C\x61\x63\x65","\x68\x65\x61\x64\x65\x72","\x75\x72\x6C","\x72\x65\x71\x53\x6F\x75\x72\x63\x65\x3D\x68\x35","\x61\x73\x73\x69\x67\x6E","\x6D\x65\x74\x68\x6F\x64","\x47\x45\x54","\x64\x61\x74\x61","\x74\x6F\x4C\x6F\x77\x65\x72\x43\x61\x73\x65","\x6B\x65\x79\x43\x6F\x64\x65","\x63\x6F\x6E\x74\x65\x6E\x74\x2D\x74\x79\x70\x65","\x43\x6F\x6E\x74\x65\x6E\x74\x2D\x54\x79\x70\x65","","\x67\x65\x74","\x70\x6F\x73\x74","\x61\x70\x70\x6C\x69\x63\x61\x74\x69\x6F\x6E\x2F\x78\x2D\x77\x77\x77\x2D\x66\x6F\x72\x6D\x2D\x75\x72\x6C\x65\x6E\x63\x6F\x64\x65\x64","\x5F","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\x6C\x6F\x67","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];function taroRequest(_0x1226x2){const _0x1226x3=$[__Oxb227b[0x0]]()?require(__Oxb227b[0x1]):CryptoJS;const _0x1226x4=__Oxb227b[0x2];const _0x1226x5=_0x1226x3[__Oxb227b[0x5]][__Oxb227b[0x4]][__Oxb227b[0x3]](_0x1226x4);const _0x1226x6=_0x1226x3[__Oxb227b[0x5]][__Oxb227b[0x4]][__Oxb227b[0x3]](__Oxb227b[0x6]);let _0x1226x7={"\x41\x65\x73\x45\x6E\x63\x72\x79\x70\x74":function _0x1226x8(_0x1226x2){var _0x1226x9=_0x1226x3[__Oxb227b[0x5]][__Oxb227b[0x4]][__Oxb227b[0x3]](_0x1226x2);return _0x1226x3[__Oxb227b[0xd]][__Oxb227b[0xc]](_0x1226x9,_0x1226x5,{"\x69\x76":_0x1226x6,"\x6D\x6F\x64\x65":_0x1226x3[__Oxb227b[0x9]][__Oxb227b[0x8]],"\x70\x61\x64\x64\x69\x6E\x67":_0x1226x3[__Oxb227b[0xb]][__Oxb227b[0xa]]})[__Oxb227b[0x7]].toString()},"\x41\x65\x73\x44\x65\x63\x72\x79\x70\x74":function _0x1226xa(_0x1226x2){var _0x1226x9=_0x1226x3[__Oxb227b[0x5]][__Oxb227b[0xe]][__Oxb227b[0x3]](_0x1226x2),_0x1226xb=_0x1226x3[__Oxb227b[0x5]][__Oxb227b[0x10]][__Oxb227b[0xf]](_0x1226x9);return _0x1226x3[__Oxb227b[0xd]][__Oxb227b[0x11]](_0x1226xb,_0x1226x5,{"\x69\x76":_0x1226x6,"\x6D\x6F\x64\x65":_0x1226x3[__Oxb227b[0x9]][__Oxb227b[0x8]],"\x70\x61\x64\x64\x69\x6E\x67":_0x1226x3[__Oxb227b[0xb]][__Oxb227b[0xa]]}).toString(_0x1226x3[__Oxb227b[0x5]].Utf8).toString()},"\x42\x61\x73\x65\x36\x34\x45\x6E\x63\x6F\x64\x65":function _0x1226xc(_0x1226x2){var _0x1226x9=_0x1226x3[__Oxb227b[0x5]][__Oxb227b[0x4]][__Oxb227b[0x3]](_0x1226x2);return _0x1226x3[__Oxb227b[0x5]][__Oxb227b[0x10]][__Oxb227b[0xf]](_0x1226x9)},"\x42\x61\x73\x65\x36\x34\x44\x65\x63\x6F\x64\x65":function _0x1226xd(_0x1226x2){return _0x1226x3[__Oxb227b[0x5]][__Oxb227b[0x10]][__Oxb227b[0x3]](_0x1226x2).toString(_0x1226x3[__Oxb227b[0x5]].Utf8)},"\x4D\x64\x35\x65\x6E\x63\x6F\x64\x65":function _0x1226xe(_0x1226x2){return _0x1226x3.MD5(_0x1226x2).toString()},"\x6B\x65\x79\x43\x6F\x64\x65":__Oxb227b[0x2]};const _0x1226xf=function _0x1226x10(_0x1226x2,_0x1226x9){if(_0x1226x2 instanceof  Array){_0x1226x9= _0x1226x9|| [];for(var _0x1226xb=0;_0x1226xb< _0x1226x2[__Oxb227b[0x12]];_0x1226xb++){_0x1226x9[_0x1226xb]= _0x1226x10(_0x1226x2[_0x1226xb],_0x1226x9[_0x1226xb])}}else {!(_0x1226x2 instanceof  Array)&& _0x1226x2 instanceof  Object?(_0x1226x9= _0x1226x9|| {},Object[__Oxb227b[0x15]](_0x1226x2)[__Oxb227b[0x14]]()[__Oxb227b[0x13]](function(_0x1226xb){_0x1226x9[_0x1226xb]= _0x1226x10(_0x1226x2[_0x1226xb],_0x1226x9[_0x1226xb])})):_0x1226x9= _0x1226x2};return _0x1226x9};const _0x1226x11=function _0x1226x12(_0x1226x2){for(var _0x1226x9=[__Oxb227b[0x16],__Oxb227b[0x17]],_0x1226xb=!1,_0x1226x3=0;_0x1226x3< _0x1226x9[__Oxb227b[0x12]];_0x1226x3++){var _0x1226x4=_0x1226x9[_0x1226x3];_0x1226x2[__Oxb227b[0x18]](_0x1226x4)&&  !_0x1226xb&& (_0x1226xb=  !0)};return _0x1226xb};const _0x1226x13=function _0x1226x14(_0x1226x2,_0x1226x9){if(_0x1226x9&& Object[__Oxb227b[0x15]](_0x1226x9)[__Oxb227b[0x12]]> 0){var _0x1226xb=Object[__Oxb227b[0x15]](_0x1226x9)[__Oxb227b[0x13]](function(_0x1226x2){return _0x1226x2+ __Oxb227b[0x1b]+ _0x1226x9[_0x1226x2]})[__Oxb227b[0x1a]](__Oxb227b[0x19]);return _0x1226x2[__Oxb227b[0x1d]](__Oxb227b[0x1c])>= 0?_0x1226x2+ __Oxb227b[0x19]+ _0x1226xb:_0x1226x2+ __Oxb227b[0x1c]+ _0x1226xb};return _0x1226x2};const _0x1226x15=function _0x1226x16(_0x1226x2){for(var _0x1226x9=_0x1226x6,_0x1226xb=0;_0x1226xb< _0x1226x9[__Oxb227b[0x12]];_0x1226xb++){var _0x1226x3=_0x1226x9[_0x1226xb];_0x1226x2[__Oxb227b[0x18]](_0x1226x3)&&  !_0x1226x2[__Oxb227b[0x18]](__Oxb227b[0x1e]+ _0x1226x3)&& (_0x1226x2= _0x1226x2[__Oxb227b[0x1f]](_0x1226x3,__Oxb227b[0x1e]+ _0x1226x3))};return _0x1226x2};var _0x1226x9=_0x1226x2,_0x1226xb=(_0x1226x9[__Oxb227b[0x20]],_0x1226x9[__Oxb227b[0x21]]);_0x1226xb+= (_0x1226xb[__Oxb227b[0x1d]](__Oxb227b[0x1c])>  -1?__Oxb227b[0x19]:__Oxb227b[0x1c])+ __Oxb227b[0x22];var _0x1226x17=function _0x1226x18(_0x1226x2){var _0x1226x9=_0x1226x2[__Oxb227b[0x21]],_0x1226xb=_0x1226x2[__Oxb227b[0x24]],_0x1226x3=void(0)=== _0x1226xb?__Oxb227b[0x25]:_0x1226xb,_0x1226x4=_0x1226x2[__Oxb227b[0x26]],_0x1226x6=_0x1226x2[__Oxb227b[0x20]],_0x1226x19=void(0)=== _0x1226x6?{}:_0x1226x6,_0x1226x1a=_0x1226x3[__Oxb227b[0x27]](),_0x1226x1b=_0x1226x7[__Oxb227b[0x28]],_0x1226x1c=_0x1226x19[__Oxb227b[0x29]]|| _0x1226x19[__Oxb227b[0x2a]]|| __Oxb227b[0x2b],_0x1226x1d=__Oxb227b[0x2b],_0x1226x1e=+ new Date();return _0x1226x1d= __Oxb227b[0x2c]!== _0x1226x1a&& (__Oxb227b[0x2d]!== _0x1226x1a|| __Oxb227b[0x2e]!== _0x1226x1c[__Oxb227b[0x27]]()&& _0x1226x4&& Object[__Oxb227b[0x15]](_0x1226x4)[__Oxb227b[0x12]])?_0x1226x7.Md5encode(_0x1226x7.Base64Encode(_0x1226x7.AesEncrypt(__Oxb227b[0x2b]+ JSON[__Oxb227b[0xf]](_0x1226xf(_0x1226x4))))+ __Oxb227b[0x2f]+ _0x1226x1b+ __Oxb227b[0x2f]+ _0x1226x1e):_0x1226x7.Md5encode(__Oxb227b[0x2f]+ _0x1226x1b+ __Oxb227b[0x2f]+ _0x1226x1e),_0x1226x11(_0x1226x9)&& (_0x1226x9= _0x1226x13(_0x1226x9,{"\x6C\x6B\x73":_0x1226x1d,"\x6C\x6B\x74":_0x1226x1e}),_0x1226x9= _0x1226x15(_0x1226x9)),Object[__Oxb227b[0x23]](_0x1226x2,{"\x75\x72\x6C":_0x1226x9})}(_0x1226x2= Object[__Oxb227b[0x23]](_0x1226x2,{"\x75\x72\x6C":_0x1226xb}));return _0x1226x17}(function(_0x1226x1f,_0x1226xf,_0x1226x20,_0x1226x21,_0x1226x1c,_0x1226x22){_0x1226x22= __Oxb227b[0x30];_0x1226x21= function(_0x1226x19){if( typeof alert!== _0x1226x22){alert(_0x1226x19)};if( typeof console!== _0x1226x22){console[__Oxb227b[0x31]](_0x1226x19)}};_0x1226x20= function(_0x1226x3,_0x1226x1f){return _0x1226x3+ _0x1226x1f};_0x1226x1c= _0x1226x20(__Oxb227b[0x32],_0x1226x20(_0x1226x20(__Oxb227b[0x33],__Oxb227b[0x34]),__Oxb227b[0x35]));try{_0x1226x1f= __encode;if(!( typeof _0x1226x1f!== _0x1226x22&& _0x1226x1f=== _0x1226x20(__Oxb227b[0x36],__Oxb227b[0x37]))){_0x1226x21(_0x1226x1c)}}catch(e){_0x1226x21(_0x1226x1c)}})({})
