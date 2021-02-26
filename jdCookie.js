@@ -10,12 +10,12 @@ let getCookie = function ($) {
         $.cookieMap = new Map()
         let cookieArr = []
         let res = await query($)
-        if (res.length !== 0) {
-            if (res[0].cookie_id === 'a') {
+        if (res.length !== 0 && res[0]['cookie_id']) {
+            if (res[0]['cookie_id'] === 'a') {
                 $.sql = 'select * from jd_cookie'
             } else {
                 $.sql = 'select * from jd_cookie where id in (?)'
-                $.values = [res[0].cookie_id.split(',')]
+                $.values = [res[0]['cookie_id'].split(',')]
             }
         } else {
             $.sql = 'select * from jd_cookie where possessor = ?'
@@ -134,11 +134,11 @@ let notice = function ($) {
         try {
             $.notice += `----------------------------\n`
             if ($.cookieMap.get($.UserName)) {
-                $.notice += `【京东账号】${$.cookieMap.get($.UserName)}\n`;
+                $.notice += `【京东账号】：${$.cookieMap.get($.UserName)}\n`;
             } else if ($.nickName) {
-                $.notice += `【京东账号】${$.nickName}\n`;
+                $.notice += `【京东账号】：${$.nickName}\n`;
             } else {
-                $.notice += `【京东账号】${$.UserName}\n`;
+                $.notice += `【京东账号】：${$.UserName}\n`;
             }
         } catch (e) {
             $.noticeName = `${$.name}错误`
