@@ -27,7 +27,7 @@ cron "0 9,12,18 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/mast
 =========================Surge============================
 京喜农场 = type=cron,cronexp="0 9,12,18 * * *",timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jxnc.js
 京喜农场cookie = type=http-request,pattern=^https\:\/\/wq\.jd\.com\/cubeactive\/farm\/dotask,requires-body=0,max-size=0,script-path= https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_tokens.js
- 
+
 =========================小火箭===========================
 京喜农场 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jxnc.js, cronexpr="0 9,12,18 * * *", timeout=3600, enable=true
 京喜农场APP种子cookie = type=http-request,script-path=https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_tokens.js,pattern=^https\:\/\/wq\.jd\.com\/cubeactive\/farm\/dotask,max-size=131072,timeout=3600,enable=true
@@ -63,7 +63,8 @@ $.maxHelpNum = $.isNode() ? 8 : 4; // 随机助力最大执行次数
 $.helpNum = 0; // 当前账号 随机助力次数
 let assistUserShareCode = 0; // 随机助力用户 share code
 
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
     await requireConfig();
     if (!cookieArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -78,7 +79,7 @@ let assistUserShareCode = 0; // 随机助力用户 share code
             $.isLogin = true;
             $.nickName = '';
             $.log(`\n************* 检查【京东账号${$.index}】${$.UserName} cookie 是否有效 *************`);
-            await TotalBean();
+            await jdCookieNode.TotalBean(cookie, $);
             $.log(`开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});

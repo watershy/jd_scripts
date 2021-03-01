@@ -23,14 +23,23 @@ cron "0 8 1-8/1,27,28 2,3 *" script-path=https://gitee.com/lxk0301/jd_scripts/ra
 
 const $ = new Env('女装盲盒抽京豆');
 const notify = $.isNode() ? require('./sendNotify') : '';
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 
-const ck = require('./jdCookie.js')
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
+  };
+} else {
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+}
 
-!(async () => {
-  cookiesArr = await ck.getCookie($);
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -44,8 +53,15 @@ const ck = require('./jdCookie.js')
       $.nickName = '';
       $.beans = 0
       message = '';
-      await ck.TotalBean(cookie, $);
+      await jdCookieNode.TotalBean(cookie, $);
+      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        } else {
+          $.setdata('', `CookieJD${i ? i + 1 : ""}`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
+        }
         continue
       }
       await jdMh()
@@ -68,7 +84,15 @@ async function jdMh() {
     await getUserInfo()
     await $.wait(500)
   }
-  console.log(`本次运行获得${$.beans}京豆`)
+  await showMsg();
+}
+
+function showMsg() {
+  return new Promise(resolve => {
+    message += `本次运行获得${$.beans}京豆`
+    $.msg($.name, '', `京东账号${$.index}${$.nickName}\n${message}`);
+    resolve()
+  })
 }
 
 function getInfo() {

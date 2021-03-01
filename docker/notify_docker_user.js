@@ -16,5 +16,6 @@ async function image_update_notify() {
   }
 }
 !(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   await image_update_notify();
 })().catch((e) => console.log(e))

@@ -8,21 +8,41 @@
 ============Quantumultx===============
 [task_local]
 #京东汽车
-10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true================Loon==============
+10 7 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
+
+================Loon==============
 [Script]
-cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车===============Surge=================
-京东汽车 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js============小火箭=========
+cron "10 7 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, tag=京东汽车
+
+===============Surge=================
+京东汽车 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js
+
+============小火箭=========
 京东汽车 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_car.js, cronexpr="10 7 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东汽车');
+
+const notify = $.isNode() ? require('./sendNotify') : '';
+//Node.js用户请在jdCookie.js处填写京东ck;
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
+const randomCount = $.isNode() ? 20 : 5;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
+  };
+} else {
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+}
 const JD_API_HOST = 'https://car-member.jd.com/api/';
-const ck = require('./jdCookie.js')
-!(async () => {
-  cookiesArr = await ck.getCookie($);
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -33,25 +53,27 @@ const ck = require('./jdCookie.js')
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await ck.TotalBean(cookie, $);
+      await jdCookieNode.TotalBean(cookie, $);
+      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+
         if ($.isNode()) {
-          $.noticeName = `cookie失效`
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : ""}`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
       }
       await jdCar();
+      await showMsg();
     }
   }
 })()
-    .catch((e) => {
-    })
-    .finally(async () => {
-      await ck.methodEnd($)
-    })
+  .catch((e) => {
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+  })
+  .finally(() => {
+    $.done();
+  })
 
 async function jdCar() {
   await check()
@@ -84,8 +106,7 @@ function check() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -111,8 +132,7 @@ function sign() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -144,8 +164,7 @@ function mission() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -170,8 +189,7 @@ function doMission(missionId) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -195,8 +213,7 @@ function receiveMission(missionId) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -218,7 +235,7 @@ function getPoint() {
               if (data.data.remainPoint >= data.data.oncePoint) {
                 console.log(`当前赛点：${data.data.remainPoint}/${data.data.oncePoint}，可以兑换京豆，请打开APP兑换`)
                 message += `当前赛点：${data.data.remainPoint}/${data.data.oncePoint}，可以兑换京豆，请打开APP兑换\n`
-              } else {
+              }else{
                 console.log(`当前赛点：${data.data.remainPoint}/${data.data.oncePoint}无法兑换京豆`)
                 message += `当前赛点：${data.data.remainPoint}/${data.data.oncePoint}，无法兑换京豆\n`
               }
@@ -226,8 +243,7 @@ function getPoint() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -308,8 +324,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -323,19 +338,16 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
 }
-
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

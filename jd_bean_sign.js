@@ -29,6 +29,7 @@ if ($.isNode()) {
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 }
 !(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -43,7 +44,7 @@ if ($.isNode()) {
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
       $.index = i + 1;
       $.nickName = '';
-      await TotalBean();
+      await jdCookieNode.TotalBean(cookie, $);
       console.log(`*****************开始京东账号${$.index} ${$.nickName || $.UserName}京豆签到*******************\n`);
       console.log(`⚠️⚠️⚠️⚠️目前Bark APP推送通知消息对推送内容长度有限制，如推送通知中包含此推送方式脚本会默认转换成简洁内容推送 ⚠️⚠️⚠️⚠️\n`)
       await changeFile(content);

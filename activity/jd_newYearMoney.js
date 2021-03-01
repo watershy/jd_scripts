@@ -46,7 +46,8 @@ const inviteCodes = [
   `vcZUAJEW6NATdpttV8s8s2aZ4u1sc6Q-bWfi11uhlAKAbA`,
   `vcZUAJEW6NATdpttV8s8s2aZ4u1sc6Q-bWfi11uhlAKAbA`,
 ];
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -60,7 +61,7 @@ const inviteCodes = [
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      await jdCookieNode.TotalBean(cookie, $);
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -86,7 +87,7 @@ const inviteCodes = [
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      await jdCookieNode.TotalBean(cookie, $);
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});

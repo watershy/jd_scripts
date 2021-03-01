@@ -3,7 +3,8 @@ const ck = require('./jdCookie')
 const fs = require('fs')
 const resultPath = './README.md'
 $.notice = ''
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
     const regexStr = await getReadMeFile()
     // const notifyContent = await fs.readFileSync(resultPath, "utf8");
     // const regexStr = notifyContent.match(/(?<=(\|\d{1,3}\|)).*(\|a)/g)

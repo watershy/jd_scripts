@@ -26,7 +26,8 @@ let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭�
 let cookiesArr = [], cookie = '', message;
 const ck = require('./jdCookie.js')
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
     return;

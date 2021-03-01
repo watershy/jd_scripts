@@ -9,7 +9,8 @@
 const $ = new Env('扫码获取京东cookie');
 const qrcode = require('qrcode-terminal');
 let s_token, cookies, guid, lsid, lstoken, okl_token, token
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   await loginEntrance();
   await generateQrcode();
   await getCookie();

@@ -45,7 +45,8 @@ let lastRoundId = null;//上期id
 let roundList = [];
 let awardState = '';//上期活动的京豆是否收取
 let randomCount = $.isNode() ? 20 : 5;
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -58,7 +59,7 @@ let randomCount = $.isNode() ? 20 : 5;
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
+      await jdCookieNode.TotalBean(cookie, $);
       console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});

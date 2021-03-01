@@ -56,7 +56,8 @@ let jdNotify = true;//是否开启静默运行，默认true开启
 let joyRunNotify = true;//宠汪汪赛跑获胜后是否推送通知，true推送，false不推送通知
 const JD_API_HOST = 'https://jdjoy.jd.com/pet'
 const weAppUrl = 'https://draw.jdfcloud.com//pet';
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -68,7 +69,7 @@ const weAppUrl = 'https://draw.jdfcloud.com//pet';
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
+      await jdCookieNode.TotalBean(cookie, $);
       console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});

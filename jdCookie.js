@@ -2,16 +2,16 @@ const db = require('./utils/db_util')
 const notify = require('./sendNotify');//获取cookie数据
 let getCookie = function ($) {
     return new Promise(async resolve => {
-        //从jd_cookie_info表中查询活动执行的cookie数据，a表示全部账号执行，否则只执行存储的数据，
+        //从jd_notify_table表中查询活动执行的cookie数据，a表示全部账号执行，否则只执行存储的数据，
         //若没有执行相对应的账号
         $.possessor = 'hyk'
-        $.sql = 'select cookie_id from jd_cookie_info where active_name = ? and possessor = ?'
+        $.sql = 'select help_info from jd_notify_table where active_name = ?'
         $.values = [$.name,$.possessor]
         $.cookieMap = new Map()
         let cookieArr = []
         let res = await query($)
-        if (res.length !== 0 && res[0]['cookie_id']) {
-            if (res[0]['cookie_id'] === 'a') {
+        if (res.length !== 0 && res[0]['help_info']) {
+            if (res[0]['help_info'] === 'a') {
                 $.sql = 'select * from jd_cookie'
             } else {
                 $.sql = 'select * from jd_cookie where id in (?)'
@@ -155,7 +155,6 @@ function TotalBean(cookie, $) {
         if ($.index === 1) {
             $.notice = ''
         }
-        console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
         const options = {
             "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
             "headers": {

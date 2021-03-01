@@ -2,28 +2,47 @@
 京东快递签到
 活动入口：https://jingcai-h5.jd.com/#/
 签到领豆,14天内满4次和7次享额外奖励，每天运行一次即可
-更新地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js已支持IOS双京东账号, Node.js支持N个京东账号
+更新地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js
+
+已支持IOS双京东账号, Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #京东快递签到
-10 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js, tag=京东快递签到, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_kd.png, enabled=true================Loon==============
+10 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js, tag=京东快递签到, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_kd.png, enabled=true
+
+================Loon==============
 [Script]
-cron "10 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js, tag=京东快递签到===============Surge=================
-京东快递签到 = type=cron,cronexp="10 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js============小火箭=========
+cron "10 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js, tag=京东快递签到
+
+===============Surge=================
+京东快递签到 = type=cron,cronexp="10 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js
+
+============小火箭=========
 京东快递签到 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_kd.js, cronexpr="10 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东快递签到');
+
+const notify = $.isNode() ? require('./sendNotify') : '';
+//Node.js用户请在jdCookie.js处填写京东ck;
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-const ck = require('./jdCookie.js')
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+} else {
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+}
 const JD_API_HOST = 'https://api.m.jd.com/api';
-!(async () => {
-  cookiesArr = await ck.getCookie($);
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -34,20 +53,26 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await ck.TotalBean(cookie, $);
+      await jdCookieNode.TotalBean(cookie, $);
+      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
         continue
       }
       await userSignIn();
+      await showMsg();
     }
   }
 })()
     .catch((e) => {
-      $.notice += `\n${e}`
-      $.noticeName = `${$.name}错误`
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
-    .finally(async () => {
-      await ck.methodEnd($)
+    .finally(() => {
+      $.done();
     })
 
 function showMsg() {
@@ -56,7 +81,6 @@ function showMsg() {
     resolve()
   })
 }
-
 function userSignIn() {
   return new Promise(resolve => {
     $.post(taskUrl(), (err, resp, data) => {
@@ -71,6 +95,7 @@ function userSignIn() {
             if (data.code === 1) {
               console.log(`今日签到成功，获得${data.content[0].title}`)
               message += `今日签到成功，获得${data.content[0].title} 🐶\n`;
+
             } else if (data.code === -1) {
               console.log(`今日已签到`)
               message += `【签到】失败，今日已签到`;
@@ -80,15 +105,13 @@ function userSignIn() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
     })
   })
 }
-
 function taskUrl() {
   return {
     url: `https://lop-proxy.jd.com/jiFenApi/signInAndGetReward`,
@@ -118,7 +141,6 @@ function taskUrl() {
     }
   }
 }
-
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -156,34 +178,29 @@ function TotalBean() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
     })
   })
 }
-
 function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
     }
   } catch (e) {
-    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
   }
 }
-
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
       return JSON.parse(str);
     } catch (e) {
-      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

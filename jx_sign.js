@@ -18,13 +18,24 @@ cron "5 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_
 京喜签到 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jx_sign.js, cronexpr="5 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京喜签到');
+const notify = $.isNode() ? require('./sendNotify') : '';
+//Node.js用户请在jdCookie.js处填写京东ck;
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-const ck = require('./jdCookie')
+let helpAuthor = true
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+} else {
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+}
 const JD_API_HOST = 'https://m.jingxi.com/';
-!(async () => {
-  cookiesArr = await ck.getCookie($);
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -39,8 +50,14 @@ const JD_API_HOST = 'https://m.jingxi.com/';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await ck.TotalBean(cookie,$);
+      await jdCookieNode.TotalBean(cookie, $);
+      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
         continue
       }
       await jdCash()
@@ -59,6 +76,7 @@ async function jdCash() {
   await sign()
   await getTaskList()
   await doubleSign()
+  await showMsg()
 }
 function sign() {
   return new Promise((resolve) => {
@@ -83,8 +101,7 @@ function sign() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -117,8 +134,7 @@ function getTaskList() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -143,8 +159,7 @@ function doTask(id) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -170,8 +185,7 @@ function finishTask(id) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -197,8 +211,7 @@ function doubleSign() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -233,13 +246,56 @@ function taskUrl(functionId, body = '') {
   }
 }
 
+function TotalBean() {
+  return new Promise(async resolve => {
+    const options = {
+      "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
+      "headers": {
+        "Accept": "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
+      }
+    }
+    $.post(options, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            data = JSON.parse(data);
+            if (data['retcode'] === 13) {
+              $.isLogin = false; //cookie过期
+              return
+            }
+            if (data['retcode'] === 0) {
+              $.nickName = data['base'].nickname;
+            } else {
+              $.nickName = $.UserName
+            }
+          } else {
+            console.log(`京东服务器返回空数据`)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
 function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
       return true;
     }
   } catch (e) {
-    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -250,7 +306,6 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

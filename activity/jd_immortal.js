@@ -49,7 +49,8 @@ const inviteCodes = [
   `39xIs4YwE5Z7CPQQ0baz9jNWO6PSZHsNWqfOwWyqScbJBGhg4v7HbuBg63TJ4@27xIs4YwE5Z7FGzJqrMmavC_vWKtbEaJxbz0Vahw@43xIs4YwE5Z7DsWOzDSP_N6WTDnbA0wBjjof6cA9FzcbHMcZB9wE1R3ToSluCgxAzEXQ@43xIs4YwE5Z7DsWOzDSEuRWEOROpnDjMx_VvSs5ikYQ8XgcZB9whEHjDmPKQoL16TZ8w@50xIs4YwE5Z7FTId9W-KibDgxxx6AEa7189V1zSxSf2HP6681IXPQ81aJEP77WoHXLcK7QzlxGqsGqfU@43xIs4YwE5Z7DsWOzDSPKFWdkRe2Ae6h0jAdlhuSmuwcfUcZB9wBcHhj0_zyZDNK4Rhg`,
   `39xIs4YwE5Z7CPQQ0baz9jNWO6PSZHsNWqfOwWyqScbJBGhg4v7HbuBg63TJ4@27xIs4YwE5Z7FGzJqrMmavC_vWKtbEaJxbz0Vahw@43xIs4YwE5Z7DsWOzDSP_N6WTDnbA0wBjjof6cA9FzcbHMcZB9wE1R3ToSluCgxAzEXQ@43xIs4YwE5Z7DsWOzDSEuRWEOROpnDjMx_VvSs5ikYQ8XgcZB9whEHjDmPKQoL16TZ8w@43xIs4YwE5Z7DsWOzDSFehRRs_UaNcqkiU7BrrzDTKHScMcZB9wkYC2z6K-QOsQy1S3A@43xIs4YwE5Z7DsWOzDSFcl8RjNxfrQquzeGQQtkQOUbyqscZB9wkxX2jw2HhM7TczeqA`
 ];
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -64,7 +65,7 @@ const inviteCodes = [
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      await jdCookieNode.TotalBean(cookie, $);
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});

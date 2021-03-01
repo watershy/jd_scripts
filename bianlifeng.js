@@ -7,7 +7,8 @@ if ($.isNode()) {
     })
 }
 const API_HOST = 'https://h5.bianlifeng.com/meepo/taskCenter/';
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
     if (!cookiesArr[0]) {
         $.msg($.name, '账号不存在');
         return;

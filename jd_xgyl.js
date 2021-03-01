@@ -26,7 +26,8 @@ const $ = new Env('小鸽有礼2');
 const ck = require('./jdCookie')
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});

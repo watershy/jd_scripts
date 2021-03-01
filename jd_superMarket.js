@@ -24,7 +24,10 @@ cron "11 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
 东东超市 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_superMarket.js, cronexpr="11 * * * *", timeout=3600, enable=true
  */
 const $ = new Env('东东超市');
+//Node.js用户请在jdCookie.js处填写京东ck;
+//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', jdSuperMarketShareArr = [], notify, newShareCodes;
+const helpAu = true;//给作者助力 免费拿活动
 let jdNotify = true;//用来是否关闭弹窗通知，true表示关闭，false表示开启。
 let superMarketUpgrade = true;//自动升级,顺序:解锁升级商品、升级货架,true表示自动升级,false表示关闭自动升级
 let businessCircleJump = true;//小于对方300热力值自动更换商圈队伍,true表示运行,false表示禁止
@@ -32,7 +35,7 @@ let drawLotteryFlag = false;//是否用500蓝币去抽奖，true表示开启，f
 let joinPkTeam = true;//是否自动加入PK队伍
 let message = '', subTitle;
 const JD_API_HOST = 'https://api.m.jd.com/api';
-const ck = require('./jdCookie')
+
 //助力好友分享码
 //此此内容是IOS用户下载脚本到本地使用，填写互助码的地方，同一京东账号的好友互助码请使用@符号隔开。
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
@@ -43,8 +46,9 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
   'aURoM7PtY_Q@eU9Ya-y2N_5z9DvXwyIV0A@eU9YaOnjYK4j-GvWmXIWhA',
 ]
 
-!(async () => {
-  cookiesArr = await ck.getCookie($);
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
+  await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
   }
@@ -58,23 +62,31 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
       $.blueCionTimes = 0;
       $.isLogin = true;
       $.nickName = '';
-      await ck.TotalBean(cookie, $);
+      await jdCookieNode.TotalBean(cookie, $);
+      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
         continue
       }
       message = '';
       subTitle = '';
       //await shareCodesFormat();//格式化助力码
       await jdSuperMarket();
+      await showMsg();
+      if (helpAu === true) await helpAuthor();
+      // await businessCircleActivity();
     }
   }
 })()
     .catch((e) => {
-      $.notice += `\n${e}`
-      $.noticeName = `${$.name}错误`
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
-    .finally(async () => {
-      await ck.methodEnd($)
+    .finally(() => {
+      $.done();
     })
 async function jdSuperMarket() {
   await receiveGoldCoin();//收金币
@@ -95,6 +107,13 @@ async function jdSuperMarket() {
   await smtgHome();
   await receiveUserUpgradeBlue();
   await Home();
+}
+function showMsg() {
+  $.log(`【京东账号${$.index}】${$.nickName}\n${message}`);
+  jdNotify = $.getdata('jdSuperMarketNotify') ? $.getdata('jdSuperMarketNotify') : jdNotify;
+  if (!jdNotify || jdNotify === 'false') {
+    $.msg($.name, subTitle ,`【京东账号${$.index}】${$.nickName}\n${message}`);
+  }
 }
 //抽奖功能(招财进宝)
 async function drawLottery() {
@@ -129,7 +148,6 @@ async function help() {
     console.log(`助力好友${JSON.stringify(res)}`);
   }
 }
-
 async function doDailyTask() {
   const smtgQueryShopTaskRes = await smtgQueryShopTask();
   if (smtgQueryShopTaskRes.code === 0 && smtgQueryShopTaskRes.data.success) {
@@ -241,8 +259,7 @@ function receiveBlueCoin(timeout = 0) {
             await receiveBlueCoin(3000);
           }
         } catch (e) {
-          $.noticeName = `${$.name}错误`
-          $.notice += `\n${e}`;
+          $.logErr(e, resp);
         } finally {
           resolve()
         }
@@ -283,8 +300,7 @@ function smtgSign(body) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -803,8 +819,7 @@ function smtg_shelfUpgrade(body) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -843,8 +858,7 @@ function updatePkActivityId(url = 'https://raw.githubusercontent.com/LXK9301/upd
           $.updatePkActivityIdRes = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -865,8 +879,7 @@ function updatePkActivityIdCDN(url) {
           $.updatePkActivityIdRes = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -893,8 +906,7 @@ function smtgDoShopTask(taskId, itemId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -915,8 +927,7 @@ function smtgObtainShopTaskPrize(taskId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -934,8 +945,7 @@ function smtgQueryShopTask() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -954,8 +964,7 @@ function smtgSignList() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1023,8 +1032,7 @@ function smtgQueryPkTask() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1043,8 +1051,7 @@ function smtgDoAssistPkTask(code) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1081,8 +1088,7 @@ function smtgObtainPkTaskPrize(taskId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1100,8 +1106,7 @@ function smtgDoPkTask(taskId, itemId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1137,8 +1142,7 @@ function smtg_getTeamPkDetailInfo() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1229,8 +1233,7 @@ function smtg_receivedPkTeamPrize() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1249,8 +1252,7 @@ function smtg_getPkPrize() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1268,8 +1270,7 @@ function smtg_quitBusinessCircle() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1288,8 +1289,7 @@ function smtg_shelfList() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1331,8 +1331,7 @@ function smtg_upgradeProduct(productId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1353,8 +1352,7 @@ function smtg_unlockProduct(productId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1375,8 +1373,7 @@ function smtg_upgradeShelf(shelfId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1397,8 +1394,7 @@ function smtg_unlockShelf(shelfId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1417,8 +1413,7 @@ function smtg_ground(productId, shelfId) {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1436,8 +1431,7 @@ function smtg_productList() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1455,8 +1449,7 @@ function smtg_lotteryIndex() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1475,8 +1468,7 @@ function smtg_drawLottery() {
           data = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve(data);
       }
@@ -1486,11 +1478,48 @@ function smtg_drawLottery() {
 function sortSyData(a, b) {
   return a['upgradeCostGold'] - b['upgradeCostGold']
 }
-
 function sortTotalPriceGold(a, b) {
   return a['previewTotalPriceGold'] - b['previewTotalPriceGold']
 }
-
+//格式化助力码
+function shareCodesFormat() {
+  return new Promise(resolve => {
+    console.log(`第${$.index}个京东账号的助力码:::${jdSuperMarketShareArr[$.index - 1]}`)
+    if (jdSuperMarketShareArr[$.index - 1]) {
+      newShareCodes = jdSuperMarketShareArr[$.index - 1].split('@');
+    } else {
+      console.log(`由于您未提供与京京东账号相对应的shareCode,下面助力将采纳本脚本自带的助力码\n`)
+      const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
+      newShareCodes = shareCodes[tempIndex].split('@');
+    }
+    console.log(`格式化后第${$.index}个京东账号的助力码${JSON.stringify(newShareCodes)}`)
+    resolve();
+  })
+}
+function requireConfig() {
+  return new Promise(resolve => {
+    // console.log('\n开始获取东东超市配置文件\n')
+    notify = $.isNode() ? require('./sendNotify') : '';
+    //Node.js用户请在jdCookie.js处填写京东ck;
+    const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+    //IOS等用户直接用NobyDa的jd cookie
+    if ($.isNode()) {
+      Object.keys(jdCookieNode).forEach((item) => {
+        if (jdCookieNode[item]) {
+          cookiesArr.push(jdCookieNode[item])
+        }
+      })
+      if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+    } else {
+      cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+    }
+    console.log(`共${cookiesArr.length}个京东账号\n`);
+    // console.log(`东东超市已改版,目前暂不用助力, 故无助力码`)
+    // console.log(`\n东东超市商圈助力码::${JSON.stringify(jdSuperMarketShareArr)}`);
+    // console.log(`您提供了${jdSuperMarketShareArr.length}个账号的助力码\n`);
+    resolve()
+  })
+}
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -1528,15 +1557,35 @@ function TotalBean() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
     })
   })
 }
-
+function getTeam() {
+  return new Promise(async resolve => {
+    $.getTeams = [];
+    $.get({url: `http://jd.turinglabs.net/api/v2/jd/supermarket/read/100000/`, timeout: 100000}, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          $.getTeams = data['data'];
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+    await $.wait(10000);
+    resolve()
+  })
+}
 function taskUrl(function_id, body = {}) {
   return {
     url: `${JD_API_HOST}?functionId=${function_id}&appid=jdsupermarket&clientVersion=8.0.0&client=m&body=${escape(JSON.stringify(body))}&t=${Date.now()}`,
@@ -1562,7 +1611,6 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

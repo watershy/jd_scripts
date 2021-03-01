@@ -9,15 +9,31 @@
 活动入口：玩一玩-家庭号
 8000幸福值可换100京豆，一天任务做完大概300幸福值，周期较长
 已支持IOS双京东账号,Node.js支持N个京东账号
-脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js易黑号，建议禁用
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+
+易黑号，建议禁用
 cron如下
 1 * * * *
  */
 const $ = new Env('京东家庭号');
+const notify = $.isNode() ? require('./sendNotify') : '';
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+//Node.js用户请在jdCookie.js处填写京东ck;
+//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-const ck = require('./jdCookie.js')
-!(async () => {
-  cookiesArr = await ck.getCookie($);
+
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
+  };
+} else {
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+}
+
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -31,11 +47,12 @@ const ck = require('./jdCookie.js')
       $.nickName = '';
       $.beans = 0
       message = '';
-      await ck.TotalBean(cookie, $);
+      await jdCookieNode.TotalBean(cookie, $);
+      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         if ($.isNode()) {
-          await ck.methodEnd($, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
         }
         continue
       }
@@ -43,16 +60,18 @@ const ck = require('./jdCookie.js')
     }
   }
 })()
-    .catch((e) => {
-    })
-    .finally(async () => {
-      await ck.methodEnd($)
-    })
+  .catch((e) => {
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+  })
+  .finally(() => {
+    $.done();
+  })
 
 async function jdFamily() {
   await getInfo()
   await getUserInfo()
   await getUserInfo(true)
+  await showMsg();
 }
 
 function showMsg() {
@@ -75,7 +94,6 @@ function getInfo() {
         $.info = JSON.parse(data.match(/var snsConfig = (.*)/)[1])
         $.prize = JSON.parse($.info.prize)
       } catch (e) {
-        $.noticeName = `${$.name}错误`
         console.log(e)
       } finally {
         resolve()
@@ -117,8 +135,7 @@ function getUserInfo(info = false) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -143,8 +160,7 @@ function doTask(taskId) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -223,8 +239,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -238,7 +253,6 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -250,7 +264,6 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

@@ -19,24 +19,33 @@ cron "1 8,12,18 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/mast
 口袋书店 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js, cronexpr="1 8,12,18* * *", timeout=3600, enable=true
  */
 const $ = new Env('口袋书店');
+const notify = $.isNode() ? require('./sendNotify') : '';
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+//Node.js用户请在jdCookie.js处填写京东ck;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 const ACT_ID = 'dz2010100034444201', shareUuid = '28a699ac78d74aa3b31f7103597f8927'
-//一个账号只能助力一次
-let inviteCodes = [
-  'ea4ec100e4984837b7eefbc011b1cdbf',
-  '78693cafbe8e40739150501335dcf1bd',
-  '78693cafbe8e40739150501335dcf1bd',
-  '78693cafbe8e40739150501335dcf1bd',
-  '78693cafbe8e40739150501335dcf1bd',
-  '78693cafbe8e40739150501335dcf1bd',
-  '78693cafbe8e40739150501335dcf1bd',
-  '78693cafbe8e40739150501335dcf1bd',
-]
 let ADD_CART = false
-const ck = require('./jdCookie.js')
-!(async () => {
-  cookiesArr = await ck.getCookie($);
+ADD_CART = $.isNode() ? (process.env.PURCHASE_SHOPS ? process.env.PURCHASE_SHOPS : ADD_CART) : ($.getdata("ADD_CART") ? $.getdata("ADD_CART") : ADD_CART);
+// 加入购物车开关，与东东小窝共享
+
+let inviteCodes = [
+  '28a699ac78d74aa3b31f7103597f8927@2f14ee9c92954cf79829320dd482bf49@fdf827db272543d88dbb51a505c2e869@ce2536153a8742fb9e8754a9a7d361da@38ba4e7ba8074b78851e928af2b4f6b2',
+  '28a699ac78d74aa3b31f7103597f8927@2f14ee9c92954cf79829320dd482bf49@fdf827db272543d88dbb51a505c2e869'
+]
+
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
+  };
+} else {
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+}
+
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
@@ -51,19 +60,25 @@ const ck = require('./jdCookie.js')
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await ck.TotalBean(cookie, $);
+      await jdCookieNode.TotalBean(cookie, $);
+      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
         continue
       }
-      await shareCodesFormat()
       await jdBeauty()
     }
   }
-})().catch((e) => {
-    })
-    .finally(async () => {
-      await ck.methodEnd($)
-    })
+})()
+  .catch((e) => {
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+  })
+  .finally(() => {
+    $.done();
+  })
 
 async function jdBeauty() {
   $.score = 0
@@ -89,6 +104,7 @@ async function jdBeauty() {
   }
   if($.userInfo.storeGold) await chargeGold()
   await helpFriends()
+  await showMsg();
 }
 
 async function helpFriends() {
@@ -115,8 +131,7 @@ function getIsvToken() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -139,8 +154,7 @@ function getIsvToken2() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -167,8 +181,7 @@ function getActCk() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -192,8 +205,7 @@ function getActInfo() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -216,8 +228,7 @@ function getToken() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -245,8 +256,7 @@ function getUserInfo() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -274,6 +284,8 @@ function getActContent(info = false, shareUuid = '') {
               }
               $.actorUuid = $.userInfo.actorUuid
               if(!info) console.log(`您的好友助力码为${$.actorUuid}`)
+              $.shareCode = $.actorUuid
+              $.newShareCodes = await jdCookieNode.getShareCode($)
               $.gold = $.userInfo.bookStore.hasStoreGold
               if (!info) {
                 const tasks = data.data.settingVo
@@ -313,7 +325,7 @@ function getActContent(info = false, shareUuid = '') {
           }
         }
       } catch (e) {
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -334,8 +346,7 @@ function doHelpList(taskType, value) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -363,8 +374,7 @@ function doTask(taskType, value) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -396,8 +406,7 @@ function draw() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -428,8 +437,7 @@ function getAllBook() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -454,8 +462,7 @@ function buyBook(bookUuid, num) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -484,8 +491,7 @@ function getMyBook() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -511,8 +517,7 @@ function upBook(bookUuid) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -538,8 +543,7 @@ function chargeGold() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -641,8 +645,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -650,22 +653,6 @@ function TotalBean() {
   })
 }
 
-//格式化助力码
-function shareCodesFormat() {
-  return new Promise(async resolve => {
-    // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
-    $.newShareCodes = [];
-    if ($.shareCodesArr[$.index - 1]) {
-      $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
-    } else {
-      console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
-      const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
-      $.newShareCodes = inviteCodes[tempIndex].split('@');
-    }
-    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
-    resolve();
-  })
-}
 function requireConfig() {
   return new Promise(resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
@@ -699,7 +686,6 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -711,7 +697,6 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];

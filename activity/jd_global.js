@@ -32,7 +32,8 @@ $.notice = ''
 const ck = require('./jdCookie')
 const JD_API_HOST = 'https://api.m.jd.com/', actCode = 'visa-card-001';
 $.invites = [];
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   cookiesArr = await ck.getCookie($);
   await requireConfig();
   if (!cookiesArr[0]) {

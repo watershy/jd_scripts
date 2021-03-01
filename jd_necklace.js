@@ -1,6 +1,6 @@
 /*
  * @Author: LXK9301 https://github.com/LXK9301
- * @Date: 2020-11-20 11:42:03 
+ * @Date: 2020-11-20 11:42:03
  * @Last Modified by: LXK9301
  * @Last Modified time: 2021-2-27 12:27:14
  */
@@ -44,7 +44,8 @@ if ($.isNode()) {
 }
 
 const JD_API_HOST = 'https://api.m.jd.com/api';
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -57,7 +58,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      await jdCookieNode.TotalBean(cookie, $);
       console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});

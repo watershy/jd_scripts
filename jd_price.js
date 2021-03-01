@@ -46,7 +46,8 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
     $.msg(
       $.name,
@@ -67,7 +68,7 @@ if ($.isNode()) {
       $.index = i + 1;
       $.isLogin = false;
       $.nickName = '';
-      await totalBean();
+      await jdCookieNode.TotalBean(cookie, $);
       if (!$.isLogin) {
         $.msg(
           $.name,

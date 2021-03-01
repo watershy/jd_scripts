@@ -3,7 +3,8 @@ const ck = require('./jdCookie')
 const exec = require('child_process').execSync
 const fs = require('fs')
 $.notice = ''
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
     //拼接js路径和log路径。后续存储至数据库
     const jsPath = 'mkdir -p /app/jd/logs/$(date +\\%Y-\\%m-\\%d)/dirPath && /usr/local/bin/node /app/jd/jd_scripts/js_path'
     const logPath = '/app/jd/logs/$(date +\\%Y-\\%m-\\%d)/dirPath/dirPath_$(date +\\%H)'

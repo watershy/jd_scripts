@@ -39,7 +39,8 @@ if ($.isNode()) {
 }
 
 const JD_API_HOST = `https://api.m.jd.com/api?appid=jdsupermarket`;
-!(async () => {
+!(async() => {
+  cookiesArr = await jdCookieNode.getCookie($)
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -59,7 +60,7 @@ const JD_API_HOST = `https://api.m.jd.com/api?appid=jdsupermarket`;
       //console.log($.coincount);
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
+      await jdCookieNode.TotalBean(cookie, $);
       console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       console.log(`目前暂无兑换酒类的奖品功能，即使输入酒类名称，脚本也会提示下架\n`)
       if (!$.isLogin) {
