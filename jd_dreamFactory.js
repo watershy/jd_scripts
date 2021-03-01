@@ -1,6 +1,6 @@
 /*
 京东京喜工厂
-更新时间：2021-1-27
+更新时间：2021-2-27
 活动入口：京东APP-游戏与互动-查看更多-京喜工厂
 或者: 京东APP首页搜索 "玩一玩" ,造物工厂即可
 
@@ -33,17 +33,35 @@ cron "10 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
 
 const $ = new Env('京喜工厂');
 const JD_API_HOST = 'https://m.jingxi.com';
-$.notice = '';
+const helpAu = true; //帮作者助力 免费拿活动
+const notify = $.isNode() ? require('./sendNotify') : '';
+let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 let tuanActiveId = `6S9y4sJUfA2vPQP6TLdVIQ==`;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
-let cookiesArr = [], cookie = '', message = '';
-const inviteCodes = ['wUjR_aJ43-uLjZU5cS9KGg=='];
-const ck = require('./jdCookie.js')
+let cookiesArr = [], cookie = '', message = '', allMessage = '';
+const inviteCodes = [
+  'V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k=@0WtCMPNq7jekehT6d3AbFw==',
+  "gB99tYLjvPcEFloDgamoBw==@7dluIKQMp0bySgcr8AqFgw==",
+  '-OvElMzqeyeGBWazWYjI1Q==',
+  'GFwo6PntxDHH95ZRzZ5uAg=='
+];
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+$.tuanIds = [];
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+  if (process.env.DREAMFACTORY_FORBID_ACCOUNT) process.env.DREAMFACTORY_FORBID_ACCOUNT.split('&').map((item, index) => Number(item) === 0 ? cookiesArr = [] : cookiesArr.splice(Number(item) - 1 - index, 1))
+} else {
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+}
 !(async () => {
-  cookiesArr = await ck.getCookie($);
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
+  await requireConfig();
   if (!cookiesArr[0]) {
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -59,47 +77,61 @@ const ck = require('./jdCookie.js')
       $.pickFriendEle = 0;
       $.friendList = [];
       $.canHelpFlag = true;//能否助力朋友
-      $.flag = $.UserName === 'jd_pBXzZlqInyyk';
-      await ck.TotalBean(cookie,$);
+      await TotalBean();
+      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
         continue
       }
       await jdDreamFactory()
+      if (helpAu === true) await helpAuthor();
     }
-    if ($.flag) {
-      await ck.notice($)
-      $.notice = $.notice + '\n' + message
+  }
+  for (let i = 0; i < cookiesArr.length; i++) {
+    if (cookiesArr[i]) {
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      console.log(`${$.UserName}去参加第一个cookie账号开的团`)
+      cookie = cookiesArr[i];
+      if ($.tuanIds.length > 0) {
+        await JoinTuan($.tuanIds[0]);
+      }
+      await joinLeaderTuan();//参团
     }
+  }
+  if ($.isNode() && allMessage) {
+    await notify.sendNotify(`${$.name}`, `${allMessage}`, { url: jxOpenUrl })
   }
 })()
     .catch((e) => {
-      $.notice += `\n${e}`
-      $.noticeName = `${$.name}错误`
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
-    .finally(async () => {
-      await ck.methodEnd($)
+    .finally(() => {
+      $.done();
     })
 
 async function jdDreamFactory() {
-  if ($.flag) {
+  try {
     await userInfo();
     await QueryFriendList();//查询今日招工情况以及剩余助力次数
-    await joinLeaderTuan();//参团
+    //await joinLeaderTuan();//参团
     await helpFriends();
     if (!$.unActive) return
     await getUserElectricity();
     await taskList();
     await investElectric();
-    // await assistFriend('wUjR_aJ43-uLjZU5cS9KGg==');
     await QueryHireReward();//收取招工电力
     await PickUp();//收取自家的地下零件
-    // await stealFriend();
-    // await tuanActivity();
-    // await QueryAllTuan();
+    await stealFriend();
+    await tuanActivity();
+    await QueryAllTuan();
     await exchangeProNotify();
-  } else {
-    await userInfo();
-    await helpFriends();
+    await showMsg();
+  } catch (e) {
+    $.logErr(e)
   }
 }
 
@@ -143,8 +175,7 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -174,8 +205,7 @@ function investElectric() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -232,8 +262,7 @@ function taskList() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -257,7 +286,6 @@ function getUserElectricity() {
               console.log(`\nnextCollectDoubleFlag::${data.data.nextCollectDoubleFlag}`);
               console.log(`nextCollectDoubleType::${data.data.nextCollectDoubleType}\n`);
               $.log(`下次集满收取${data.data.nextCollectDoubleFlag === 1 ? '可' : '不可'}双倍电力`)
-              message += `【双倍状态】下次集满收取${data.data.nextCollectDoubleFlag === 1 ? '可' : '不可'}双倍电力\n`
               console.log(`发电机：当前 ${data.data.currentElectricityQuantity} 电力，最大值 ${data.data.maxElectricityQuantity} 电力`)
               if (data.data.nextCollectDoubleFlag === 1) {
                 if (data.data.currentElectricityQuantity === data.data.maxElectricityQuantity && data.data.doubleElectricityFlag) {
@@ -275,8 +303,7 @@ function getUserElectricity() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -300,9 +327,6 @@ function QueryHireReward() {
               for (let item of data['data']['hireReward']) {
                 if (item.date !== new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).Format("yyyyMMdd")) {
                   await hireAward(item.date, item.type);
-                } else {
-                  console.log(`当天招工电力已领取`)
-                  message += `【招工电力】当天招工电力已领取\n`
                 }
               }
             } else {
@@ -311,8 +335,7 @@ function QueryHireReward() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -341,8 +364,7 @@ function hireAward(date, type = 0) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -352,6 +374,7 @@ function hireAward(date, type = 0) {
 async function helpFriends() {
   let Hours = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).getHours();
   if ($.canHelpFlag && Hours >= 6) {
+    await shareCodesFormat();
     for (let code of $.newShareCodes) {
       if (code) {
         if ($.encryptPin === code) {
@@ -361,9 +384,6 @@ async function helpFriends() {
         const assistFriendRes = await assistFriend(code);
         if (assistFriendRes && assistFriendRes['ret'] === 0) {
           console.log(`助力朋友：${code}成功，因一次只能助力一个，故跳出助力`)
-          if ($.helpCount !== 0) {
-            $.helpCount = $.helpCount - 1
-          }
           break
         } else if (assistFriendRes && assistFriendRes['ret'] === 11009) {
           console.log(`助力朋友[${code}]失败：${assistFriendRes.msg}，跳出助力`);
@@ -379,10 +399,6 @@ async function helpFriends() {
 }
 // 帮助用户
 function assistFriend(sharepin) {
-  if ($.encryptPin === sharepin) {
-    console.log(`不能为自己助力,跳过`);
-    return ;
-  }
   return new Promise(async resolve => {
     // const url = `/dreamfactory/friend/AssistFriend?zone=dream_factory&sharepin=${escape(sharepin)}&sceneval=2&g_login_type=1`
     const options = {
@@ -414,8 +430,7 @@ function assistFriend(sharepin) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -439,7 +454,6 @@ function QueryFriendList() {
               if (assistListToday.length === assistNumMax) {
                 $.canHelpFlag = false;
               }
-              $.helpCount = assistNumMax-assistListToday.length
               $.log(`【今日招工进度】${hireListToday.length}/${hireNumMax}`);
               message += `【招工进度】${hireListToday.length}/${hireNumMax}\n`;
             } else {
@@ -448,8 +462,7 @@ function QueryFriendList() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -489,8 +502,7 @@ function completeTask(taskId, taskName) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -518,8 +530,7 @@ function doTask(taskId) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -561,21 +572,16 @@ function userInfo() {
                 }
                 console.log(`当前电力：${data.user.electric}`)
                 console.log(`当前等级：${data.user.currentLevel}`)
-                console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.user.encryptPin}`);
-                $.shareCode = data.user.encryptPin
-                $.newShareCodes = await ck.getShareCode($)
+                console.log(`\n【京东账号${$.index}（${$.nickName || $.UserName}）的${$.name}好友互助码】${data.user.encryptPin}`);
                 console.log(`已投入电力：${production.investedElectric}`);
-                console.log(`商品电力：${production.needElectric}`);
+                console.log(`所需电力：${production.needElectric}`);
                 console.log(`生产进度：${((production.investedElectric / production.needElectric) * 100).toFixed(2)}%`);
-                console.log(`还需电力： ${(production.needElectric - production.investedElectric)}`)
+                message += `【京东账号${$.index}】${$.nickName}\n`
                 message += `【生产商品】${$.productName}\n`;
                 message += `【当前等级】${data.user.userIdentity} ${data.user.currentLevel}\n`;
-                message += `【当前电力】${data.user.electric}\n`
                 message += `【生产进度】${((production.investedElectric / production.needElectric) * 100).toFixed(2)}%\n`;
-                message += `【商品电力】${(production.needElectric)}\n`
-                message += `【还需电力】${(production.needElectric - production.investedElectric)}\n`
                 if (production.investedElectric >= production.needElectric) {
-                  $.log(`可以兑换商品了`)
+                  $.log(`可以对方商品了`)
                   // await exchangeProNotify()
                 }
               } else {
@@ -589,7 +595,8 @@ function userInfo() {
                   if (nowTimes.getHours()  === 12) {
                     //如按每小时运行一次，则此处将一天推送2次提醒
                     $.msg($.name, '提醒⏰', `京东账号${$.index}[${$.nickName}]京喜工厂未选择商品\n请手动去京东APP->游戏与互动->查看更多->京喜工厂 选择商品`);
-                    if ($.isNode()) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `京东账号${$.index}[${$.nickName}]京喜工厂未选择商品\n请手动去京东APP->游戏与互动->查看更多->京喜工厂 选择商品`)
+                    // if ($.isNode()) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `京东账号${$.index}[${$.nickName}]京喜工厂未选择商品\n请手动去京东APP->游戏与互动->查看更多->京喜工厂 选择商品`)
+                    if ($.isNode()) allMessage += `京东账号${$.index}[${$.nickName}]京喜工厂未选择商品\n请手动去京东APP->游戏与互动->查看更多->京喜工厂 选择商品${$.index !== cookiesArr.length ? '\n\n' : ''}`
                   }
                 }
               }
@@ -599,8 +606,7 @@ function userInfo() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -628,8 +634,7 @@ function GetCommodityDetails() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -661,8 +666,7 @@ function GetShelvesList(pageNo = 1) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -690,8 +694,7 @@ function DrawProductionStagePrize() {
           // }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -756,8 +759,7 @@ function GetUserComponent(pin = $.encryptPin, timeout = 0) {
             }
           }
         } catch (e) {
-        $.noticeName = `${$.name}错误`
-          $.notice += `\n${e}`
+          $.logErr(e, resp)
         } finally {
           resolve(data);
         }
@@ -796,8 +798,7 @@ function PickUpComponent(index, encryptPin) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -814,9 +815,9 @@ async function stealFriend() {
   $.friendList = [...new Set($.friendList)];
   for (let i = 0; i < $.friendList.length; i++) {
     let pin = $.friendList[i];//好友的encryptPin
-    // if (pin === 'V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k=' || pin === 'Bo-jnVs_m9uBvbRzraXcSA==') {
-    //   continue
-    // }
+    if (pin === 'V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k=' || pin === 'Bo-jnVs_m9uBvbRzraXcSA==') {
+      continue
+    }
     await PickUp(pin, true);
     // await getFactoryIdByPin(pin);//获取好友工厂ID
     // if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
@@ -851,8 +852,7 @@ function getFriendList(sort = 0) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -882,8 +882,7 @@ function getFactoryIdByPin(pin) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -968,8 +967,7 @@ function QueryActiveConfig() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -1007,8 +1005,7 @@ function QueryTuan(activeId, tuanId) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -1048,8 +1045,7 @@ function CreateTuan() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -1103,8 +1099,7 @@ function JoinTuan(tuanId) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -1161,8 +1156,7 @@ function QueryAllTuan() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -1218,8 +1212,7 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -1236,8 +1229,7 @@ function updateTuanIds(url = 'https://raw.githubusercontent.com/LXK9301/updateTe
           $.tuanIdS = JSON.parse(data);
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -1259,8 +1251,7 @@ function updateTuanIdsCDN(url) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -1299,16 +1290,157 @@ async function exchangeProNotify() {
       // 一:在兑换超时这一天(2020/12/8 09:20:04)的前2小时内通知
       if ((exchangeEndTime - nowTimes) <= 3600000 * 2) {
         $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}${(exchangeEndTime - nowTimes) / 60*60*1000}分钟后兑换超时\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换`, {'open-url': jxOpenUrl, 'media-url': $.picture})
+        // if ($.isNode()) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}${(exchangeEndTime - nowTimes) / 60*60*1000}分钟后兑换超时\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换`, { url: jxOpenUrl })
+        if ($.isNode()) allMessage += `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}${(exchangeEndTime - nowTimes) / 60*60*1000}分钟后兑换超时\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换${$.index !== cookiesArr.length ? '\n\n' : ''}`
       }
       //二:在兑换超时日期前的时间一天通知三次(2020/12/6 9,10,11点,以及在2020/12/7 9,10,11点各通知一次)
       if (nowHours === exchangeEndHours || nowHours === (exchangeEndHours + 1) || nowHours === (exchangeEndHours + 2)) {
         $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}已可兑换\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换`, {'open-url': jxOpenUrl, 'media-url': $.picture})
+        // if ($.isNode()) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}已可兑换\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换`, { url: jxOpenUrl })
+        if ($.isNode()) allMessage += `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}已可兑换\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换${$.index !== cookiesArr.length ? '\n\n' : ''}`
       }
     } else {
       //兑换已超时
       $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}兑换已超时，请重新选择商品生产\n【兑换截止时间】${$.exchangeEndTime}`, {'open-url': jxOpenUrl})
+      // if ($.isNode()) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}兑换已超时，请重新选择商品生产\n【兑换截止时间】${$.exchangeEndTime}`, { url: jxOpenUrl })
+      if ($.isNode()) allMessage += `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}兑换已超时，请重新选择商品生产\n【兑换截止时间】${$.exchangeEndTime}${$.index !== cookiesArr.length ? '\n\n' : ''}`
     }
   }
+}
+async function showMsg() {
+  return new Promise(async resolve => {
+    message += `【收取自己零件】${$.pickUpMyselfComponent ? `获得${$.pickEle}电力` : `今日已达上限`}\n`;
+    message += `【收取好友零件】${$.pickUpMyselfComponent ? `获得${$.pickFriendEle}电力` : `今日已达上限`}\n`;
+    if ($.isNode() && process.env.DREAMFACTORY_NOTIFY_CONTROL) {
+      $.ctrTemp = `${process.env.DREAMFACTORY_NOTIFY_CONTROL}` === 'false';
+    } else if ($.getdata('jdDreamFactory')) {
+      $.ctrTemp = $.getdata('jdDreamFactory') === 'false';
+    } else {
+      $.ctrTemp = `${jdNotify}` === 'false';
+    }
+    if (new Date().getHours() === 22) {
+      $.msg($.name, '', `${message}`)
+      $.log(`\n${message}`);
+    } else {
+      $.log(`\n${message}`);
+    }
+    resolve()
+  })
+}
+function readShareCode() {
+  console.log(`开始`)
+  return new Promise(async resolve => {
+    $.get({url: `http://jd.turinglabs.net/api/v2/jd/jxfactory/read/${randomCount}/`, 'timeout': 10000}, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            console.log(`随机取${randomCount}个码放到您固定的互助码后面(不影响已有固定互助)`)
+            data = JSON.parse(data);
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+    await $.wait(10000);
+    resolve()
+  })
+}
+//格式化助力码
+function shareCodesFormat() {
+  return new Promise(async resolve => {
+    // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
+    $.newShareCodes = [];
+    if ($.shareCodesArr[$.index - 1]) {
+      $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
+    } else {
+      console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
+      const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
+      $.newShareCodes = inviteCodes[tempIndex].split('@');
+    }
+    const readShareCodeRes = await readShareCode();
+    if (readShareCodeRes && readShareCodeRes.code === 200) {
+      $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
+    }
+    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
+    resolve();
+  })
+}
+function requireConfig() {
+  return new Promise(async resolve => {
+    await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/shareCodes/jd_updateFactoryTuanId.json');
+    if ($.tuanIdS && $.tuanIdS.tuanActiveId) {
+      tuanActiveId = $.tuanIdS.tuanActiveId;
+    }
+    console.log(`开始获取${$.name}配置文件\n`);
+    console.log(`tuanActiveId: ${tuanActiveId}`)
+    //Node.js用户请在jdCookie.js处填写京东ck;
+    const shareCodes = $.isNode() ? require('./jdDreamFactoryShareCodes.js') : '';
+    console.log(`共${cookiesArr.length}个京东账号\n`);
+    $.shareCodesArr = [];
+    if ($.isNode()) {
+      Object.keys(shareCodes).forEach((item) => {
+        if (shareCodes[item]) {
+          $.shareCodesArr.push(shareCodes[item])
+        }
+      })
+    } else {
+      if ($.getdata('jd_jxFactory')) $.shareCodesArr = $.getdata('jd_jxFactory').split('\n').filter(item => item !== "" && item !== null && item !== undefined);
+      console.log(`\nBoxJs设置的京喜工厂邀请码:${$.getdata('jd_jxFactory')}\n`);
+    }
+    // console.log(`\n种豆得豆助力码::${JSON.stringify($.shareCodesArr)}`);
+    console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码\n`);
+    resolve()
+  })
+}
+function TotalBean() {
+  return new Promise(async resolve => {
+    const options = {
+      "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
+      "headers": {
+        "Accept": "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1"
+      }
+    }
+    $.post(options, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            data = JSON.parse(data);
+            if (data['retcode'] === 13) {
+              $.isLogin = false; //cookie过期
+              return
+            }
+            if (data['retcode'] === 0) {
+              $.nickName = data['base'].nickname;
+            } else {
+              $.nickName = $.UserName
+            }
+          } else {
+            console.log(`京东服务器返回空数据`)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
 }
 function safeGet(data) {
   try {
@@ -1316,7 +1448,6 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -1386,7 +1517,6 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-        $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

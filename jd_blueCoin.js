@@ -1,7 +1,7 @@
 /*
 东东超市兑换奖品 脚本地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_blueCoin.js
 感谢@yangtingxiao提供PR
-更新时间：2020-12-24
+更新时间：2021-2-27
 活动入口：京东APP我的-更多工具-东东超市
 支持京东多个账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
@@ -22,17 +22,26 @@ cron "0 0 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/j
  */
 const $ = new Env('东东超市兑换奖品');
 const notify = $.isNode() ? require('./sendNotify') : '';
+let allMessage = '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let coinToBeans = $.getdata('coinToBeans') || 20; //兑换多少数量的京豆（20或者1000），0表示不兑换，默认兑换20京豆，如需兑换把0改成20或者1000，或者'商品名称'(商品名称放到单引号内)即可
+let jdNotify = false;//是否开启静默运行，默认false关闭(即:奖品兑换成功后会发出通知提示)
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+} else {
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+}
+
 const JD_API_HOST = `https://api.m.jd.com/api?appid=jdsupermarket`;
-const ck = require('./jdCookie.js')
-$.notice = ''
 !(async () => {
-  cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
+    $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
   for (let i =0; i < cookiesArr.length; i++) {
@@ -50,26 +59,42 @@ $.notice = ''
       //console.log($.coincount);
       $.isLogin = true;
       $.nickName = '';
-      await ck.TotalBean(cookie, $);
+      await TotalBean();
+      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       console.log(`目前暂无兑换酒类的奖品功能，即使输入酒类名称，脚本也会提示下架\n`)
       if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
         continue
       }
-      await ck.notice($)
-      await smtgHome();//查询蓝币数量，是否满足兑换的条件
-      await PrizeIndex();
-      $.notice += `${$.beanerr}\n`
+      //先兑换京豆
+      if ($.isNode()) {
+        if (process.env.MARKET_COIN_TO_BEANS) {
+          coinToBeans = process.env.MARKET_COIN_TO_BEANS;
+        }
+      }
+      try {
+        if (`${coinToBeans}` !== '0') {
+          await smtgHome();//查询蓝币数量，是否满足兑换的条件
+          await PrizeIndex();
+        } else {
+          console.log('查询到您设置的是不兑换京豆选项，现在为您跳过兑换京豆。如需兑换，请去BoxJs设置或者修改脚本coinToBeans\n')
+        }
+        await msgShow();
+      } catch (e) {
+        $.logErr(e)
+      }
     }
   }
+  if ($.isNode() && allMessage && $.ctrTemp) {
+    await notify.sendNotify(`${$.name}`, `${allMessage}`)
+  }
 })()
-    .catch((e) => {
-      $.notice += `\n${e}`
-      $.noticeName = `${$.name}错误`
-    })
-    .finally(async () => {
-      await ck.methodEnd($)
-    })
-
+  .catch((e) => $.logErr(e))
+  .finally(() => $.done())
 async function PrizeIndex() {
   await smtg_queryPrize();
   // await smtg_materialPrizeIndex();//兑换酒类奖品，此兑换API与之前的兑换京豆类的不一致，故目前无法进行
@@ -82,53 +107,49 @@ async function PrizeIndex() {
       $.blueCost = prizeList[1].blueCost;
     } else {
       console.log(`查询换1000京豆ID失败`)
-      $.beanerr += `东哥今天不给换`;
-      return;
+      $.beanerr = `东哥今天不给换`;
+      return ;
     }
-    if (prizeList[1].inStock === 506) {
-      $.beanerr += `失败，1000京豆领光了`;
-      console.log('开始兑换20京豆')
-      //设置为20京豆重新执行
-      coinToBeans = 20
-      await smtg_queryPrize();
-      return;
+    if (prizeList[1] && prizeList[1].inStock === 506) {
+      $.beanerr = `失败，1000京豆领光了，请明天再来`;
+      return ;
     }
-    if (prizeList[1].targetNum === prizeList[1].finishNum) {
-      $.beanerr += `${prizeList[1].subTitle}`;
-      return;
+    if (prizeList[1] && prizeList[1].targetNum === prizeList[1] && prizeList[1].finishNum) {
+      $.beanerr = `${prizeList[1].subTitle}`;
+      return ;
     }
     //兑换1000京豆
     if ($.totalBlue > $.blueCost) {
       await smtg_obtainPrize(prizeList[1].prizeId);
     } else {
       console.log(`兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`);
-      $.beanerr += `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
+      $.beanerr = `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
     }
   } else if (`${coinToBeans}` === '20') {
-    if (prizeList[0].beanType === 'Bean') {
+    if (prizeList[0] && prizeList[0].beanType === 'Bean') {
       console.log(`查询换${prizeList[0].title}ID成功，ID:${prizeList[0].prizeId}`)
       $.title = prizeList[0].title;
       $.blueCost = prizeList[0].blueCost;
     } else {
       console.log(`查询换万能的京豆ID失败`)
-      $.beanerr += `东哥今天不给换`;
-      return;
+      $.beanerr = `东哥今天不给换`;
+      return ;
     }
-    if (prizeList[0].inStock === 506) {
+    if (prizeList[0] && prizeList[0].inStock === 506) {
       console.log(`失败，万能的京豆领光了，请明天再来`);
-      $.beanerr += `失败，万能的京豆领光了，请明天再来`;
-      return;
+      $.beanerr = `失败，万能的京豆领光了，请明天再来`;
+      return ;
     }
-    if (prizeList[0].targetNum === prizeList[0].finishNum) {
-      $.beanerr += `${prizeList[0].subTitle}`;
-      return;
+    if ((prizeList[0] && prizeList[0].targetNum) === (prizeList[0] && prizeList[0].finishNum)) {
+      $.beanerr = `${prizeList[0].subTitle}`;
+      return ;
     }
     //兑换万能的京豆(1-20京豆)
     if ($.totalBlue > $.blueCost) {
       await smtg_obtainPrize(prizeList[0].prizeId,1000);
     } else {
       console.log(`兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`);
-      $.beanerr += `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
+      $.beanerr = `兑换失败,您目前蓝币${$.totalBlue}个,不足以兑换${$.title}所需的${$.blueCost}个`;
     }
   } else {
     //自定义输入兑换
@@ -191,8 +212,7 @@ function smtg_materialPrizeIndex(timeout = 0) {
             $.materialPrizeIndex = data.data.result.prizes || [];
           }
         } catch (e) {
-          $.noticeName = `${$.name}错误`
-          $.notice += `\n${e}`;
+          $.logErr(e, resp);
         } finally {
           resolve()
         }
@@ -232,8 +252,7 @@ function smtg_queryPrize(timeout = 0){
             }
           }
         } catch (e) {
-          $.noticeName = `${$.name}错误`
-          $.notice += `\n${e}`;
+          $.logErr(e, resp);
         } finally {
           resolve()
         }
@@ -288,8 +307,7 @@ function smtg_obtainPrize(prizeId, timeout = 0) {
           }
           await  smtg_obtainPrize(prizeId,3000);
         } catch (e) {
-          $.noticeName = `${$.name}错误`
-          $.notice += `\n${e}`;
+          $.logErr(e, resp);
         } finally {
           resolve()
         }
@@ -313,14 +331,11 @@ function smtgHome() {
               $.totalBlue = result.totalBlue;
               console.log(`【总金币】${$.totalGold}个\n`);
               console.log(`【总蓝币】${$.totalBlue}个\n`);
-              $.notice += `【总金币】${$.totalGold}个\n`
-              $.notice += `【总蓝币】${$.totalBlue}个\n`
             }
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`;
+        $.logErr(e, resp);
       } finally {
         resolve();
       }
@@ -328,6 +343,29 @@ function smtgHome() {
   })
 }
 
+//通知
+function msgShow() {
+  // $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【收取蓝币】${$.coincount ? `${$.coincount}个` : $.coinerr }${coinToBeans ? `\n【兑换京豆】${ $.beanscount ? `${$.beanscount}个` : $.beanerr}` : ""}`);
+  return new Promise(async resolve => {
+    $.log(`\n【京东账号${$.index}】${$.nickName}\n${coinToBeans ? `【兑换${$.title}】${$.beanscount ? `成功` : $.beanerr}` : "您设置的是不兑换奖品"}\n`);
+    if ($.isNode() && process.env.MARKET_REWARD_NOTIFY) {
+      $.ctrTemp = `${process.env.MARKET_REWARD_NOTIFY}` === 'false';
+    } else if ($.getdata('jdSuperMarketRewardNotify')) {
+      $.ctrTemp = $.getdata('jdSuperMarketRewardNotify') === 'false';
+    } else {
+      $.ctrTemp = `${jdNotify}` === 'false';
+    }
+    //默认只在兑换奖品成功后弹窗提醒。情况情况加，只打印日志，不弹窗
+    if ($.beanscount && $.ctrTemp) {
+      $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n${coinToBeans ? `【兑换${$.title}】${ $.beanscount ? `成功，数量：${$.beanscount}个` : $.beanerr}` : "您设置的是不兑换奖品"}`);
+      allMessage += `【京东账号${$.index}】${$.nickName}\n${coinToBeans ? `【兑换${$.title}】${$.beanscount ? `成功，数量：${$.beanscount}个` : $.beanerr}` : "您设置的是不兑换奖品"}${$.index !== cookiesArr.length ? '\n\n' : ''}`
+      // if ($.isNode()) {
+      //   await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】${$.nickName}\n${coinToBeans ? `【兑换${$.title}】${$.beanscount ? `成功，数量：${$.beanscount}个` : $.beanerr}` : "您设置的是不兑换奖品"}`)
+      // }
+    }
+    resolve()
+  })
+}
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -365,8 +403,7 @@ function TotalBean() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -379,7 +416,6 @@ function safeGet(data) {
       return true;
     }
   } catch (e) {
-    $.noticeName = `${$.name}错误`
     console.log(e);
     console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
     return false;
@@ -402,7 +438,6 @@ function jsonParse(str) {
     try {
       return JSON.parse(str);
     } catch (e) {
-      $.noticeName = `${$.name}错误`
       console.log(e);
       $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];

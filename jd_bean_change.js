@@ -2,7 +2,7 @@
  * @Author: LXK9301 https://github.com/LXK9301
  * @Date: 2020-11-01 16:25:41
  * @Last Modified by:   LXK9301
- * @Last Modified time: 2021-02-19 10:25:41
+ * @Last Modified time: 2021-02-27 10:25:41
  */
 /*
 京豆变动通知脚本：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bean_change.js
@@ -25,11 +25,23 @@ cron "2 9 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_
 京豆变动通知 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bean_change.js, cronexpr="2 9 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京豆变动通知');
+const notify = $.isNode() ? require('./sendNotify') : '';
+//Node.js用户请在jdCookie.js处填写京东ck;
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+let allMessage = '';
+//IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
-const ck = require('./jdCookie.js')
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+} else {
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+}
 !(async () => {
-  cookiesArr = await ck.getCookie($);
   if (!cookiesArr[0]) {
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -46,24 +58,39 @@ const ck = require('./jdCookie.js')
       $.message = '';
       $.balance = 0;
       $.expiredBalance = 0;
-      await ck.TotalBean(cookie, $);
+      await TotalBean();
+      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
       if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
         continue
       }
       await bean();
-      $.message += `\n昨日收入：${$.incomeBean}京豆 🐶\n昨日支出：${$.expenseBean}京豆 🐶\n当前京豆：${$.beanCount}京豆 🐶`
-      await ck.notice($)
-      $.notice = $.notice + $.message + '\n'
+      await showMsg();
     }
+  }
+
+  if ($.isNode() && allMessage) {
+    await notify.sendNotify(`${$.name}`, `${allMessage}`, { url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean` })
   }
 })()
     .catch((e) => {
-      $.notice += `\n${e}`
-      $.noticeName = `${$.name}错误`
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
-    .finally(async () => {
-      await ck.methodEnd($)
+    .finally(() => {
+      $.done();
     })
+async function showMsg() {
+  if ($.errorMsg) return
+  allMessage += `账号${$.index}：${$.nickName || $.UserName}\n昨日收入：${$.incomeBean}京豆 🐶\n昨日支出：${$.expenseBean}京豆 🐶\n当前京豆：${$.beanCount}京豆 🐶${$.message}${$.index !== cookiesArr.length ? '\n\n' : ''}`;
+  // if ($.isNode()) {
+  //   await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `账号${$.index}：${$.nickName || $.UserName}\n昨日收入：${$.incomeBean}京豆 🐶\n昨日支出：${$.expenseBean}京豆 🐶\n当前京豆：${$.beanCount}京豆 🐶${$.message}`, { url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean` })
+  // }
+  $.msg($.name, '', `账号${$.index}：${$.nickName || $.UserName}\n昨日收入：${$.incomeBean}京豆 🐶\n昨日支出：${$.expenseBean}京豆 🐶\n当前京豆：${$.beanCount}京豆 🐶${$.message}`, {"open-url": "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean"});
+}
 async function bean() {
   // console.log(`北京时间零点时间戳:${parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000}`);
   // console.log(`北京时间2020-10-28 06:16:05::${new Date("2020/10/28 06:16:05+08:00").getTime()}`)
@@ -76,7 +103,7 @@ async function bean() {
   let page = 1, t = 0, yesterdayArr = [];
   do {
     let response = await getJingBeanBalanceDetail(page);
-    // console.log(`第${page}页: ${JSON.stringify(response)}`);
+    console.log(`第${page}页: ${JSON.stringify(response)}`);
     if (response && response.code === "0") {
       page++;
       let detailList = response.detailList;
@@ -138,7 +165,11 @@ function TotalBean() {
               $.isLogin = false; //cookie过期
               return
             }
-            $.nickName = data['base'].nickname;
+            if (data['retcode'] === 0) {
+              $.nickName = data['base'].nickname;
+            } else {
+              $.nickName = $.UserName
+            }
             if (data['retcode'] === 0) {
               $.beanCount = data['base'].jdNum;
             }
@@ -180,8 +211,7 @@ function getJingBeanBalanceDetail(page) {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve(data);
       }
@@ -227,8 +257,7 @@ function queryexpirejingdou() {
           }
         }
       } catch (e) {
-        $.noticeName = `${$.name}错误`
-        $.notice += `\n${e}`
+        $.logErr(e, resp)
       } finally {
         resolve();
       }
@@ -260,7 +289,7 @@ function redPacket() {
             data = JSON.parse(data).data
             $.balance = data.balance
             $.expiredBalance = data.expiredBalance || 0;
-            $.message += `当前红包：${$.balance}元🧧`;
+            $.message += `\n当前红包：${$.balance}元🧧`;
             if ($.expiredBalance > 0) $.message += `\n今日将过期：${$.expiredBalance}元红包🧧`;
           } else {
             console.log(`京东服务器返回空数据`)
