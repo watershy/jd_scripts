@@ -93,19 +93,19 @@ let getShareCode = function ($) {
             let res = await query($)
             if (res.length === 0) {
                 $.values = [$.name, $.shareCode, $.UserName]
-                $.sql = 'insert into jd_share_code_info(cookie_id,pt_pin,active_name,share_code) select id,pt_pin,?,? from jd_cookie where pt_pin = ?;'
+                $.sql = 'insert into jd_share_code_info(cookie_id,user_name,pt_pin,active_name,share_code) select id,name,pt_pin,?,? from jd_cookie where pt_pin = ?;'
                 await query($)
             } else if (res[0]['share_code'] !== $.shareCode) {
-                $.values = [$.shareCode, new Date().toLocaleString(), $.UserName, $.name]
-                $.sql = 'update jd_share_code_info set share_code = ?,remark = ?  where pt_pin = ? and active_name = ?'
+                $.values = [$.shareCode, $.UserName, $.UserName, $.name]
+                $.sql = 'update jd_share_code_info set share_code = ?,cookie_id = (select id from jd_cookie where pt_pin = ?),user_name = (select name from jd_cookie where pt_pin = ?) where pt_pin = ? and active_name = ?'
                 await query($)
             }
             //获取助力码数据
-            $.sql = 'select help_info from jd_share_code_info where active_name = ? and pt_pin = ?'
-            $.values = [$.name, $.UserName]
+            $.sql = 'select share_info from jd_cookie_share_info where cookie_id = (select id from jd_cookie where pt_pin = ?) and active_name = ?'
+            $.values = [$.UserName, $.name]
             const helpInfo = await query($)
-            if (helpInfo.length !== 0 && helpInfo[0]['help_info']) {
-                $.values = [$.name, helpInfo[0]['help_info'].split(',')]
+            if (helpInfo.length !== 0 && helpInfo[0]['share_info']) {
+                $.values = [$.name, helpInfo[0]['share_info'].split(',')]
                 $.sql = 'select share_code from jd_share_code_info where active_name = ? and cookie_id in (?)'
                 const shareCodes = await query($)
                 for (let i = 0; i < shareCodes.length; i++) {
