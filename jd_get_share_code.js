@@ -33,8 +33,7 @@ if ($.isNode()) {
 } else {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
-!(async() => {
-  cookiesArr = await jdCookieNode.getCookie($)
+!(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -48,7 +47,7 @@ if ($.isNode()) {
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await jdCookieNode.TotalBean(cookie, $);
+      await TotalBean();
       if (!$.isLogin) {
         continue
       }
@@ -605,7 +604,7 @@ function getCFD(showInvite = true) {
           strMyShareId,
           strPin,
         } = JSON.parse(data);
-        console.log(`【账号${$.index}（${$.nickName || $.UserName}）财富岛】${strMyShareId}`)
+        console.log(`【账号${$.index}（${$.nickName || $.UserName}）财富岛】${strMyShareId}(每次都变化,不影响)`)
       } catch (e) {
         $.logErr(e, resp);
       } finally {

@@ -1,6 +1,6 @@
 /*
 京东京喜工厂
-更新时间：2021-1-27
+更新时间：2021-2-27
 活动入口：京东APP-游戏与互动-查看更多-京喜工厂
 或者: 京东APP首页搜索 "玩一玩" ,造物工厂即可
 
@@ -84,7 +84,7 @@ async function jdDreamFactory() {
   if ($.flag) {
     await userInfo();
     await QueryFriendList();//查询今日招工情况以及剩余助力次数
-    await joinLeaderTuan();//参团
+    // await joinLeaderTuan();//参团
     await helpFriends();
     if (!$.unActive) return
     await getUserElectricity();
@@ -1057,6 +1057,8 @@ function CreateTuan() {
   })
 }
 async function joinLeaderTuan() {
+  $.tuanIdS = null;
+  if (!$.tuanIdS) await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/shareCodes/jd_updateFactoryTuanId.json');
   if ($.tuanIdS && $.tuanIdS.tuanIds) {
     for (let tuanId of $.tuanIdS.tuanIds) {
       if (!tuanId) continue
@@ -1072,10 +1074,10 @@ async function joinLeaderTuan() {
     }
   }
 }
-function JoinTuan(tuanId) {
+function JoinTuan(tuanId, stk = '_time,activeId,tuanId') {
   return new Promise((resolve) => {
     const options = {
-      'url': `https://m.jingxi.com/dreamfactory/tuan/JoinTuan?activeId=${escape(tuanActiveId)}&tuanId=${escape(tuanId)}&_time=${Date.now()}&_=${Date.now()}&sceneval=2&g_login_type=1&_ste=1&h5st=${decrypt(Date.now())}`,
+      'url': `https://m.jingxi.com/dreamfactory/tuan/JoinTuan?activeId=${escape(tuanActiveId)}&tuanId=${escape(tuanId)}&_time=${Date.now()}&_stk=_time,activeId,tuanId&h5st=20210303071536851;0386098809875160;10001;tk01w64d91a47a8na1RialFZV1MxNgHFXD25O99/df6c113+v+vdL7mhZgJvA5EVGKI5pNOFsJxjz1F3E23ZgM/3q0kx;686703a0bcc9d7cb0a1f68c6c83c994e4ae6ac545052ddcfbdf8e074d6408122&_=${Date.now()}&sceneval=2&g_login_type=1`,
       "headers": {
         "Accept": "*/*",
         "Accept-Encoding": "gzip, deflate, br",
@@ -1083,7 +1085,7 @@ function JoinTuan(tuanId) {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Host": "m.jingxi.com",
-        "Referer": "https://st.jingxi.com/pingou/dream_factory/divide.html?exchange=%7B%22activeId%22:%22ilOin38J30PcT9xnWbx9lw%3D%3D%22,%22sTuanId%22:%22QvqM7GtgQQJUO8jaz1CYBA%3D%3D%22,%22sPin%22:%22V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k%3D%22,%22sType%22:%22101%22%7D&ptag=139022.1.2?srv=jinshusongjin_https://wq.jd.com/cube/front/activePublish/dream_factory_report/380556.html_jing",
+        "Referer": "https://st.jingxi.com/pingou/dream_factory/divide.html",
         "User-Agent": "jdpingou"
       }
     }
@@ -1396,7 +1398,7 @@ function jsonParse(str) {
 function decrypt(time, stk, type) {
   if (stk) {
     const random = 'pmUmA8IyRcDp';
-    const token = ``;
+    const token = `tk01wd4571d58a8nT0tkdXczeW94f5x4qjWs44kcPCTXeWKa2xXY+ZxHaOtbRxmyw6vrIF4RDFwwTUfwy1pIqNE0oyWW`;
     const fingerprint = 8410347712257161;
     const timestamp = new Date(time).Format("yyyyMMddhhmmssS");
     const appId = 10001;
@@ -1408,8 +1410,8 @@ function decrypt(time, stk, type) {
     })
     const hash2 = $.CryptoJS.HmacSHA256(st, hash1).toString($.CryptoJS.enc.Hex);
     console.log(`st:${st}\n`)
-    // console.log(`hash2:${hash2}\n`)
-    // console.log(`h5st:${h5st}\n`)
+    // console.log(`hash2:${JSON.stringify(["".concat(timestamp.toString()), "".concat(fingerprint.toString()), "".concat(appId.toString()), "".concat(token), "".concat(hash2)])}\n`)
+    console.log(`h5st:${["".concat(timestamp.toString()), "".concat(fingerprint.toString()), "".concat(appId.toString()), "".concat(token), "".concat(hash2)].join(";")}\n`)
     return ["".concat(timestamp.toString()), "".concat(fingerprint.toString()), "".concat(appId.toString()), "".concat(token), "".concat(hash2)].join(";")
   } else {
     return '20210121201915905;8410347712257161;10001;tk01wa5bd1b5fa8nK2drQ3o3azhyhItRUb1DBNK57SQnGlXj9kmaV/iQlhKdXuz1RME5H/+NboJj8FAS9N+FcoAbf6cB;3c567a551a8e1c905a8d676d69e873c0bc7adbd8277957f90e95ab231e1800f2'
